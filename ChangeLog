@@ -1,12 +1,12 @@
 2009-03-04 0.0.7  Aleksandar Urošević <urke@users.sourceforge.net>
 
 	* Posts per Cat added to WordPress plugin repository
-	* Fixed broken category URI on non-index pages
-	* Added posts_per_cat action hook
+	* Fixed broken category and posts URI on non-index pages
+	* Added 'ppc' action hook
 
 2009-03-03 0.0.6  Aleksandar Urošević <urke@users.sourceforge.net>
 
-	* Fixed SCC URI on non-index pages
+	* Fixed CSS URI on non-index pages
 
 2009-02-20 0.0.5  Aleksandar Urošević <urke@users.sourceforge.net>
 
