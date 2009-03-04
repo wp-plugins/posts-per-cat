@@ -1,0 +1,55 @@
+/*
+CSS Stylesheet for Posts-per-Cat
+Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
+Description: List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
+Author: Aleksandar Urošević
+Version: 0.0.5
+Author URI: http://urosevic.net
+*/
+#ppc-box {
+	width: 100%;
+	clear: both;
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+#ppc-box .ppc-box {
+	width: 48.5%;
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+/* box graphics style */
+#ppc-box .ppc-box .ppc {
+	padding: 10px;
+	border: 1px solid #DEDBD1;
+	background: url(/wp-content/plugins/wp-posts-per-cat/ppc_bg.gif) no-repeat bottom right;
+	clear: none;
+}
+
+/* fonts and colors of content */
+#ppc-box .ppc-box .ppc ul li p {
+	font-size: small;
+	color: gray;
+	clear: none;
+}
+
+/* box positioning and spacing */
+#ppc-box .left {
+	position: relative;
+	float: left;
+}
+#ppc-box .right {
+	position: relative;
+	float: right;
+}
+
+#ppc-box .clear {
+	position: relative;
+	clear: both;
+	width: 100% !important;
+	height: 17px;
+	display: block;
+}
