@@ -1,9 +1,9 @@
 /*
 CSS Stylesheet for Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
-Description: List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
+Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.5
+Version: 0.0.8
 Author URI: http://urosevic.net
 */
 #ppc-box {
@@ -25,7 +25,7 @@ Author URI: http://urosevic.net
 #ppc-box .ppc-box .ppc {
 	padding: 10px;
 	border: 1px solid #DEDBD1;
-	background: url(/wp-content/plugins/wp-posts-per-cat/ppc_bg.gif) no-repeat bottom right;
+	background: url(/wp-content/plugins/posts-per-cat/ppc_bg.gif) no-repeat bottom right;
 	clear: none;
 }
 

@@ -18,31 +18,43 @@
 
 Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
-Description: List latests N article titles from all or top level only categories and group them in category boxes organized in two columns. Configure plugin on <a href="options-general.php?page=wp-posts-per-cat/wp-postspercat.php">Settings</a> page.
+Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.7
+Version: 0.0.8
 Author URI: http://urosevic.net
-
 */
+$ppc_version = "0.0.8";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
+if ( is_admin() ) {
+	$plugin = plugin_basename(__FILE__); 
+	add_filter("plugin_action_links_$plugin", 'addConfigureLink' );
+}
+
+function addConfigureLink( $links ) { 
+  $settings_link = '<a href="options-general.php?page=posts-per-cat/wp-postspercat.php">'.__('Settings').'</a>'; 
+  array_unshift( $links, $settings_link ); 
+  return $links; 
+}
 
 if ( function_exists('posts_per_cat') ) 
 {
-	load_plugin_textdomain( 'ppc', PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) . '/languages' );
+	$blog_url = get_bloginfo('url');
+	$ppc_dir = PLUGINDIR . '/' . dirname(plugin_basename(__FILE__));
+//	load_plugin_textdomain( 'ppc', PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) . '/languages' );
+	load_plugin_textdomain( "ppc", "$ppc_dir/languages" );
 
 	add_filter('wp_head', 'ppc_header_css', 10);
-	$blog_url = get_bloginfo('url');
 }
 
 function ppc_header_css()
 {
-	global $blog_url;
-	echo '<link rel="stylesheet" href="'.$blog_url.'/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/ppc.css" type="text/css" media="screen" />';
+	global $blog_url, $ppc_dir;
+	echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc.css" type="text/css" media="screen" />';
 	$options = get_option("postspercat");
 	if ( $options['list'] ) {
-		echo '<link rel="stylesheet" href="'.$blog_url.'/'.PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)).'/ppc-list.css" type="text/css" media="screen" />';
+		echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc-list.css" type="text/css" media="screen" />';
 	}
 }
 
@@ -52,7 +64,7 @@ function ppc_postspercat_menu() {
 
 function ppc_postspercat_options()
 {
-
+	global $ppc_version;
 	if ( $_POST['ppc-submit'] )
 	{
 		$options['posts']   = htmlspecialchars($_POST['ppc-posts']);
@@ -60,6 +72,8 @@ function ppc_postspercat_options()
 		$options['parent']  = htmlspecialchars($_POST['ppc-parent']);
 		$options['order']   = htmlspecialchars($_POST['ppc-order']);
 		$options['list']    = htmlspecialchars($_POST['ppc-list']);
+		$options['include'] = htmlspecialchars($_POST['ppc-include']);
+		$options['exclude'] = htmlspecialchars($_POST['ppc-exclude']);
 		update_option("postspercat", $options);
 	}
 
@@ -72,58 +86,75 @@ function ppc_postspercat_options()
 			"excerpt"   => True,
 			"parent"    => False,
 			"order"     => "ID",
-			"list"      => True
+			"list"      => True,
+			"include"   => "",
+			"exclude"   => ""
 		);
 		update_option("postspercat", $options);
-	}	
+	}
 ?>
 <div class="wrap">
 	<h2><?php _e('Posts per Cat', 'ppc'); ?></h2>
-
-	<p><?php _e('This plugin list latests N article titles from all or top level only categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href="http://webnovinar.org">Web Journalism School</a>.', 'ppc'); ?></p>
-	<p><?php _e('To use Posts-per-Cat plugin add to your template file code above:', 'ppc'); ?></p>
-	<pre>&lt;?php do_action("ppc"); ?&gt;</pre>
-	<br />
 	<form method="post" action="" id="ppc-conf">
 	<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('ppc-updatesettings'); } ?>
+	<p><?php echo sprintf(__("Currently installed version: <strong>%s</strong>", "ppc"), $ppc_version); ?></p>
+	<p><?php _e('This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href="http://webnovinar.org">Web Journalism School</a>.', 'ppc'); ?></p>
+	<h3><?php _e("Usage", "ppc"); ?></h3>
+	<p><?php _e('Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):', 'ppc'); ?></p>
+	<code>&lt;?php do_action("ppc"); ?&gt;</code>
 
+	<h3><?php _e("Category options", "ppc"); ?></h3>
 	<table class="form-table">
-
 		<tr valign="top">
-			<th scope="row"><?php _e('Number of articles per category:', 'ppc'); ?></th>
-			<td><input type="text" value="<?php echo $options['posts']; ?>" name="ppc-posts" id="ppc-posts" size="2" /></td>
+			<th scope="row"><label><?php _e("Include category", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['include']); ?>" name="ppc-include" id="ppc-include" /> (<?php _e("comma separated category ID's", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"></label><?php _e("Exclude category", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['exclude']); ?>" name="ppc-exclude" id="ppc-exclude" /> (<?php _e("comma separated category ID's", "ppc"); ?>)</td>
 		</tr>
 
 		<tr valign="top">
-			<th scope="row"><?php _e('List only top level categories?', 'ppc'); ?></th>
+			<th scope="row"><label><?php _e("Only top level categories", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['parent']) ? ' checked="checked"' : ''; ?> name="ppc-parent" id="ppc-parent" /></td>
 		</tr>
 
 		<tr valign="top">
-			<th scope="row"><?php _e('Order categories by', 'ppc'); ?></th>
+			<th scope="row"><label><?php _e("Order categories by", "ppc"); ?></label></th>
 			<td>
-				<input type="radio" id="ppc-order" name="ppc-order" value="ID" <?php if ( $options['order'] == "ID" ) { echo "checked"; } ?>/> <?php _e('Category ID', 'ppc'); ?><br/>
-				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e('Category Name', 'ppc'); ?>
+				<input type="radio" id="ppc-order" name="ppc-order" value="ID" <?php if ( $options['order'] == "ID" ) { echo "checked"; } ?>/> <?php _e("Category ID", "ppc"); ?><br/>
+				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e("Category Name", "ppc"); ?>
 			</td>
-		</tr>
-
-		<tr valign="top">
-			<th scope="row"><?php _e('Display excerpt for first article in category box?', 'ppc'); ?></th>
-			<td><input type="checkbox" <?php echo ($options['excerpt']) ? ' checked="checked"' : ''; ?> name="ppc-excerpt" id="ppc-excerpt" /></td>
-		</tr>
-
-		<tr valign="top">
-			<th scope="row"><?php _e('Use Posts-per-Cat list style CSS Stylesheet?', 'ppc'); ?></th>
-			<td><input type="checkbox" <?php echo ($options['list']) ? ' checked="checked"' : ''; ?> name="ppc-list" id="ppc-list" /></td>
 		</tr>
 
 	</table>
 
+	<h3><?php _e("Posts options", "ppc"); ?></h3>
+	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Articles per category", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['posts']; ?>" name="ppc-posts" id="ppc-posts" size="2" /></td>
+		</tr>
+
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Excerpt for first articles", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['excerpt']) ? ' checked="checked"' : ''; ?> name="ppc-excerpt" id="ppc-excerpt" /></td>
+		</tr>
+	</table>
+
+	<h3><?php _e("Optional", "ppc"); ?></h3>
+	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Use PPC CSS StyleSheet?", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['list']) ? ' checked="checked"' : ''; ?> name="ppc-list" id="ppc-list" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
+		</tr>
+	</table>
+
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-excerpt, ppc-parent, ppc-order, ppc-list" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-excerpt, ppc-parent, ppc-order, ppc-list, ppc-include, ppc-exclude" />
 
 	<p class="submit">
-		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes', 'ppc') ?>" />
+		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 	</p>
 
 	</form>
@@ -133,20 +164,23 @@ function ppc_postspercat_options()
 
 function posts_per_cat()
 {
-	global $blog_url;
-	$options = get_option('postspercat');
-	$ppc_posts = $options['posts']; // broj članaka za listanje
-	$ppc_parent = $options['parent']; // listanje samo kategorija najvišeg nivoa?
+	global $blog_url, $ppc_version;
+	$options     = get_option('postspercat');
+	$ppc_posts   = $options['posts'];   // broj članaka za listanje
+	$ppc_parent  = $options['parent'];  // listanje samo kategorija najvišeg nivoa?
 	$ppc_excerpt = $options['excerpt']; // da li štampati sažetak?
-	$ppc_order = $options['order']; // poredak po ID-u ili nazivu kategorije?
+	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
+
+	$ppc_include = $options['include']; // kategorije koje će biti izlistane
+	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
 
 	// uzimamo spisak kategorija iz baze
-	$kategorije = get_categories('orderby='.$ppc_order);
+	$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
 
 	// klasa za raspoređivanje kutija levo/desno
 	$position = "left";
 	echo '
-<!-- start of Posts-per-Cat -->
+<!-- start of Posts-per-Cat version '.$ppc_version.' -->
 	<div id="ppc-box">
 ';
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
@@ -188,7 +222,9 @@ function posts_per_cat()
 		} // kraj uzimanja samo kategorija sa člancima
 	} // kraj foreach petlje $kategorije as $kat
 
-echo '
+	// ako je poslednja kućica leva, dodaje clear fix iza nje
+	if ( $position == "right" ) { echo '<div class="clear"></div>'; }
+	echo '
 	</div>
 <!-- end of Posts-per-Cat -->
 ';
