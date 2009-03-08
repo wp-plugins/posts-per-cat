@@ -68,6 +68,8 @@ function ppc_postspercat_options()
 	if ( $_POST['ppc-submit'] )
 	{
 		$options['posts']   = htmlspecialchars($_POST['ppc-posts']);
+		$options['titlelength']   = htmlspecialchars($_POST['ppc-titlelength']);
+		$options['shorten']   = htmlspecialchars($_POST['ppc-shorten']);
 		$options['excerpt'] = htmlspecialchars($_POST['ppc-excerpt']);
 		$options['parent']  = htmlspecialchars($_POST['ppc-parent']);
 		$options['order']   = htmlspecialchars($_POST['ppc-order']);
@@ -83,7 +85,9 @@ function ppc_postspercat_options()
 	{
 		$options = array(
 			"posts"     => "5",
-			"excerpt"   => True,
+			"titlelength" => "",
+			"shorten"   => False,
+			"excerpt"   => "none",
 			"parent"    => False,
 			"order"     => "ID",
 			"list"      => True,
@@ -135,10 +139,22 @@ function ppc_postspercat_options()
 			<th scope="row"><label><?php _e("Articles per category", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['posts']; ?>" name="ppc-posts" id="ppc-posts" size="2" /></td>
 		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Post title length", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['titlelength']; ?>" name="ppc-titlelength" id="ppc-titlelength" size="2" /> (<?php _e("leave blank for full post title length, optimal 34 characters", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Shorten post title", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['shorten']) ? ' checked="checked"' : ''; ?> name="ppc-shorten" id="ppc-shorten" /></td>
+		</tr>
 
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Excerpt for first articles", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['excerpt']) ? ' checked="checked"' : ''; ?> name="ppc-excerpt" id="ppc-excerpt" /></td>
+			<th scope="row"><label><?php _e("Show excerpt", "ppc"); ?></label></th>
+			<td>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="none" <?php if ( $options['excerpt'] == "none" ) { echo "checked"; } ?>/> <?php _e("Don't display", "ppc"); ?><br/>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="first" <?php if ( $options['excerpt'] == "first" ) { echo "checked"; } ?>/> <?php _e("For first article only", "ppc"); ?><br/>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="all" <?php if ( $options['excerpt'] == "all" ) { echo "checked"; } ?>/> <?php _e("For all articles", "ppc"); ?>
+			</td>
 		</tr>
 	</table>
 
@@ -151,7 +167,7 @@ function ppc_postspercat_options()
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-excerpt, ppc-parent, ppc-order, ppc-list, ppc-include, ppc-exclude" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-parent, ppc-order, ppc-list, ppc-include, ppc-exclude" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -167,8 +183,10 @@ function posts_per_cat()
 	global $blog_url, $ppc_version;
 	$options     = get_option('postspercat');
 	$ppc_posts   = $options['posts'];   // broj članaka za listanje
+	$ppc_shorten = $options['shorten'];   // da li treba skrećivati naslov?
+	$ppc_titlelength = $options['titlelength'];   // dužina naslova u karakterima
 	$ppc_parent  = $options['parent'];  // listanje samo kategorija najvišeg nivoa?
-	$ppc_excerpt = $options['excerpt']; // da li štampati sažetak?
+	$ppc_excerpt = $options['excerpt']; // da li i za koje članke štampati sažetak?
 	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
 
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
@@ -199,9 +217,16 @@ function posts_per_cat()
 			$br = 0; // kontrolni brojač za sažetak prvog članka
 
 			foreach ( $clanci as $clanak ) {
+				if ( $ppc_shorten ) {
+					if ( $ppc_titlelength && mb_strlen($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
+				} else {
+					$naslov = $clanak->post_title;
+				}
 				echo '
-				<li><a href="'.$blog_url.'/?p='.$clanak->ID.'" title="'.$clanak->post_date.'">'.$clanak->post_title.'</a>';
-				if ( $br++ == 0 && $ppc_excerpt ) { // štampamo sažetak prvog članka ako treba
+				<li><a href="'.$blog_url.'/?p='.$clanak->ID.'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
+				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
+					echo "<p>".$clanak->post_excerpt."</p>";
+				} elseif ( $br++ > 0 && $ppc_excerpt == "all" ) { // štampamo sažetak za ostale članke
 					echo "<p>".$clanak->post_excerpt."</p>";
 				}
 				echo "</li>";
@@ -229,4 +254,14 @@ function posts_per_cat()
 <!-- end of Posts-per-Cat -->
 ';
 } // kraj funkcije posts_per_cat()
+
+// unicode substr workaround from http://en.jinzorahelp.com/forums/viewtopic.php?f=18&t=6231
+function substr_utf8($str,$from,$len)
+{
+	# utf8 substr
+	# http://www.yeap.lv
+	return preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$from.'}'.
+'((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$len.'}).*#s',
+'$1',$str);
+}
 ?>
