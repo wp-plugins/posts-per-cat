@@ -23,17 +23,14 @@ Author URI: http://urosevic.net
 
 /* box graphics style */
 #ppc-box .ppc-box .ppc {
+	margin: 0;
 	padding: 10px;
-	border: 1px solid #DEDBD1;
-	background: url(/wp-content/plugins/posts-per-cat/ppc_bg.gif) no-repeat bottom right;
 	clear: none;
 }
 
 /* fonts and colors of content */
 #ppc-box .ppc-box .ppc ul li p {
-	font-size: small;
-	color: gray;
-	clear: none;
+	clear: both;
 }
 
 /* box positioning and spacing */

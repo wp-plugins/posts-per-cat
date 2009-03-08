@@ -53,7 +53,7 @@ function ppc_header_css()
 	global $blog_url, $ppc_dir;
 	echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc.css" type="text/css" media="screen" />';
 	$options = get_option("postspercat");
-	if ( $options['list'] ) {
+	if ( $options['ppccss'] ) {
 		echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc-list.css" type="text/css" media="screen" />';
 	}
 }
@@ -67,15 +67,17 @@ function ppc_postspercat_options()
 	global $ppc_version;
 	if ( $_POST['ppc-submit'] )
 	{
-		$options['posts']   = htmlspecialchars($_POST['ppc-posts']);
+		$options['posts']     = htmlspecialchars($_POST['ppc-posts']);
 		$options['titlelength']   = htmlspecialchars($_POST['ppc-titlelength']);
 		$options['shorten']   = htmlspecialchars($_POST['ppc-shorten']);
-		$options['excerpt'] = htmlspecialchars($_POST['ppc-excerpt']);
-		$options['parent']  = htmlspecialchars($_POST['ppc-parent']);
-		$options['order']   = htmlspecialchars($_POST['ppc-order']);
-		$options['list']    = htmlspecialchars($_POST['ppc-list']);
-		$options['include'] = htmlspecialchars($_POST['ppc-include']);
-		$options['exclude'] = htmlspecialchars($_POST['ppc-exclude']);
+		$options['excerpt']   = htmlspecialchars($_POST['ppc-excerpt']);
+		$options['excleng']   = htmlspecialchars($_POST['ppc-excleng']);
+		$options['parent']    = htmlspecialchars($_POST['ppc-parent']);
+		$options['order']     = htmlspecialchars($_POST['ppc-order']);
+		$options['include']   = htmlspecialchars($_POST['ppc-include']);
+		$options['exclude']   = htmlspecialchars($_POST['ppc-exclude']);
+		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
+		$options['minh']      = htmlspecialchars($_POST['ppc-minh']);
 		update_option("postspercat", $options);
 	}
 
@@ -88,11 +90,13 @@ function ppc_postspercat_options()
 			"titlelength" => "",
 			"shorten"   => False,
 			"excerpt"   => "none",
+			"excleng"   => "100",
 			"parent"    => False,
 			"order"     => "ID",
-			"list"      => True,
 			"include"   => "",
-			"exclude"   => ""
+			"exclude"   => "",
+			"ppccss"    => True,
+			"minh"      => ""
 		);
 		update_option("postspercat", $options);
 	}
@@ -156,18 +160,28 @@ function ppc_postspercat_options()
 				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="all" <?php if ( $options['excerpt'] == "all" ) { echo "checked"; } ?>/> <?php _e("For all articles", "ppc"); ?>
 			</td>
 		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Excerpt length", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> (<?php _e("leave empty for full excerpt length", "ppc"); ?>)</td>
+		</tr>
+
 	</table>
 
 	<h3><?php _e("Optional", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Use PPC CSS StyleSheet?", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['list']) ? ' checked="checked"' : ''; ?> name="ppc-list" id="ppc-list" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
+			<td><input type="checkbox" <?php echo ($options['ppccss']) ? ' checked="checked"' : ''; ?> name="ppc-ppccss" id="ppc-ppccss" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
 		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
+		</tr>
+
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-parent, ppc-order, ppc-list, ppc-include, ppc-exclude" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -187,11 +201,14 @@ function posts_per_cat()
 	$ppc_titlelength = $options['titlelength'];   // dužina naslova u karakterima
 	$ppc_parent  = $options['parent'];  // listanje samo kategorija najvišeg nivoa?
 	$ppc_excerpt = $options['excerpt']; // da li i za koje članke štampati sažetak?
+	$ppc_excleng = $options['excleng']; // dužina sažetka u karakterima
 	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
 
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
 
+	// $ppc_minh    = $options['minh'];    // min-height za kućicu
+	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
 	// uzimamo spisak kategorija iz baze
 	$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
 
@@ -206,7 +223,7 @@ function posts_per_cat()
 			echo '
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$position.'">
-			<div class="ppc">
+			<div class="ppc"'.$ppc_minh.'>
 			<h3><a href="'.$blog_url.'/?cat='.$kat->cat_ID.'">'.$kat->cat_name.'</a></h3>
 			<ul>';
 
@@ -224,10 +241,11 @@ function posts_per_cat()
 				}
 				echo '
 				<li><a href="'.$blog_url.'/?p='.$clanak->ID.'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
+				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
-					echo "<p>".$clanak->post_excerpt."</p>";
+					echo "<p>".$sazetak."</p>";
 				} elseif ( $br++ > 0 && $ppc_excerpt == "all" ) { // štampamo sažetak za ostale članke
-					echo "<p>".$clanak->post_excerpt."</p>";
+					echo "<p>".$sazetak."</p>";
 				}
 				echo "</li>";
 			} // kraj procesiranja svakog članaka u kategoriji $kat

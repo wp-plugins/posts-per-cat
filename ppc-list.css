@@ -7,9 +7,14 @@ Version: 0.0.8
 Author URI: http://urosevic.net
 */
 
+.ppc {
+	border: 1px solid #DEDBD1;
+	background: #fff url(/wp-content/plugins/posts-per-cat/ppc_bg.gif) no-repeat bottom right;
+}
 #ppc-box .ppc-box .ppc h3 {
 	margin: 0 0 10px 0;
-	padding: 0; }
+	padding: 0;
+}
 
 /* list style */
 #ppc-box .ppc-box .ppc ul {
@@ -19,14 +24,15 @@ Author URI: http://urosevic.net
 }
 
 #ppc-box .ppc-box .ppc ul li {
-/*	padding: 0;
-	background: none;*/
 	padding-left: 15px;
 	background: url(/wp-content/plugins/posts-per-cat/bullet.gif) no-repeat left top;
 }
 
 /* fonts and colors of content */
 #ppc-box .ppc-box .ppc ul li p {
-	margin: 0;
+	font-size: 95%;
+	margin: 0 0 17px 0;
 	padding: 0;
+	text-align: left;
+	color: gray;
 }

@@ -1,10 +1,11 @@
 2009-03-08 0.0.8  Aleksandar Urošević <urke@users.sourceforge.net>
 
 	* Added option to display excerpt for first article only, for all articles or not display at all
+	* Added option to shorten excerpts to specified length (in characters)
 	* Added option to shorten post title to specified length (in characters)
 	* Added options for custom categories to include/exclude
 	* Moved Settings links in plugin actions
-	* Fixed ppc-list CSS StyleSheet
+	* Fixed and improved ppc.css and ppc-list.css StyleSheets
 
 2009-03-04 0.0.7  Aleksandar Urošević <urke@users.sourceforge.net>
 
