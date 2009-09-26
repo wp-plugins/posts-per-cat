@@ -3,8 +3,8 @@ Tags: categories, posts, archive, time, past
 Contributors: urkekg
 Donate link: http://urosevic.net/kontakt
 Requires at least: 2.6.0
-Tested up to: 2.7.1
-Stable tag: 0.0.7
+Tested up to: 2.8.4
+Stable tag: 0.0.8
 
 List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
 
@@ -19,6 +19,7 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 * toggle displaying excerpt for first post in list per category
 * toggle usage of custom list CSS StyleSheet
 * category boxes organised in two columns
+* SEO optimized permalink URI's
 * translantable
 * produces XHTML 1.1 valid code
 * published under terms of GNU GPLv3
@@ -30,10 +31,10 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 3. Configure plugin options on `Settings` &rarr; `Posts per Cat` menu
 4. Add to template file code `<?php do_action("ppc"); ?>` (for example in index.php after pagination code)
 
-or in WordPress 2.7
+or in WordPress 2.7+
 
 1. Go to your `Plugins` &rarr; `Add New`
-2. Search for type `Author` and enter keywork `urkekg`
+2. Search for `psots-per-cat`
 3. Click on `Install` link on right of Posts per Cat
 4. Click on red button `Install Now`
 5. Click on `Activate plugin` or `Install Update Now`
