@@ -207,7 +207,6 @@ function posts_per_cat()
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
 
-	// $ppc_minh    = $options['minh'];    // min-height za kućicu
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
 	// uzimamo spisak kategorija iz baze
 	$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
@@ -224,7 +223,7 @@ function posts_per_cat()
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$position.'">
 			<div class="ppc"'.$ppc_minh.'>
-			<h3><a href="'.$blog_url.'/?cat='.$kat->cat_ID.'">'.$kat->cat_name.'</a></h3>
+			<h3><a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a></h3>
 			<ul>';
 
 			// uzimamo najnovijih N članaka iz kategorije $kat
@@ -240,7 +239,7 @@ function posts_per_cat()
 					$naslov = $clanak->post_title;
 				}
 				echo '
-				<li><a href="'.$blog_url.'/?p='.$clanak->ID.'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
+				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
 				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
 					echo "<p>".$sazetak."</p>";
