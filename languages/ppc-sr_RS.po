@@ -4,15 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ppc-sr_RS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-03 08:31+0200\n"
-"PO-Revision-Date: 2009-03-08 21:05+0100\n"
+"POT-Creation-Date: 2009-09-26 09:16+0200\n"
+"PO-Revision-Date: 2009-09-26 09:17+0100\n"
 "Last-Translator: Aleksandar Urošević <urke@users.sourceforge.net>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: KBabel 1.11.4\n"
 
 #: ../wp-postspercat.php:143
@@ -84,7 +83,8 @@ msgstr "Дужина наслова у карактерима"
 msgid "Posts options"
 msgstr "Поставке чланака"
 
-#: ../wp-postspercat.php:62 ../wp-postspercat.php:105
+#: ../wp-postspercat.php:62
+#: ../wp-postspercat.php:105
 msgid "Posts per Cat"
 msgstr "Чланци по категоријама"
 
@@ -93,12 +93,8 @@ msgid "Posts per Cat Options"
 msgstr "Подешавања „Чланци по категоријама“"
 
 #: ../wp-postspercat.php:111
-msgid ""
-"Put next code to template files in place where you wish to display PPC boxes "
-"(but not in Loop!):"
-msgstr ""
-"Следећи кôд поставите на место где желите да кућице чланака по категоријама "
-"буду приказане (немојте стављати у <em>loop</em>!)"
+msgid "Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):"
+msgstr "Следећи кôд поставите на место где желите да кућице чланака по категоријама буду приказане (немојте стављати у <em>loop</em>!)"
 
 #: ../wp-postspercat.php:187
 msgid "Save Changes"
@@ -117,15 +113,8 @@ msgid "Show excerpt"
 msgstr "Прикажи сажетке"
 
 #: ../wp-postspercat.php:109
-msgid ""
-"This plugin list latests N article titles from categories and group them in "
-"category boxes organized in two columns.<br />Posts-Per-Cat has initially "
-"created for <a href=\"http://webnovinar.org\">Web Journalism School</a>."
-msgstr ""
-"Овај додатак листа последњих <em>Н</em> наслова чланака из категорија, "
-"групише их у кућице распоређене у две колоне.<br />Додатак „Чланци по "
-"категоријама“ иницијално је написан за <a href=\"http://webnovinar.org"
-"\">Школу веб новинарства</a>."
+msgid "This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href=\"http://webnovinar.org\">Web Journalism School</a>."
+msgstr "Овај додатак листа последњих <em>Н</em> наслова чланака из категорија, групише их у кућице распоређене у две колоне.<br />Додатак „Чланци по категоријама“ иницијално је написан за <a href=\"http://webnovinar.org\">Школу веб новинарства</a>."
 
 #: ../wp-postspercat.php:110
 msgid "Usage"
@@ -135,7 +124,8 @@ msgstr "Употреба"
 msgid "Use PPC CSS StyleSheet?"
 msgstr "Користи припадајући <em>CSS</em> стил за листу"
 
-#: ../wp-postspercat.php:118 ../wp-postspercat.php:122
+#: ../wp-postspercat.php:118
+#: ../wp-postspercat.php:122
 msgid "comma separated category ID's"
 msgstr "ИД категорија раздвојени запетама"
 
@@ -149,10 +139,9 @@ msgstr "у пикселима (оставите празно за искључи
 
 #: ../wp-postspercat.php:148
 msgid "leave blank for full post title length, optimal 34 characters"
-msgstr ""
-"оставите празно за игнорисање скраћивања, оптимална дужина наслова 34 "
-"карактера"
+msgstr "оставите празно за игнорисање скраћивања, оптимална дужина наслова 34 карактера"
 
 #: ../wp-postspercat.php:165
 msgid "leave empty for full excerpt length"
 msgstr "оставите празно за пуну дужину сажетка"
+
