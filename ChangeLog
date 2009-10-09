@@ -1,3 +1,8 @@
+2009-10-09 0.0.9  Aleksandar Urošević <urke@users.sourceforge.net>
+
+	* Fixed XHTML validation error for div class
+	* Added full post title as link title
+
 2009-09-26 0.0.8  Aleksandar Urošević <urke@users.sourceforge.net>
 
 	* Replaced category and psot URI with permalink

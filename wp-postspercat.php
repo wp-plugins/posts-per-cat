@@ -20,10 +20,10 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.8
+Version: 0.0.9
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.8";
+$ppc_version = "0.0.9";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
@@ -222,7 +222,7 @@ function posts_per_cat()
 			echo '
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$position.'">
-			<div class="ppc"'.$ppc_minh.'>
+			<div class="ppc" '.$ppc_minh.'>
 			<h3><a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a></h3>
 			<ul>';
 
@@ -235,11 +235,13 @@ function posts_per_cat()
 			foreach ( $clanci as $clanak ) {
 				if ( $ppc_shorten ) {
 					if ( $ppc_titlelength && mb_strlen($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
+					$naslov_title = " - ".$clanak->post_title;
 				} else {
 					$naslov = $clanak->post_title;
+					$naslov_title = "";
 				}
 				echo '
-				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
+				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.$naslov_title.'">'.$naslov.'</a>';
 				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
 					echo "<p>".$sazetak."</p>";
