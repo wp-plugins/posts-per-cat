@@ -20,10 +20,10 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.9
+Version: 0.0.10
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.9";
+$ppc_version = "0.0.10";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
@@ -74,6 +74,7 @@ function ppc_postspercat_options()
 		$options['excleng']   = htmlspecialchars($_POST['ppc-excleng']);
 		$options['parent']    = htmlspecialchars($_POST['ppc-parent']);
 		$options['order']     = htmlspecialchars($_POST['ppc-order']);
+		$options['nosticky']  = htmlspecialchars($_POST['ppc-nosticky']);
 		$options['include']   = htmlspecialchars($_POST['ppc-include']);
 		$options['exclude']   = htmlspecialchars($_POST['ppc-exclude']);
 		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
@@ -96,7 +97,8 @@ function ppc_postspercat_options()
 			"include"   => "",
 			"exclude"   => "",
 			"ppccss"    => True,
-			"minh"      => ""
+			"minh"      => "",
+			"nosticky"	=> False
 		);
 		update_option("postspercat", $options);
 	}
@@ -151,6 +153,10 @@ function ppc_postspercat_options()
 			<th scope="row"><label><?php _e("Shorten post title", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['shorten']) ? ' checked="checked"' : ''; ?> name="ppc-shorten" id="ppc-shorten" /></td>
 		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Hide sticky posts", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['nosticky']) ? ' checked="checked"' : ''; ?> name="ppc-nosticky" id="ppc-nosticky" /></td>
+		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Show excerpt", "ppc"); ?></label></th>
@@ -203,6 +209,7 @@ function posts_per_cat()
 	$ppc_excerpt = $options['excerpt']; // da li i za koje članke štampati sažetak?
 	$ppc_excleng = $options['excleng']; // dužina sažetka u karakterima
 	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
+	$ppc_nosticky = $options['nosticky'];   // listati ili ne lepljive članke?
 
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
@@ -227,8 +234,18 @@ function posts_per_cat()
 			<ul>';
 
 			// uzimamo najnovijih N članaka iz kategorije $kat
-			$clanci = get_posts('numberposts='.$ppc_posts.'&order=DSC&orderby=date&category='.$kat->cat_ID);
-
+			if ( $ppc_nosticky ) {
+				$clanci = get_posts(array(
+					'post__not_in' => get_option("sticky_posts"),
+					'numberposts' => $ppc_posts,
+					'order' => "DSC",
+					'orderby' => "date",
+					'category' => $kat->cat_ID
+				));
+			} else {
+				$clanci = get_posts('numberposts='.$ppc_posts.'&order=DSC&orderby=date&category='.$kat->cat_ID);
+			}
+			
 			// procesiramo svaki članak u kategoriji $kat
 			$br = 0; // kontrolni brojač za sažetak prvog članka
 

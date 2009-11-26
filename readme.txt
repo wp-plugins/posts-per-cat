@@ -17,6 +17,7 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 * include or exclude child categories
 * ordering boxes by category ID or title
 * toggle displaying excerpt for first post in list per category
+* toggle displaying sticky posts
 * toggle usage of custom list CSS StyleSheet
 * category boxes organised in two columns
 * SEO optimized permalink URI's
@@ -26,7 +27,7 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 
 == Installation ==
 
-1. Put `wp-posts-per-cat/` directory into `[wordpress_dir]/wp-content/plugins/`
+1. Put `posts-per-cat` directory into `[wordpress_dir]/wp-content/plugins/`
 2. Go into the `WordPress` admin interface and activate the plugin
 3. Configure plugin options on `Settings` &rarr; `Posts per Cat` menu
 4. Add to template file code `<?php do_action("ppc"); ?>` (for example in index.php after pagination code)
@@ -34,8 +35,8 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 or in WordPress 2.7+
 
 1. Go to your `Plugins` &rarr; `Add New`
-2. Search for `psots-per-cat`
-3. Click on `Install` link on right of Posts per Cat
+2. Search for `posts-per-cat`
+3. Click on `Install` link on right of `Posts per Cat`
 4. Click on red button `Install Now`
 5. Click on `Activate plugin` or `Install Update Now`
 6. Configure plugin options on `Settings` &rarr; `Posts per Cat` menu
@@ -43,13 +44,9 @@ or in WordPress 2.7+
 
 == Frequently Asked Questions ==
 
-= Where is real FAQ? =
+= I would like to get a list of posts but just one category =
 
-Give me questions, and I'll return U answers :)
-
-= How I can help? =
-
-Post suggestions and injoy in WordPress forum.
+Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
 1. Posts per Cat Settings menu
