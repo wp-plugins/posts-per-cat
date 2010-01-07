@@ -79,6 +79,7 @@ function ppc_postspercat_options()
 		$options['exclude']   = htmlspecialchars($_POST['ppc-exclude']);
 		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
 		$options['minh']      = htmlspecialchars($_POST['ppc-minh']);
+		$options['column']      = htmlspecialchars($_POST['ppc-column']);
 		update_option("postspercat", $options);
 	}
 
@@ -98,7 +99,8 @@ function ppc_postspercat_options()
 			"exclude"   => "",
 			"ppccss"    => True,
 			"minh"      => "",
-			"nosticky"	=> False
+			"nosticky"	=> False,
+			"column"      => "2"
 		);
 		update_option("postspercat", $options);
 	}
@@ -112,6 +114,21 @@ function ppc_postspercat_options()
 	<h3><?php _e("Usage", "ppc"); ?></h3>
 	<p><?php _e('Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):', 'ppc'); ?></p>
 	<code>&lt;?php do_action("ppc"); ?&gt;</code>
+
+	<h3><?php _e("Boxes", "ppc"); ?></h3>
+	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Number of Columns", "ppc"); ?></label></th>
+			<td>
+				<input type="radio" id="ppc-column" name="ppc-column" value="2" <?php if ( $options['column'] == "2" ) { echo "checked"; } ?>/> <?php _e("Two columns per row", "ppc"); ?><br/>
+				<input type="radio" id="ppc-column" name="ppc-column" value="1" <?php if ( $options['column'] == "1" ) { echo "checked"; } ?>/> <?php _e("One column per row (full width)", "ppc"); ?><br/>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
+		</tr>
+	</table>
 
 	<h3><?php _e("Category options", "ppc"); ?></h3>
 	<table class="form-table">
@@ -176,18 +193,13 @@ function ppc_postspercat_options()
 	<h3><?php _e("Optional", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Use PPC CSS StyleSheet?", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Use PPC for styling list?", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['ppccss']) ? ' checked="checked"' : ''; ?> name="ppc-ppccss" id="ppc-ppccss" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
 		</tr>
-		<tr valign="top">
-			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
-		</tr>
-
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -213,6 +225,7 @@ function posts_per_cat()
 
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
+	if ( $options['column'] == "1" ) { $ppc_column = " class=\"full\""; } else { $ppc_column = ""; }
 
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
 	// uzimamo spisak kategorija iz baze
@@ -222,7 +235,7 @@ function posts_per_cat()
 	$position = "left";
 	echo '
 <!-- start of Posts-per-Cat version '.$ppc_version.' -->
-	<div id="ppc-box">
+	<div id="ppc-box"'.$ppc_column.'>
 ';
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
 		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False) ) { // uzimamo samo kategorije sa člancima
@@ -278,7 +291,9 @@ function posts_per_cat()
 				$position = "right";
 			} else {
 				$position = "left";
-				echo '<div class="clear"></div>';
+				if ( $ppc_column == "" ) {
+					echo '<div class="clear"></div>';
+				}
 			}
 		} // kraj uzimanja samo kategorija sa člancima
 	} // kraj foreach petlje $kategorije as $kat

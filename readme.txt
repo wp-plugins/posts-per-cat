@@ -3,8 +3,8 @@ Tags: categories, posts, archive, time, past
 Contributors: urkekg
 Donate link: http://urosevic.net/kontakt
 Requires at least: 2.6.0
-Tested up to: 2.8.4
-Stable tag: 0.0.9
+Tested up to: 2.9.1
+Stable tag: 0.0.10
 
 List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
 
@@ -13,6 +13,7 @@ List latests N article titles from all or top level only categories and group th
 Posts per Cat is a simple plugin that get all categories from database, then list last N posts from all category in boxes organised in two columns.
 
 = Features =
+* you can chose two columns per row, or only one (full width)
 * configurable number of post titles to display per category
 * include or exclude child categories
 * ordering boxes by category ID or title
@@ -44,11 +45,12 @@ or in WordPress 2.7+
 
 == Frequently Asked Questions ==
 
-= I would like to get a list of posts but just one category =
+= I would like to get a list of posts but just from one category =
 
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
 1. Posts per Cat Settings menu
 2. Posts per Cat Settings page
-3. Posts per Cat plugin in action
+3. Posts per Cat plugin with two columns per row (default)
+4. Posts per Cat plugin with one column per row (full width)

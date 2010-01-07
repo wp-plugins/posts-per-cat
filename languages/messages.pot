@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2009-11-26 20:46+0100\n"
+        "POT-Creation-Date: 2010-01-07 13:36+0100\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,80 +15,92 @@ msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: ../wp-postspercat.php:145
+#: ../wp-postspercat.php:162
 msgid   "Articles per category"
 msgstr  ""
 
-#: ../wp-postspercat.php:135
+#: ../wp-postspercat.php:118
+msgid   "Boxes"
+msgstr  ""
+
+#: ../wp-postspercat.php:152
 msgid   "Category ID"
 msgstr  ""
 
-#: ../wp-postspercat.php:136
+#: ../wp-postspercat.php:153
 msgid   "Category Name"
 msgstr  ""
 
-#: ../wp-postspercat.php:116
+#: ../wp-postspercat.php:133
 msgid   "Category options"
 msgstr  ""
 
-#: ../wp-postspercat.php:110
+#: ../wp-postspercat.php:112
 #, php-format
 msgid   "Currently installed version: <strong>%s</strong>"
 msgstr  ""
 
-#: ../wp-postspercat.php:164
+#: ../wp-postspercat.php:181
 msgid   "Don't display"
 msgstr  ""
 
-#: ../wp-postspercat.php:170
+#: ../wp-postspercat.php:187
 msgid   "Excerpt length"
 msgstr  ""
 
-#: ../wp-postspercat.php:123
+#: ../wp-postspercat.php:140
 msgid   "Exclude category"
 msgstr  ""
 
-#: ../wp-postspercat.php:166
+#: ../wp-postspercat.php:183
 msgid   "For all articles"
 msgstr  ""
 
-#: ../wp-postspercat.php:165
+#: ../wp-postspercat.php:182
 msgid   "For first article only"
 msgstr  ""
 
-#: ../wp-postspercat.php:157
+#: ../wp-postspercat.php:174
 msgid   "Hide sticky posts"
 msgstr  ""
 
-#: ../wp-postspercat.php:119
+#: ../wp-postspercat.php:136
 msgid   "Include category"
 msgstr  ""
 
-#: ../wp-postspercat.php:183
+#: ../wp-postspercat.php:128
 msgid   "Minimal height of box"
 msgstr  ""
 
-#: ../wp-postspercat.php:128
+#: ../wp-postspercat.php:121
+msgid   "Number of Columns"
+msgstr  ""
+
+#: ../wp-postspercat.php:124
+msgid   "One column per row (full width)"
+msgstr  ""
+
+#: ../wp-postspercat.php:145
 msgid   "Only top level categories"
 msgstr  ""
 
-#: ../wp-postspercat.php:176
+#: ../wp-postspercat.php:193
 msgid   "Optional"
 msgstr  ""
 
-#: ../wp-postspercat.php:133
+#: ../wp-postspercat.php:150
 msgid   "Order categories by"
 msgstr  ""
 
-#: ../wp-postspercat.php:149
+#: ../wp-postspercat.php:166
 msgid   "Post title length"
 msgstr  ""
 
-#: ../wp-postspercat.php:142
+#: ../wp-postspercat.php:159
 msgid   "Posts options"
 msgstr  ""
 
-#: ../wp-postspercat.php:62 ../wp-postspercat.php:107
+#: ../wp-postspercat.php:62 ../wp-postspercat.php:109
 msgid   "Posts per Cat"
 msgstr  ""
 
@@ -96,12 +108,12 @@ msgstr  ""
 msgid   "Posts per Cat Options"
 msgstr  ""
 
-#: ../wp-postspercat.php:113
+#: ../wp-postspercat.php:115
 msgid   "Put next code to template files in place where you wish to display "
         "PPC boxes (but not in Loop!):"
 msgstr  ""
 
-#: ../wp-postspercat.php:193
+#: ../wp-postspercat.php:205
 msgid   "Save Changes"
 msgstr  ""
 
@@ -109,45 +121,49 @@ msgstr  ""
 msgid   "Settings"
 msgstr  ""
 
-#: ../wp-postspercat.php:153
+#: ../wp-postspercat.php:170
 msgid   "Shorten post title"
 msgstr  ""
 
-#: ../wp-postspercat.php:162
+#: ../wp-postspercat.php:179
 msgid   "Show excerpt"
 msgstr  ""
 
-#: ../wp-postspercat.php:111
+#: ../wp-postspercat.php:113
 msgid   "This plugin list latests N article titles from categories and group "
         "them in category boxes organized in two columns.<br />Posts-Per-Cat "
         "has initially created for <a href=\"http://webnovinar.org\">Web "
         "Journalism School</a>."
 msgstr  ""
 
-#: ../wp-postspercat.php:112
+#: ../wp-postspercat.php:123
+msgid   "Two columns per row"
+msgstr  ""
+
+#: ../wp-postspercat.php:114
 msgid   "Usage"
 msgstr  ""
 
-#: ../wp-postspercat.php:179
-msgid   "Use PPC CSS StyleSheet?"
+#: ../wp-postspercat.php:196
+msgid   "Use PPC for styling list?"
 msgstr  ""
 
-#: ../wp-postspercat.php:120 ../wp-postspercat.php:124
+#: ../wp-postspercat.php:137 ../wp-postspercat.php:141
 msgid   "comma separated category ID's"
 msgstr  ""
 
-#: ../wp-postspercat.php:180
+#: ../wp-postspercat.php:197
 msgid   "enable this option if U see ugly lists in PPC boxes"
 msgstr  ""
 
-#: ../wp-postspercat.php:184
+#: ../wp-postspercat.php:129
 msgid   "in px (leave empty to disable min-height)"
 msgstr  ""
 
-#: ../wp-postspercat.php:150
+#: ../wp-postspercat.php:167
 msgid   "leave blank for full post title length, optimal 34 characters"
 msgstr  ""
 
-#: ../wp-postspercat.php:171
+#: ../wp-postspercat.php:188
 msgid   "leave empty for full excerpt length"
 msgstr  ""
