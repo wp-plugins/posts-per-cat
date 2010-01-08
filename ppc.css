@@ -48,6 +48,14 @@ Author URI: http://urosevic.net
 	margin-top: 9px;
 	font-size: x-small;
 }
+.ppc-box .wp-post-image {
+	position: relative;
+	float: left;
+	display: block;
+	margin-right: 10px;
+	margin-top: 3px;
+	clear: left;
+}
 /* box positioning and spacing */
 #ppc-box .left {
 	position: relative;

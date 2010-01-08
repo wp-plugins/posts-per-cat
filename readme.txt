@@ -1,5 +1,5 @@
 === Posts per Cat ===
-Tags: categories, posts, archive, time, past
+Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style
 Contributors: urkekg
 Donate link: http://urosevic.net/kontakt
 Requires at least: 2.6.0
@@ -59,6 +59,7 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 
 = 0.0.11 (2010-01-08) =
 * Added option to display standalone link to category archive
+* Added support for post thumbnails (require WP 2.9)
 * Better terminology
 
 = 0.0.10 (2010-01-07) =

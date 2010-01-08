@@ -82,6 +82,8 @@ function ppc_postspercat_options()
 		$options['column']      = htmlspecialchars($_POST['ppc-column']);
 		$options['more']      = htmlspecialchars($_POST['ppc-more']);
 		$options['moretxt']      = htmlspecialchars($_POST['ppc-moretxt']);
+		$options['thumb']      = htmlspecialchars($_POST['ppc-thumb']);
+		$options['tsize']      = htmlspecialchars($_POST['ppc-tsize']);
 		update_option("postspercat", $options);
 	}
 
@@ -104,7 +106,9 @@ function ppc_postspercat_options()
 			"nosticky"	=> False,
 			"column"      => "2",
 			"more"      => False,
-			"moretxt"   => __("More from", "ppc")
+			"moretxt"   => __("More from", "ppc"),
+			"thumb"     => False,
+			"tsize"     => "60"
 		);
 		update_option("postspercat", $options);
 	}
@@ -157,6 +161,15 @@ function ppc_postspercat_options()
 				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e("Category Name", "ppc"); ?>
 			</td>
 		</tr>
+
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Standalone link to archives", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['more']) ? ' checked="checked"' : ''; ?> name="ppc-more" id="ppc-more" /> (<?php _e("leave unchecked to link category title to archive", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Archive link prefix", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['moretxt']) ? $options['moretxt'] : _e("More from", "ppc"); ?>" name="ppc-moretxt" id="ppc-moretxt" size="25" /></td>
+		</tr>
 	</table>
 
 	<h3><?php _e("Headlines", "ppc"); ?></h3>
@@ -190,16 +203,14 @@ function ppc_postspercat_options()
 			<th scope="row"><label><?php _e("Excerpt length", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> (<?php _e("leave empty for full excerpt length", "ppc"); ?>)</td>
 		</tr>
-
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Insert link to category archive", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['more']) ? ' checked="checked"' : ''; ?> name="ppc-more" id="ppc-more" /> (<?php _e("leave unchecked to link category title to archive", "ppc"); ?>)</td>
+			<th scope="row"><label><?php _e("Show thumbnail with excerpt", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['thumb']) ? ' checked="checked"' : ''; ?> name="ppc-thumb" id="ppc-thumb" /> (<?php _e("thumbnail is shown only if theme support it, and excerpt is enabled. Require WordPress 2.9 or newer.", "ppc"); ?>)</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Category link prefix", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo ($options['moretxt']) ? $options['moretxt'] : _e("More from", "ppc"); ?>" name="ppc-moretxt" id="ppc-moretxt" size="25" /></td>
+			<th scope="row"><label><?php _e("Thumbnail size", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['tsize']) ? $options['tsize'] : "60"; ?>" name="ppc-tsize" id="ppc-tsize" size="2" /> (<?php _e("enter size in px for thumbnail width (height is same)", "ppc"); ?>)</td>
 		</tr>
-
 	</table>
 
 	<h3><?php _e("Styling", "ppc"); ?></h3>
@@ -211,7 +222,7 @@ function ppc_postspercat_options()
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppx-more, ppx-moretxt" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppc-more, ppc-moretxt, ppc-thumb, ppc-tsize" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -238,6 +249,8 @@ function posts_per_cat()
 	$ppc_moretxt = $options['moretxt']; // prefiks za vezu do arhive kategorije
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
+	$ppc_thumb = $options['thumb']; // da li treba prikazati thumbnail?
+	if ( $options['tsize'] != "60" ) { $ppc_tsize = array($options['tsize'],$options['tsize']); } else { $ppc_tsize = array(60,60); } // visina i sirina thumbnaila u px
 	if ( $options['column'] == "1" ) { $ppc_column = " class=\"full\""; } else { $ppc_column = ""; }
 
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
@@ -295,9 +308,21 @@ function posts_per_cat()
 				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.$naslov_title.'">'.$naslov.'</a>';
 				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
-					echo "<p>".$sazetak."</p>";
+					echo "<p>";
+					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
+						if (  (function_exists('get_the_post_thumbnail')) && (get_the_post_thumbnail())  ) {
+							echo get_the_post_thumbnail( $clanak->ID, $ppc_tsize );
+						}
+					}
+					echo $sazetak."</p>";
 				} elseif ( $br++ > 0 && $ppc_excerpt == "all" ) { // štampamo sažetak za ostale članke
-					echo "<p>".$sazetak."</p>";
+					echo "<p>";
+					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
+						if (  (function_exists('get_the_post_thumbnail')) && (get_the_post_thumbnail())  ) {
+							echo get_the_post_thumbnail( $clanak->ID, $ppc_tsize );
+						}
+					}
+					echo $sazetak."</p>";
 				}
 				echo "</li>";
 			} // kraj procesiranja svakog članaka u kategoriji $kat
