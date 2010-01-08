@@ -20,10 +20,10 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.10
+Version: 0.0.11
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.10";
+$ppc_version = "0.0.11";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
@@ -80,6 +80,8 @@ function ppc_postspercat_options()
 		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
 		$options['minh']      = htmlspecialchars($_POST['ppc-minh']);
 		$options['column']      = htmlspecialchars($_POST['ppc-column']);
+		$options['more']      = htmlspecialchars($_POST['ppc-more']);
+		$options['moretxt']      = htmlspecialchars($_POST['ppc-moretxt']);
 		update_option("postspercat", $options);
 	}
 
@@ -100,7 +102,9 @@ function ppc_postspercat_options()
 			"ppccss"    => True,
 			"minh"      => "",
 			"nosticky"	=> False,
-			"column"      => "2"
+			"column"      => "2",
+			"more"      => False,
+			"moretxt"   => __("More from", "ppc")
 		);
 		update_option("postspercat", $options);
 	}
@@ -130,7 +134,7 @@ function ppc_postspercat_options()
 		</tr>
 	</table>
 
-	<h3><?php _e("Category options", "ppc"); ?></h3>
+	<h3><?php _e("Categoryes", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Include category", "ppc"); ?></label></th>
@@ -153,21 +157,20 @@ function ppc_postspercat_options()
 				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e("Category Name", "ppc"); ?>
 			</td>
 		</tr>
-
 	</table>
 
-	<h3><?php _e("Posts options", "ppc"); ?></h3>
+	<h3><?php _e("Headlines", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Articles per category", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Number of headlines", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['posts']; ?>" name="ppc-posts" id="ppc-posts" size="2" /></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Post title length", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Headline length", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['titlelength']; ?>" name="ppc-titlelength" id="ppc-titlelength" size="2" /> (<?php _e("leave blank for full post title length, optimal 34 characters", "ppc"); ?>)</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Shorten post title", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Shorten headline", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['shorten']) ? ' checked="checked"' : ''; ?> name="ppc-shorten" id="ppc-shorten" /></td>
 		</tr>
 		<tr valign="top">
@@ -188,9 +191,18 @@ function ppc_postspercat_options()
 			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> (<?php _e("leave empty for full excerpt length", "ppc"); ?>)</td>
 		</tr>
 
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Insert link to category archive", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['more']) ? ' checked="checked"' : ''; ?> name="ppc-more" id="ppc-more" /> (<?php _e("leave unchecked to link category title to archive", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Category link prefix", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['moretxt']) ? $options['moretxt'] : _e("More from", "ppc"); ?>" name="ppc-moretxt" id="ppc-moretxt" size="25" /></td>
+		</tr>
+
 	</table>
 
-	<h3><?php _e("Optional", "ppc"); ?></h3>
+	<h3><?php _e("Styling", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Use PPC for styling list?", "ppc"); ?></label></th>
@@ -199,7 +211,7 @@ function ppc_postspercat_options()
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppx-more, ppx-moretxt" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -222,7 +234,8 @@ function posts_per_cat()
 	$ppc_excleng = $options['excleng']; // dužina sažetka u karakterima
 	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
 	$ppc_nosticky = $options['nosticky'];   // listati ili ne lepljive članke?
-
+	$ppc_more    = $options['more']; // posebnaveza do arhive kategorije?
+	$ppc_moretxt = $options['moretxt']; // prefiks za vezu do arhive kategorije
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
 	if ( $options['column'] == "1" ) { $ppc_column = " class=\"full\""; } else { $ppc_column = ""; }
@@ -239,11 +252,19 @@ function posts_per_cat()
 ';
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
 		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False) ) { // uzimamo samo kategorije sa člancima
+			// da li treba veza da ide na naslov kategorije ili na posebnu vezu?
+			if ( $ppc_more ) {
+				$ppc_cattitle = $kat->cat_name;
+				$ppc_moreadd = '<div class="ppc-more"><a href="'.get_category_link( $kat->cat_ID ).'">'.$ppc_moretxt.' '.__('&#8220;', 'ppc').$ppc_cattitle.__('&#8221;', 'ppc').'</a></div>';
+			} else {
+				$ppc_cattitle = '<a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a>';
+				$ppc_moreadd = "";
+			}
 			echo '
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$position.'">
 			<div class="ppc" '.$ppc_minh.'>
-			<h3><a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a></h3>
+			<h3>'.$ppc_cattitle.'</h3>
 			<ul>';
 
 			// uzimamo najnovijih N članaka iz kategorije $kat
@@ -283,6 +304,7 @@ function posts_per_cat()
 
 			echo '
 			</ul>
+			'.$ppc_moreadd.'
 			</div>
 		</div>
 		<!-- end of Category Box -->

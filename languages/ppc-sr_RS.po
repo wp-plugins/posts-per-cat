@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ppc-sr_RS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-07 13:36+0100\n"
-"PO-Revision-Date: 2010-01-07 13:37+0100\n"
+"POT-Creation-Date: 2010-01-08 21:41+0100\n"
+"PO-Revision-Date: 2010-01-08 21:44+0100\n"
 "Last-Translator: Aleksandar Urošević <urke@users.sourceforge.net>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "MIME-Version: 1.0\n"
@@ -14,93 +14,110 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../wp-postspercat.php:162
-msgid "Articles per category"
-msgstr "Број чланака по категорији"
+#: ../wp-postspercat.php:258
+msgid "&#8220;"
+msgstr "„"
 
-#: ../wp-postspercat.php:118
+#: ../wp-postspercat.php:258
+msgid "&#8221;"
+msgstr "“"
+
+#: ../wp-postspercat.php:122
 msgid "Boxes"
 msgstr "Кутије"
 
-#: ../wp-postspercat.php:152
+#: ../wp-postspercat.php:156
 msgid "Category ID"
 msgstr "ИД-у категорије"
 
-#: ../wp-postspercat.php:153
+#: ../wp-postspercat.php:157
 msgid "Category Name"
 msgstr "Називу категорије"
 
-#: ../wp-postspercat.php:133
-msgid "Category options"
-msgstr "Опције категорија"
+#: ../wp-postspercat.php:199
+msgid "Category link prefix"
+msgstr "Предложак везе категорије"
 
-#: ../wp-postspercat.php:112
+#: ../wp-postspercat.php:137
+msgid "Categoryes"
+msgstr "Категорије"
+
+#: ../wp-postspercat.php:116
 #, php-format
 msgid "Currently installed version: <strong>%s</strong>"
 msgstr "Актуелна верзија: <strong>%s</strong>"
 
-#: ../wp-postspercat.php:181
+#: ../wp-postspercat.php:184
 msgid "Don't display"
 msgstr "Не приказуј"
 
-#: ../wp-postspercat.php:187
+#: ../wp-postspercat.php:190
 msgid "Excerpt length"
 msgstr "Дужина сажетка"
 
-#: ../wp-postspercat.php:140
+#: ../wp-postspercat.php:144
 msgid "Exclude category"
 msgstr "Искључене категорије"
 
-#: ../wp-postspercat.php:183
+#: ../wp-postspercat.php:186
 msgid "For all articles"
 msgstr "За све чланке"
 
-#: ../wp-postspercat.php:182
+#: ../wp-postspercat.php:185
 msgid "For first article only"
 msgstr "Само за први чланак"
 
-#: ../wp-postspercat.php:174
+#: ../wp-postspercat.php:169
+msgid "Headline length"
+msgstr "Дужина наслова"
+
+#: ../wp-postspercat.php:162
+msgid "Headlines"
+msgstr "Наслови"
+
+#: ../wp-postspercat.php:177
 msgid "Hide sticky posts"
 msgstr "Сакриј истакнуте чланке"
 
-#: ../wp-postspercat.php:136
+#: ../wp-postspercat.php:140
 msgid "Include category"
 msgstr "Укључене категорије"
 
-#: ../wp-postspercat.php:128
-msgid "Minimal height of box"
-msgstr "Минимална висина кућице"
+#: ../wp-postspercat.php:195
+msgid "Insert link to category archive"
+msgstr "Издвој везу ка архиви категорије"
 
-#: ../wp-postspercat.php:121
+#: ../wp-postspercat.php:132
+msgid "Minimal height of box"
+msgstr "Минимална висина кутије"
+
+#: ../wp-postspercat.php:107
+#: ../wp-postspercat.php:200
+msgid "More from"
+msgstr "Још из рубрике"
+
+#: ../wp-postspercat.php:125
 msgid "Number of Columns"
 msgstr "Број колона"
 
-#: ../wp-postspercat.php:124
+#: ../wp-postspercat.php:165
+msgid "Number of headlines"
+msgstr "Број наслова"
+
+#: ../wp-postspercat.php:128
 msgid "One column per row (full width)"
 msgstr "Једна колона по реду (целом ширином)"
 
-#: ../wp-postspercat.php:145
+#: ../wp-postspercat.php:149
 msgid "Only top level categories"
 msgstr "Само категорије највишег нивоа"
 
-#: ../wp-postspercat.php:193
-msgid "Optional"
-msgstr "Опционо"
-
-#: ../wp-postspercat.php:150
+#: ../wp-postspercat.php:154
 msgid "Order categories by"
 msgstr "Поредак категорија по"
 
-#: ../wp-postspercat.php:166
-msgid "Post title length"
-msgstr "Дужина наслова у карактерима"
-
-#: ../wp-postspercat.php:159
-msgid "Posts options"
-msgstr "Поставке чланака"
-
 #: ../wp-postspercat.php:62
-#: ../wp-postspercat.php:109
+#: ../wp-postspercat.php:113
 msgid "Posts per Cat"
 msgstr "Чланци по категоријама"
 
@@ -108,11 +125,11 @@ msgstr "Чланци по категоријама"
 msgid "Posts per Cat Options"
 msgstr "Подешавања „Чланци по категоријама“"
 
-#: ../wp-postspercat.php:115
+#: ../wp-postspercat.php:119
 msgid "Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):"
 msgstr "Следећи кôд поставите на место где желите да кућице чланака по категоријама буду приказане (немојте стављати у <em>loop</em>!)"
 
-#: ../wp-postspercat.php:205
+#: ../wp-postspercat.php:217
 msgid "Save Changes"
 msgstr "Сачувај измене"
 
@@ -120,51 +137,69 @@ msgstr "Сачувај измене"
 msgid "Settings"
 msgstr "Подешавања"
 
-#: ../wp-postspercat.php:170
-msgid "Shorten post title"
-msgstr "Скрати дужину наслова"
+#: ../wp-postspercat.php:173
+msgid "Shorten headline"
+msgstr "Скрати наслове"
 
-#: ../wp-postspercat.php:179
+#: ../wp-postspercat.php:182
 msgid "Show excerpt"
 msgstr "Прикажи сажетке"
 
-#: ../wp-postspercat.php:113
+#: ../wp-postspercat.php:205
+msgid "Styling"
+msgstr "Улепшавање"
+
+#: ../wp-postspercat.php:117
 msgid "This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href=\"http://webnovinar.org\">Web Journalism School</a>."
 msgstr "Овај додатак листа последњих <em>Н</em> наслова чланака из категорија, групише их у кућице распоређене у две колоне.<br />Додатак „Чланци по категоријама“ иницијално је написан за <a href=\"http://webnovinar.org\">Школу веб новинарства</a>."
 
-#: ../wp-postspercat.php:123
+#: ../wp-postspercat.php:127
 msgid "Two columns per row"
 msgstr "Две колоне по реду"
 
-#: ../wp-postspercat.php:114
+#: ../wp-postspercat.php:118
 msgid "Usage"
 msgstr "Употреба"
 
-#: ../wp-postspercat.php:196
+#: ../wp-postspercat.php:208
 msgid "Use PPC for styling list?"
-msgstr "Користи ЧПК стилове за листе"
+msgstr "Користи посебне стилове за листе"
 
-#: ../wp-postspercat.php:137
 #: ../wp-postspercat.php:141
+#: ../wp-postspercat.php:145
 msgid "comma separated category ID's"
 msgstr "ИД категорија раздвојени запетама"
 
-#: ../wp-postspercat.php:197
+#: ../wp-postspercat.php:209
 msgid "enable this option if U see ugly lists in PPC boxes"
 msgstr "омогућите ову опцију ако списак наслова не изгледа лепо"
 
-#: ../wp-postspercat.php:129
+#: ../wp-postspercat.php:133
 msgid "in px (leave empty to disable min-height)"
 msgstr "у пикселима (оставите празно за искључивање стила <em>min-height</em>)"
 
-#: ../wp-postspercat.php:167
+#: ../wp-postspercat.php:170
 msgid "leave blank for full post title length, optimal 34 characters"
 msgstr "оставите празно за игнорисање скраћивања, оптимална дужина наслова 34 карактера"
 
-#: ../wp-postspercat.php:188
+#: ../wp-postspercat.php:191
 msgid "leave empty for full excerpt length"
 msgstr "оставите празно за пуну дужину сажетка"
 
+#: ../wp-postspercat.php:196
+msgid "leave unchecked to link category title to archive"
+msgstr "оставите искључено за везу на наслову категорије"
+
+#~ msgid "Articles per category"
+#~ msgstr "Број чланака по категорији"
+#~ msgid "Optional"
+#~ msgstr "Опционо"
+#~ msgid "Post title length"
+#~ msgstr "Дужина наслова у карактерима"
+#~ msgid "Posts options"
+#~ msgstr "Поставке чланака"
+#~ msgid "Shorten post title"
+#~ msgstr "Скрати дужину наслова"
 #~ msgid "Use PPC CSS StyleSheet?"
 #~ msgstr "Користи припадајући <em>CSS</em> стил за листу"
 

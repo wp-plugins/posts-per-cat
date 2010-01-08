@@ -39,7 +39,15 @@ Author URI: http://urosevic.net
 #ppc-box .ppc-box .ppc ul li p {
 	clear: both;
 }
-
+.ppc-more {
+	display: block;
+	clear: both;
+	position: relative;
+	width: 100%;
+	text-align: right;
+	margin-top: 9px;
+	font-size: x-small;
+}
 /* box positioning and spacing */
 #ppc-box .left {
 	position: relative;
