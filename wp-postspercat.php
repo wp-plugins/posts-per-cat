@@ -84,6 +84,8 @@ function ppc_postspercat_options()
 		$options['moretxt']      = htmlspecialchars($_POST['ppc-moretxt']);
 		$options['thumb']      = htmlspecialchars($_POST['ppc-thumb']);
 		$options['tsize']      = htmlspecialchars($_POST['ppc-tsize']);
+		$options['catonly']      = htmlspecialchars($_POST['ppc-catonly']);
+		
 		update_option("postspercat", $options);
 	}
 
@@ -108,7 +110,8 @@ function ppc_postspercat_options()
 			"more"      => False,
 			"moretxt"   => __("More from", "ppc"),
 			"thumb"     => False,
-			"tsize"     => "60"
+			"tsize"     => "60",
+			"catonly"   => False
 		);
 		update_option("postspercat", $options);
 	}
@@ -160,6 +163,11 @@ function ppc_postspercat_options()
 				<input type="radio" id="ppc-order" name="ppc-order" value="ID" <?php if ( $options['order'] == "ID" ) { echo "checked"; } ?>/> <?php _e("Category ID", "ppc"); ?><br/>
 				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e("Category Name", "ppc"); ?>
 			</td>
+		</tr>
+
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Only from displayed category archive", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['catonly']) ? ' checked="checked"' : ''; ?> name="ppc-catonly" id="ppc-catonly" /> (<?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive", "ppc"); ?>)</td>
 		</tr>
 
 		<tr valign="top">
@@ -222,7 +230,7 @@ function ppc_postspercat_options()
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppc-more, ppc-moretxt, ppc-thumb, ppc-tsize" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppc-more, ppc-moretxt, ppc-thumb, ppc-tsize, ppc-catonly" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -250,12 +258,20 @@ function posts_per_cat()
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
 	$ppc_thumb = $options['thumb']; // da li treba prikazati thumbnail?
+	$ppc_catonly = $options['catonly']; // da li treba prikazati samo članke iz kategorije u arhivi kategorije?
+	
 	if ( $options['tsize'] != "60" ) { $ppc_tsize = array($options['tsize'],$options['tsize']); } else { $ppc_tsize = array(60,60); } // visina i sirina thumbnaila u px
 	if ( $options['column'] == "1" ) { $ppc_column = " class=\"full\""; } else { $ppc_column = ""; }
 
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
-	// uzimamo spisak kategorija iz baze
-	$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
+
+	// da li treba filtrirati kategorije na arhivi kategorija?
+	if ( $ppc_catonly && is_category() ) {
+		$kategorije = get_categories('orderby='.$ppc_order.'&include='.get_query_var('cat'));
+	} else {
+		// uzimamo spisak kategorija iz baze
+		$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
+	}
 
 	// klasa za raspoređivanje kutija levo/desno
 	$position = "left";
@@ -263,8 +279,9 @@ function posts_per_cat()
 <!-- start of Posts-per-Cat version '.$ppc_version.' -->
 	<div id="ppc-box"'.$ppc_column.'>
 ';
+
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
-		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False) ) { // uzimamo samo kategorije sa člancima
+		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False || $ppc_catonly == True ) ) { // uzimamo samo kategorije sa člancima
 			// da li treba veza da ide na naslov kategorije ili na posebnu vezu?
 			if ( $ppc_more ) {
 				$ppc_cattitle = $kat->cat_name;
@@ -310,17 +327,15 @@ function posts_per_cat()
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
 					echo "<p>";
 					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
-						if (  (function_exists('get_the_post_thumbnail')) && (get_the_post_thumbnail())  ) {
-							echo get_the_post_thumbnail( $clanak->ID, $ppc_tsize );
-						}
+						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($clanak->ID) ) {
+						echo wp_get_attachment_image( get_post_thumbnail_id($clanak->ID), $ppc_tsize ); }
 					}
 					echo $sazetak."</p>";
 				} elseif ( $br++ > 0 && $ppc_excerpt == "all" ) { // štampamo sažetak za ostale članke
 					echo "<p>";
 					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
-						if (  (function_exists('get_the_post_thumbnail')) && (get_the_post_thumbnail())  ) {
-							echo get_the_post_thumbnail( $clanak->ID, $ppc_tsize );
-						}
+						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($clanak->ID) ) {
+						echo wp_get_attachment_image( get_post_thumbnail_id($clanak->ID), $ppc_tsize ); }
 					}
 					echo $sazetak."</p>";
 				}

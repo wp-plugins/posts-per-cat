@@ -72,4 +72,4 @@ Author URI: http://urosevic.net
 	height: 17px;
 	display: block;
 }
-
+.ppc li p img { float: left; position: relative; margin: 4px 9px 0 0; }
