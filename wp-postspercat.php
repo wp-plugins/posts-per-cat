@@ -315,7 +315,7 @@ function posts_per_cat()
 
 			foreach ( $clanci as $clanak ) {
 				if ( $ppc_shorten ) {
-					if ( $ppc_titlelength && mb_strlen($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
+					if ( $ppc_titlelength && mb_strlen_dh($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
 					$naslov_title = " - ".$clanak->post_title;
 				} else {
 					$naslov = $clanak->post_title;
@@ -323,7 +323,7 @@ function posts_per_cat()
 				}
 				echo '
 				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.$naslov_title.'">'.$naslov.'</a>';
-				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
+				if ( $ppc_excleng && mb_strlen_dh($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
 					echo "<p>";
 					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
@@ -376,5 +376,15 @@ function substr_utf8($str,$from,$len)
 	return preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$from.'}'.
 '((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$len.'}).*#s',
 '$1',$str);
+}
+
+// dirty hack for missing mb_strlen() found at http://www.php.net/manual/en/function.mb-strlen.php#87114
+function mb_strlen_dh($utf8str)
+{
+	if ( function_exists("mb_strlen") ) {
+		return mb_strlen($utf8str);
+	} else {
+		return preg_match_all("/.{1}/us",$utf8str,$dummy);
+	}
 }
 ?>

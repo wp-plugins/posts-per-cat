@@ -3,8 +3,8 @@ Tags: categories, category, posts, archive, archives, date, time, past, listing,
 Contributors: urkekg
 Donate link: http://urosevic.net/kontakt
 Requires at least: 2.6.0
-Tested up to: 2.9.1
-Stable tag: 0.0.10
+Tested up to: 2.9.2
+Stable tag: 0.0.11
 
 List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
 
@@ -57,9 +57,11 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 
 == Changelog ==
 
-= 0.0.11 (2010-01-08) =
+= 0.0.11 (2010-04-24) =
+* Added dirty hack for seervers w/o mb_strlen()
+* Added option to filter categories on category archive
+* Added option to display thumbnails with excerpts
 * Added option to display standalone link to category archive
-* Added support for post thumbnails (require WP 2.9)
 * Better terminology
 
 = 0.0.10 (2010-01-07) =
