@@ -23,7 +23,7 @@ Author: Aleksandar Urošević
 Version: 0.0.12
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.11";
+$ppc_version = "0.0.12";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
