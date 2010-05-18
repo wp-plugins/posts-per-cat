@@ -20,10 +20,10 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.8
+Version: 0.0.11
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.8";
+$ppc_version = "0.0.11";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
@@ -74,10 +74,18 @@ function ppc_postspercat_options()
 		$options['excleng']   = htmlspecialchars($_POST['ppc-excleng']);
 		$options['parent']    = htmlspecialchars($_POST['ppc-parent']);
 		$options['order']     = htmlspecialchars($_POST['ppc-order']);
+		$options['nosticky']  = htmlspecialchars($_POST['ppc-nosticky']);
 		$options['include']   = htmlspecialchars($_POST['ppc-include']);
 		$options['exclude']   = htmlspecialchars($_POST['ppc-exclude']);
 		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
 		$options['minh']      = htmlspecialchars($_POST['ppc-minh']);
+		$options['column']      = htmlspecialchars($_POST['ppc-column']);
+		$options['more']      = htmlspecialchars($_POST['ppc-more']);
+		$options['moretxt']      = htmlspecialchars($_POST['ppc-moretxt']);
+		$options['thumb']      = htmlspecialchars($_POST['ppc-thumb']);
+		$options['tsize']      = htmlspecialchars($_POST['ppc-tsize']);
+		$options['catonly']      = htmlspecialchars($_POST['ppc-catonly']);
+		
 		update_option("postspercat", $options);
 	}
 
@@ -96,7 +104,14 @@ function ppc_postspercat_options()
 			"include"   => "",
 			"exclude"   => "",
 			"ppccss"    => True,
-			"minh"      => ""
+			"minh"      => "",
+			"nosticky"	=> False,
+			"column"      => "2",
+			"more"      => False,
+			"moretxt"   => __("More from", "ppc"),
+			"thumb"     => False,
+			"tsize"     => "60",
+			"catonly"   => False
 		);
 		update_option("postspercat", $options);
 	}
@@ -111,7 +126,22 @@ function ppc_postspercat_options()
 	<p><?php _e('Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):', 'ppc'); ?></p>
 	<code>&lt;?php do_action("ppc"); ?&gt;</code>
 
-	<h3><?php _e("Category options", "ppc"); ?></h3>
+	<h3><?php _e("Boxes", "ppc"); ?></h3>
+	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Number of Columns", "ppc"); ?></label></th>
+			<td>
+				<input type="radio" id="ppc-column" name="ppc-column" value="2" <?php if ( $options['column'] == "2" ) { echo "checked"; } ?>/> <?php _e("Two columns per row", "ppc"); ?><br/>
+				<input type="radio" id="ppc-column" name="ppc-column" value="1" <?php if ( $options['column'] == "1" ) { echo "checked"; } ?>/> <?php _e("One column per row (full width)", "ppc"); ?><br/>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
+		</tr>
+	</table>
+
+	<h3><?php _e("Categoryes", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Include category", "ppc"); ?></label></th>
@@ -135,21 +165,38 @@ function ppc_postspercat_options()
 			</td>
 		</tr>
 
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Only from displayed category archive", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['catonly']) ? ' checked="checked"' : ''; ?> name="ppc-catonly" id="ppc-catonly" /> (<?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive", "ppc"); ?>)</td>
+		</tr>
+
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Standalone link to archives", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['more']) ? ' checked="checked"' : ''; ?> name="ppc-more" id="ppc-more" /> (<?php _e("leave unchecked to link category title to archive", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Archive link prefix", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['moretxt']) ? $options['moretxt'] : _e("More from", "ppc"); ?>" name="ppc-moretxt" id="ppc-moretxt" size="25" /></td>
+		</tr>
 	</table>
 
-	<h3><?php _e("Posts options", "ppc"); ?></h3>
+	<h3><?php _e("Headlines", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Articles per category", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Number of headlines", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['posts']; ?>" name="ppc-posts" id="ppc-posts" size="2" /></td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Post title length", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Headline length", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['titlelength']; ?>" name="ppc-titlelength" id="ppc-titlelength" size="2" /> (<?php _e("leave blank for full post title length, optimal 34 characters", "ppc"); ?>)</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Shorten post title", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Shorten headline", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['shorten']) ? ' checked="checked"' : ''; ?> name="ppc-shorten" id="ppc-shorten" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Hide sticky posts", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['nosticky']) ? ' checked="checked"' : ''; ?> name="ppc-nosticky" id="ppc-nosticky" /></td>
 		</tr>
 
 		<tr valign="top">
@@ -164,24 +211,26 @@ function ppc_postspercat_options()
 			<th scope="row"><label><?php _e("Excerpt length", "ppc"); ?></label></th>
 			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> (<?php _e("leave empty for full excerpt length", "ppc"); ?>)</td>
 		</tr>
-
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Show thumbnail with excerpt", "ppc"); ?></label></th>
+			<td><input type="checkbox" <?php echo ($options['thumb']) ? ' checked="checked"' : ''; ?> name="ppc-thumb" id="ppc-thumb" /> (<?php _e("thumbnail is shown only if theme support it, and excerpt is enabled. Require WordPress 2.9 or newer.", "ppc"); ?>)</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e("Thumbnail size", "ppc"); ?></label></th>
+			<td><input type="text" value="<?php echo ($options['tsize']) ? $options['tsize'] : "60"; ?>" name="ppc-tsize" id="ppc-tsize" size="2" /> (<?php _e("enter size in px for thumbnail width (height is same)", "ppc"); ?>)</td>
+		</tr>
 	</table>
 
-	<h3><?php _e("Optional", "ppc"); ?></h3>
+	<h3><?php _e("Styling", "ppc"); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><label><?php _e("Use PPC CSS StyleSheet?", "ppc"); ?></label></th>
+			<th scope="row"><label><?php _e("Use PPC for styling list?", "ppc"); ?></label></th>
 			<td><input type="checkbox" <?php echo ($options['ppccss']) ? ' checked="checked"' : ''; ?> name="ppc-ppccss" id="ppc-ppccss" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
 		</tr>
-		<tr valign="top">
-			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
-		</tr>
-
 	</table>
 
 	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh" />
+	<input type="hidden" name="page_options" value="ppc-posts, ppc-titlelength, ppc-shorten, ppc-excerpt, ppc-excleng, ppc-parent, ppc-order, ppc-include, ppc-exclude, ppc-ppccss, ppc-minh, ppc-column, ppc-more, ppc-moretxt, ppc-thumb, ppc-tsize, ppc-catonly" />
 
 	<p class="submit">
 		<input type="submit" name="ppc-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
@@ -203,54 +252,99 @@ function posts_per_cat()
 	$ppc_excerpt = $options['excerpt']; // da li i za koje članke štampati sažetak?
 	$ppc_excleng = $options['excleng']; // dužina sažetka u karakterima
 	$ppc_order   = $options['order'];   // poredak po ID-u ili nazivu kategorije?
-
+	$ppc_nosticky = $options['nosticky'];   // listati ili ne lepljive članke?
+	$ppc_more    = $options['more']; // posebnaveza do arhive kategorije?
+	$ppc_moretxt = $options['moretxt']; // prefiks za vezu do arhive kategorije
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
+	$ppc_thumb = $options['thumb']; // da li treba prikazati thumbnail?
+	$ppc_catonly = $options['catonly']; // da li treba prikazati samo članke iz kategorije u arhivi kategorije?
+	
+	if ( $options['tsize'] != "60" ) { $ppc_tsize = array($options['tsize'],$options['tsize']); } else { $ppc_tsize = array(60,60); } // visina i sirina thumbnaila u px
+	if ( $options['column'] == "1" ) { $ppc_column = " class=\"full\""; } else { $ppc_column = ""; }
 
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
-	// uzimamo spisak kategorija iz baze
-	$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
+
+	// da li treba filtrirati kategorije na arhivi kategorija?
+	if ( $ppc_catonly && is_category() ) {
+		$kategorije = get_categories('orderby='.$ppc_order.'&include='.get_query_var('cat'));
+	} else {
+		// uzimamo spisak kategorija iz baze
+		$kategorije = get_categories('orderby='.$ppc_order.'&include='.$ppc_include.'&exclude='.$ppc_exclude);
+	}
 
 	// klasa za raspoređivanje kutija levo/desno
 	$position = "left";
 	echo '
 <!-- start of Posts-per-Cat version '.$ppc_version.' -->
-	<div id="ppc-box">
+	<div id="ppc-box"'.$ppc_column.'>
 ';
+
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
-		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False) ) { // uzimamo samo kategorije sa člancima
+		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False || $ppc_catonly == True ) ) { // uzimamo samo kategorije sa člancima
+			// da li treba veza da ide na naslov kategorije ili na posebnu vezu?
+			if ( $ppc_more ) {
+				$ppc_cattitle = $kat->cat_name;
+				$ppc_moreadd = '<div class="ppc-more"><a href="'.get_category_link( $kat->cat_ID ).'">'.$ppc_moretxt.' '.__('&#8220;', 'ppc').$ppc_cattitle.__('&#8221;', 'ppc').'</a></div>';
+			} else {
+				$ppc_cattitle = '<a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a>';
+				$ppc_moreadd = "";
+			}
 			echo '
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$position.'">
-			<div class="ppc"'.$ppc_minh.'>
-			<h3><a href="'.get_category_link( $kat->cat_ID ).'">'.$kat->cat_name.'</a></h3>
+			<div class="ppc" '.$ppc_minh.'>
+			<h3>'.$ppc_cattitle.'</h3>
 			<ul>';
 
 			// uzimamo najnovijih N članaka iz kategorije $kat
-			$clanci = get_posts('numberposts='.$ppc_posts.'&order=DSC&orderby=date&category='.$kat->cat_ID);
-
+			if ( $ppc_nosticky ) {
+				$clanci = get_posts(array(
+					'post__not_in' => get_option("sticky_posts"),
+					'numberposts' => $ppc_posts,
+					'order' => "DSC",
+					'orderby' => "date",
+					'category' => $kat->cat_ID
+				));
+			} else {
+				$clanci = get_posts('numberposts='.$ppc_posts.'&order=DSC&orderby=date&category='.$kat->cat_ID);
+			}
+			
 			// procesiramo svaki članak u kategoriji $kat
 			$br = 0; // kontrolni brojač za sažetak prvog članka
 
 			foreach ( $clanci as $clanak ) {
 				if ( $ppc_shorten ) {
-					if ( $ppc_titlelength && mb_strlen($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
+					if ( $ppc_titlelength && mb_strlen_dh($clanak->post_title) > ($ppc_titlelength+1) ) { $naslov = substr_utf8($clanak->post_title, 0, $ppc_titlelength)."&hellip;"; } else { $naslov = $clanak->post_title; }
+					$naslov_title = " - ".$clanak->post_title;
 				} else {
 					$naslov = $clanak->post_title;
+					$naslov_title = "";
 				}
 				echo '
-				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.'">'.$naslov.'</a>';
-				if ( $ppc_excleng && mb_strlen($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
+				<li><a href="'.get_permalink($clanak->ID).'" title="'.$clanak->post_date.$naslov_title.'">'.$naslov.'</a>';
+				if ( $ppc_excleng && mb_strlen_dh($clanak->post_excerpt) > ($ppc_excleng+1) ) { $sazetak = substr_utf8($clanak->post_excerpt, 0, $ppc_excleng)."&hellip;"; } else { $sazetak = $clanak->post_excerpt;}
 				if ( $br++ == 0 && ($ppc_excerpt == "first") ) { // štampamo sažetak prvog članka ako treba
-					echo "<p>".$sazetak."</p>";
+					echo "<p>";
+					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
+						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($clanak->ID) ) {
+						echo wp_get_attachment_image( get_post_thumbnail_id($clanak->ID), $ppc_tsize ); }
+					}
+					echo $sazetak."</p>";
 				} elseif ( $br++ > 0 && $ppc_excerpt == "all" ) { // štampamo sažetak za ostale članke
-					echo "<p>".$sazetak."</p>";
+					echo "<p>";
+					if ( $ppc_thumb ) { // ako treba thumbnail, ubacujemo i njega
+						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($clanak->ID) ) {
+						echo wp_get_attachment_image( get_post_thumbnail_id($clanak->ID), $ppc_tsize ); }
+					}
+					echo $sazetak."</p>";
 				}
 				echo "</li>";
 			} // kraj procesiranja svakog članaka u kategoriji $kat
 
 			echo '
 			</ul>
+			'.$ppc_moreadd.'
 			</div>
 		</div>
 		<!-- end of Category Box -->
@@ -259,7 +353,9 @@ function posts_per_cat()
 				$position = "right";
 			} else {
 				$position = "left";
-				echo '<div class="clear"></div>';
+				if ( $ppc_column == "" ) {
+					echo '<div class="clear"></div>';
+				}
 			}
 		} // kraj uzimanja samo kategorija sa člancima
 	} // kraj foreach petlje $kategorije as $kat
@@ -280,5 +376,15 @@ function substr_utf8($str,$from,$len)
 	return preg_replace('#^(?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$from.'}'.
 '((?:[\x00-\x7F]|[\xC0-\xFF][\x80-\xBF]+){0,'.$len.'}).*#s',
 '$1',$str);
+}
+
+// dirty hack for missing mb_strlen() found at http://www.php.net/manual/en/function.mb-strlen.php#87114
+function mb_strlen_dh($utf8str)
+{
+	if ( function_exists("mb_strlen") ) {
+		return mb_strlen($utf8str);
+	} else {
+		return preg_match_all("/.{1}/us",$utf8str,$dummy);
+	}
 }
 ?>

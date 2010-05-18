@@ -3,7 +3,7 @@ CSS Stylesheet for Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.8
+Version: 0.0.10
 Author URI: http://urosevic.net
 */
 #ppc-box {
@@ -21,6 +21,13 @@ Author URI: http://urosevic.net
 	padding: 0;
 }
 
+#ppc-box.full .ppc-box {
+	position: relative;
+	width: 100%;
+	margin-bottom: 18px;
+	clear: both;
+}
+
 /* box graphics style */
 #ppc-box .ppc-box .ppc {
 	margin: 0;
@@ -32,7 +39,23 @@ Author URI: http://urosevic.net
 #ppc-box .ppc-box .ppc ul li p {
 	clear: both;
 }
-
+.ppc-more {
+	display: block;
+	clear: both;
+	position: relative;
+	width: 100%;
+	text-align: right;
+	margin-top: 9px;
+	font-size: x-small;
+}
+.ppc-box .wp-post-image {
+	position: relative;
+	float: left;
+	display: block;
+	margin-right: 10px;
+	margin-top: 3px;
+	clear: left;
+}
 /* box positioning and spacing */
 #ppc-box .left {
 	position: relative;
@@ -42,7 +65,6 @@ Author URI: http://urosevic.net
 	position: relative;
 	float: right;
 }
-
 #ppc-box .clear {
 	position: relative;
 	clear: both;
@@ -50,3 +72,4 @@ Author URI: http://urosevic.net
 	height: 17px;
 	display: block;
 }
+.ppc li p img { float: left; position: relative; margin: 4px 9px 0 0; }

@@ -1,3 +1,20 @@
+2010-04-24 0.0.11 Aleksandar Urošević <urke@users.sourceforge.net>
+
+	* Added dirty hack for seervers w/o mb_strlen()
+	* Added option to filter categories on category archive
+	* Added option to display thumbnails with excerpts
+	* Added option to display standalone link to category archive
+	* Better terminology
+
+2010-01-07 0.0.10 Aleksandar Urošević <urke@users.sourceforge.net>
+
+	* Added option to display two or only one column per row (full width)
+
+2009-10-09 0.0.9  Aleksandar Urošević <urke@users.sourceforge.net>
+
+	* Fixed XHTML validation error for div class
+	* Added full post title as link title
+
 2009-09-26 0.0.8  Aleksandar Urošević <urke@users.sourceforge.net>
 
 	* Replaced category and psot URI with permalink
