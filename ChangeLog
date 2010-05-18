@@ -1,3 +1,7 @@
+2010-05-18 0.0.12 Aleksandar Urošević <urke@users.sourceforge.net>
+
+	* Fixed full width problem in IE6
+
 2010-04-24 0.0.11 Aleksandar Urošević <urke@users.sourceforge.net>
 
 	* Added dirty hack for seervers w/o mb_strlen()

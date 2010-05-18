@@ -20,7 +20,7 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.11
+Version: 0.0.12
 Author URI: http://urosevic.net
 */
 $ppc_version = "0.0.11";

@@ -57,6 +57,9 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 
 == Changelog ==
 
+= 0.0.12 (2010-05-18) =
+* Fixed full width problem in IE6
+
 = 0.0.11 (2010-04-24) =
 * Added dirty hack for seervers w/o mb_strlen()
 * Added option to filter categories on category archive
