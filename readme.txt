@@ -56,6 +56,8 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 4. Posts per Cat plugin with one column per row (full width)
 
 == Changelog ==
+= 0.0.13 (2010-05-27) =
+* Fixed path to CSS on nonroot WP installations
 
 = 0.0.12 (2010-05-18) =
 * Fixed full width problem in IE6
