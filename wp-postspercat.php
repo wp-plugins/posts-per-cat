@@ -20,10 +20,10 @@ Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.12
+Version: 0.0.13
 Author URI: http://urosevic.net
 */
-$ppc_version = "0.0.12";
+$ppc_version = "0.0.13";
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
@@ -51,10 +51,10 @@ if ( function_exists('posts_per_cat') )
 function ppc_header_css()
 {
 	global $blog_url, $ppc_dir;
-	echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc.css" type="text/css" media="screen" />';
+	echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc.css" type="text/css" media="screen" />';
 	$options = get_option("postspercat");
 	if ( $options['ppccss'] ) {
-		echo '<link rel="stylesheet" href="'.$blog_url.'/'.$ppc_dir.'/ppc-list.css" type="text/css" media="screen" />';
+		echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc-list.css" type="text/css" media="screen" />';
 	}
 }
 

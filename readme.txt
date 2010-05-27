@@ -3,8 +3,8 @@ Tags: categories, category, posts, archive, archives, date, time, past, listing,
 Contributors: urkekg
 Donate link: http://urosevic.net/kontakt
 Requires at least: 2.6.0
-Tested up to: 2.9.2
-Stable tag: 0.0.12
+Tested up to: 3.0
+Stable tag: 0.0.13
 
 List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
 
