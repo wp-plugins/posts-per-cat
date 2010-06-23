@@ -56,6 +56,9 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 4. Posts per Cat plugin with one column per row (full width)
 
 == Changelog ==
+= 0.0.14 (2010-06-23) =
+* Added French localisation thanks to Natacha Gangler
+
 = 0.0.13 (2010-05-27) =
 * Fixed path to CSS on nonroot WP installations
 

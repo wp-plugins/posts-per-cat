@@ -1,0 +1,217 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-15 23:01+0200\n"
+"PO-Revision-Date: 2010-06-14 22:41+0100\n"
+"Last-Translator: Natacha Gangler <natgangler@free.fr>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../wp-postspercat.php:288
+msgid "&#8220;"
+msgstr "&#8220;"
+
+#: ../wp-postspercat.php:288
+msgid "&#8221;"
+msgstr "&#8221;"
+
+#: ../wp-postspercat.php:178
+msgid "Archive link prefix"
+msgstr "Préfixe de l'archive"
+
+#: ../wp-postspercat.php:129
+msgid "Boxes"
+msgstr "Encarts"
+
+#: ../wp-postspercat.php:163
+msgid "Category ID"
+msgstr "ID de la catégorie"
+
+#: ../wp-postspercat.php:164
+msgid "Category Name"
+msgstr "Nom de la Catégorie"
+
+#: ../wp-postspercat.php:144
+msgid "Categoryes"
+msgstr "Catégories"
+
+#: ../wp-postspercat.php:123
+#, php-format
+msgid "Currently installed version: <strong>%s</strong>"
+msgstr "Version actuelle"
+
+#: ../wp-postspercat.php:205
+msgid "Don't display"
+msgstr "Ne pas afficher"
+
+#: ../wp-postspercat.php:211
+msgid "Excerpt length"
+msgstr "Longueur de l'extrait"
+
+#: ../wp-postspercat.php:151
+msgid "Exclude category"
+msgstr "Exclure la catégorie"
+
+#: ../wp-postspercat.php:207
+msgid "For all articles"
+msgstr "Pour tous les articles"
+
+#: ../wp-postspercat.php:206
+msgid "For first article only"
+msgstr "Pour le premier article seulement"
+
+#: ../wp-postspercat.php:190
+msgid "Headline length"
+msgstr "Longueur du titre"
+
+#: ../wp-postspercat.php:183
+msgid "Headlines"
+msgstr "Titres"
+
+#: ../wp-postspercat.php:198
+msgid "Hide sticky posts"
+msgstr "Ne pas afficher les articles mis en avant."
+
+#: ../wp-postspercat.php:147
+msgid "Include category"
+msgstr "Inclure la catégorie"
+
+#: ../wp-postspercat.php:139
+msgid "Minimal height of box"
+msgstr "Hauteur minimale de l'encart"
+
+#: ../wp-postspercat.php:111
+#: ../wp-postspercat.php:179
+msgid "More from"
+msgstr "Les articles suivants"
+
+#: ../wp-postspercat.php:132
+msgid "Number of Columns"
+msgstr "Nombre de colonnes"
+
+#: ../wp-postspercat.php:186
+msgid "Number of headlines"
+msgstr "Nombre de titres"
+
+#: ../wp-postspercat.php:135
+msgid "One column per row (full width)"
+msgstr "Afficher sur une colonne (toute la largeur)"
+
+#: ../wp-postspercat.php:169
+msgid "Only from displayed category archive"
+msgstr "Seulement les archives des catégories affichées"
+
+#: ../wp-postspercat.php:156
+msgid "Only top level categories"
+msgstr "Catégories de premier niveau seulement"
+
+#: ../wp-postspercat.php:161
+msgid "Order categories by"
+msgstr "Afficher les catégories par"
+
+#: ../wp-postspercat.php:62
+#: ../wp-postspercat.php:120
+msgid "Posts per Cat"
+msgstr "Posts per Cat"
+
+#: ../wp-postspercat.php:62
+msgid "Posts per Cat Options"
+msgstr "Options de Posts per Cat"
+
+#: ../wp-postspercat.php:126
+msgid "Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):"
+msgstr "Copier ce code dans votre thème aux endroits où vous souhaitez afficher les encarts PPC (mais pas dans une boucle !) :"
+
+#: ../wp-postspercat.php:236
+msgid "Save Changes"
+msgstr "Enregistrer"
+
+#: ../wp-postspercat.php:36
+msgid "Settings"
+msgstr "Configuration"
+
+#: ../wp-postspercat.php:194
+msgid "Shorten headline"
+msgstr "Raccourcir le titre"
+
+#: ../wp-postspercat.php:203
+msgid "Show excerpt"
+msgstr "Afficher un extrait"
+
+#: ../wp-postspercat.php:215
+msgid "Show thumbnail with excerpt"
+msgstr "Afficher un aperçu avec l'extrait"
+
+#: ../wp-postspercat.php:174
+msgid "Standalone link to archives"
+msgstr "Afficher un lien vers les archives de cette catégorie"
+
+#: ../wp-postspercat.php:224
+msgid "Styling"
+msgstr "Mise en forme"
+
+#: ../wp-postspercat.php:124
+msgid "This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href=\"http://webnovinar.org\">Web Journalism School</a>."
+msgstr "Ce plugin affiche un nombre N de titres à partir de vos catégories, en les regroupant dans des encarts répartis sur deux colonnes. <br />Posts-Per-Cat a été conçu à l'origine pour le site <a href=\"http://webnovinar.org\">Web Journalism School</a>."
+
+#: ../wp-postspercat.php:219
+msgid "Thumbnail size"
+msgstr "Taille de l'aperçu"
+
+#: ../wp-postspercat.php:134
+msgid "Two columns per row"
+msgstr "Affichr sur deux colonnes"
+
+#: ../wp-postspercat.php:125
+msgid "Usage"
+msgstr "Utilisation"
+
+#: ../wp-postspercat.php:227
+msgid "Use PPC for styling list?"
+msgstr "Appliquer la mise en forme de PPC aux listes"
+
+#: ../wp-postspercat.php:148
+#: ../wp-postspercat.php:152
+msgid "comma separated category ID's"
+msgstr "IDs de catégories séparées par des virgules"
+
+#: ../wp-postspercat.php:228
+msgid "enable this option if U see ugly lists in PPC boxes"
+msgstr "Activer cette option si les encarts apparaissent sans mise en forme"
+
+#: ../wp-postspercat.php:220
+msgid "enter size in px for thumbnail width (height is same)"
+msgstr "Entrer la largeur de l'aperçu en px (la hauteur est identique)"
+
+#: ../wp-postspercat.php:170
+msgid "exclude categories different from currently displayed on category archive and ignore first category rules on category archive"
+msgstr "Afficher uniquement les catégories différentes de celle dans laquelle PPC est affiché et ignorer la règle concernant la première catégorie"
+
+#: ../wp-postspercat.php:140
+msgid "in px (leave empty to disable min-height)"
+msgstr "En px (laisser vide pour désactiver la limitation de taille)"
+
+#: ../wp-postspercat.php:191
+msgid "leave blank for full post title length, optimal 34 characters"
+msgstr "Pour afficher le titre complet, laisser vide (longueur optimale : 34 caractères)"
+
+#: ../wp-postspercat.php:212
+msgid "leave empty for full excerpt length"
+msgstr "Pour afficher l'extrait complet, ne pas cocher."
+
+#: ../wp-postspercat.php:175
+msgid "leave unchecked to link category title to archive"
+msgstr "Ne pas cocher pour rendre actif le lien du titre vers l'archive de la catégorie"
+
+#: ../wp-postspercat.php:216
+msgid "thumbnail is shown only if theme support it, and excerpt is enabled. Require WordPress 2.9 or newer."
+msgstr "L'aperçu ne s'affiche que si votre thème le permet et si la fonction 'Extrait' est activée. Nécessite WordPress version 2.9 ou ultérieure."
+
