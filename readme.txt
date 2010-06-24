@@ -57,7 +57,7 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 
 == Changelog ==
 = 0.0.14 (2010-06-23) =
-* Added French localisation thanks to Natacha Gangler
+* Added French localisation thanks to Pepita Pop
 
 = 0.0.13 (2010-05-27) =
 * Fixed path to CSS on nonroot WP installations
