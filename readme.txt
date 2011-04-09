@@ -1,10 +1,10 @@
 === Posts per Cat ===
-Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style
+Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail
 Contributors: urkekg
-Donate link: http://urosevic.net/kontakt
-Requires at least: 2.6.0
-Tested up to: 3.0
-Stable tag: 0.0.13
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
+Requires at least: 3.0
+Tested up to: 3.1
+Stable tag: 0.0.14
 
 List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
 
@@ -13,7 +13,7 @@ List latests N article titles from all or top level only categories and group th
 Posts per Cat is a simple plugin that get all categories from database, then list last N posts from all category in boxes organised in two columns.
 
 = Features =
-* you can chose two columns per row, or only one (full width)
+* you can choose two columns per row, or only one (full width)
 * configurable number of post titles to display per category
 * include or exclude child categories
 * ordering boxes by category ID or title
@@ -28,20 +28,19 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 
 == Installation ==
 
-1. Put `posts-per-cat` directory into `[wordpress_dir]/wp-content/plugins/`
-2. Go into the `WordPress` admin interface and activate the plugin
-3. Configure plugin options on `Settings` &rarr; `Posts per Cat` menu
-4. Insert code `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
+= Manual =
+1. Upload the entire `posts-per-cat` folder to the `/wp-content/plugins/` directory.
+1. Activate the plugin through the `Plugins` menu in WordPress.
+1. Configure `Posts per Cat` options.
+1. Insert `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
 
-or in WordPress 2.7+
-
-1. Go to your `Plugins` &rarr; `Add New`
-2. Search for `posts-per-cat`
-3. Click on `Install` link on right of `Posts per Cat`
-4. Click on red button `Install Now`
-5. Click on `Activate plugin` or `Install Update Now`
-6. Configure plugin options on `Settings` &rarr; `Posts per Cat` menu
-7. Insert code `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
+= Automatic =
+1. Go to `Plugins` → `Add New` and search for `posts per cat`.
+1. Click on `Install Now` link bellow `Posts per Cat` search result and aswer `Yes` on popup question.
+1. If you need enter FTP parameters for your host and click on `Proceed`.
+1. Activate the plugin through the `Plugins` menu in WordPress.
+1. Configure `Posts per Cat` options.
+1. Insert `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
 
 == Frequently Asked Questions ==
 
@@ -56,8 +55,11 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 4. Posts per Cat plugin with one column per row (full width)
 
 == Changelog ==
-= 0.0.14 (2010-06-23) =
-* Added French localisation thanks to Pepita Pop
+= 0.0.14 (2011-04-09) =
+* Fixed debug errors
+* Fixed (I hope I do) image URI's in CSS
+* Adapted for WordPress 3.1
+* Added French localisation thanks to Pepita Pop (2010-06-23)
 
 = 0.0.13 (2010-05-27) =
 * Fixed path to CSS on nonroot WP installations

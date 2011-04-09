@@ -1,7 +1,7 @@
 <?php
 /*
     WP Posts-per-Cat lists titles of recent posts in boxes for all single categories
-    Copyright (C) 2009 Aleksandar Urošević <urke@users.sourceforge.net>
+    Copyright (C) 2009-2011 Aleksandar Urošević <urke@users.sourceforge.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,22 +18,27 @@
 
 Plugin Name: Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
-Description: List latests N article titles from categories and group them to category boxes organized in two columns.
-Author: Aleksandar Urošević
+Description: List latests N article titles from categories and group them as category boxes organized in two columns.
 Version: 0.0.14
+Author: Aleksandar Urošević
 Author URI: http://urosevic.net
+License: GNU GPLv3
 */
-$ppc_version = "0.0.14";
+
+define( 'POSTS_PER_CAT_VER', '0.0.14' );
+define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
+define( 'POSTS_PER_CAT_DIR', PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) );
 
 add_action("admin_menu", "ppc_postspercat_menu");
 add_action("ppc", "posts_per_cat");
+
+
 if ( is_admin() ) {
 	$plugin = plugin_basename(__FILE__); 
 	add_filter("plugin_action_links_$plugin", 'addConfigureLink' );
 }
-
 function addConfigureLink( $links ) { 
-  $settings_link = '<a href="options-general.php?page=posts-per-cat/wp-postspercat.php">'.__('Settings').'</a>'; 
+  $settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>'; 
   array_unshift( $links, $settings_link ); 
   return $links; 
 }
@@ -41,50 +46,52 @@ function addConfigureLink( $links ) {
 if ( function_exists('posts_per_cat') ) 
 {
 	$blog_url = get_bloginfo('url');
-	$ppc_dir = PLUGINDIR . '/' . dirname(plugin_basename(__FILE__));
+	//$ppc_dir = PLUGINDIR . '/' . dirname(plugin_basename(__FILE__));
 //	load_plugin_textdomain( 'ppc', PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) . '/languages' );
-	load_plugin_textdomain( "ppc", "$ppc_dir/languages" );
-
+//	load_plugin_textdomain( "ppc", "$ppc_dir/languages" );
+	load_plugin_textdomain( 'ppc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	add_filter('wp_head', 'ppc_header_css', 10);
 }
 
 function ppc_header_css()
 {
-	global $blog_url, $ppc_dir;
-	echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc.css" type="text/css" media="screen" />';
+	//global $blog_url, $ppc_dir;
+	//echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc.css" type="text/css" media="screen" />';
+	echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_DIR.'/ppc.css" type="text/css" media="screen" />';
 	$options = get_option("postspercat");
 	if ( $options['ppccss'] ) {
-		echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc-list.css" type="text/css" media="screen" />';
+		//echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL.'/posts-per-cat/ppc-list.css" type="text/css" media="screen" />';
+		echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_DIR.'/ppc-list.css" type="text/css" media="screen" />';
 	}
 }
 
 function ppc_postspercat_menu() {
-	add_options_page(__('Posts per Cat Options', 'ppc'), __('Posts per Cat', 'ppc'), 8, __FILE__, 'ppc_postspercat_options');
+	//add_options_page(__('Posts per Cat Options', 'ppc'), __('Posts per Cat', 'ppc'), 8, __FILE__, 'ppc_postspercat_options');
+	add_options_page(__('Posts per Cat Options', 'ppc'),  __('Posts per Cat', 'ppc'), 'manage_options', 'posts-per-cat', 'ppc_postspercat_options');
 }
 
 function ppc_postspercat_options()
 {
-	global $ppc_version;
-	if ( $_POST['ppc-submit'] )
+	if ( isset($_POST['ppc-submit']) )
 	{
 		$options['posts']     = htmlspecialchars($_POST['ppc-posts']);
-		$options['titlelength']   = htmlspecialchars($_POST['ppc-titlelength']);
-		$options['shorten']   = htmlspecialchars($_POST['ppc-shorten']);
+		$options['titlelength'] = htmlspecialchars($_POST['ppc-titlelength']);
+		$options['shorten']   = isset($_POST['ppc-shorten']);
 		$options['excerpt']   = htmlspecialchars($_POST['ppc-excerpt']);
 		$options['excleng']   = htmlspecialchars($_POST['ppc-excleng']);
-		$options['parent']    = htmlspecialchars($_POST['ppc-parent']);
+		$options['parent']    = isset($_POST['ppc-parent']);
 		$options['order']     = htmlspecialchars($_POST['ppc-order']);
-		$options['nosticky']  = htmlspecialchars($_POST['ppc-nosticky']);
+		$options['nosticky']  = isset($_POST['ppc-nosticky']);
 		$options['include']   = htmlspecialchars($_POST['ppc-include']);
 		$options['exclude']   = htmlspecialchars($_POST['ppc-exclude']);
-		$options['ppccss']    = htmlspecialchars($_POST['ppc-ppccss']);
+		$options['ppccss']    = isset($_POST['ppc-ppccss']);
 		$options['minh']      = htmlspecialchars($_POST['ppc-minh']);
-		$options['column']      = htmlspecialchars($_POST['ppc-column']);
-		$options['more']      = htmlspecialchars($_POST['ppc-more']);
-		$options['moretxt']      = htmlspecialchars($_POST['ppc-moretxt']);
-		$options['thumb']      = htmlspecialchars($_POST['ppc-thumb']);
-		$options['tsize']      = htmlspecialchars($_POST['ppc-tsize']);
-		$options['catonly']      = htmlspecialchars($_POST['ppc-catonly']);
+		$options['column']    = htmlspecialchars($_POST['ppc-column']);
+		$options['more']      = isset($_POST['ppc-more']);
+		$options['moretxt']   = htmlspecialchars($_POST['ppc-moretxt']);
+		$options['thumb']     = isset($_POST['ppc-thumb']);
+		$options['tsize']     = htmlspecialchars($_POST['ppc-tsize']);
+		$options['catonly']   = isset($_POST['ppc-catonly']);
 		
 		update_option("postspercat", $options);
 	}
@@ -120,8 +127,8 @@ function ppc_postspercat_options()
 	<h2><?php _e('Posts per Cat', 'ppc'); ?></h2>
 	<form method="post" action="" id="ppc-conf">
 	<?php if (function_exists('wp_nonce_field')) { wp_nonce_field('ppc-updatesettings'); } ?>
-	<p><?php echo sprintf(__("Currently installed version: <strong>%s</strong>", "ppc"), $ppc_version); ?></p>
-	<p><?php _e('This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href="http://webnovinar.org">Web Journalism School</a>.', 'ppc'); ?></p>
+	<p><?php echo sprintf(__("Current version: <strong>%s</strong>", "ppc"), POSTS_PER_CAT_VER); ?></p>
+	<p><?php _e('This plugin list latests N article titles from categories and group them in category boxes organized in two columns.', 'ppc'); ?></p>
 	<h3><?php _e("Usage", "ppc"); ?></h3>
 	<p><?php _e('Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):', 'ppc'); ?></p>
 	<code>&lt;?php do_action("ppc"); ?&gt;</code>
@@ -131,13 +138,13 @@ function ppc_postspercat_options()
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Number of Columns", "ppc"); ?></label></th>
 			<td>
-				<input type="radio" id="ppc-column" name="ppc-column" value="2" <?php if ( $options['column'] == "2" ) { echo "checked"; } ?>/> <?php _e("Two columns per row", "ppc"); ?><br/>
-				<input type="radio" id="ppc-column" name="ppc-column" value="1" <?php if ( $options['column'] == "1" ) { echo "checked"; } ?>/> <?php _e("One column per row (full width)", "ppc"); ?><br/>
+				<input type="radio" id="ppc-column" name="ppc-column" value="2" <?php checked( $options['column'], 2 ); ?>/> <?php _e("Two columns per row", "ppc"); ?><br/>
+				<input type="radio" id="ppc-column" name="ppc-column" value="1" <?php checked( $options['column'], 1 ); ?>/> <?php _e("One column per row (full width)", "ppc"); ?><br/>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Minimal height of box", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("in px (leave empty to disable min-height)", "ppc"); ?></td>
+			<td><input type="text" value="<?php echo $options['minh']; ?>" name="ppc-minh" id="ppc-minh" size="2" /> <?php _e("px (leave empty to disable min-height)", "ppc"); ?></td>
 		</tr>
 	</table>
 
@@ -145,34 +152,34 @@ function ppc_postspercat_options()
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Include category", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo ($options['include']); ?>" name="ppc-include" id="ppc-include" /> (<?php _e("comma separated category ID's", "ppc"); ?>)</td>
+			<td><input type="text" value="<?php echo ($options['include']); ?>" name="ppc-include" id="ppc-include" /> <?php _e("comma separated category ID's", "ppc"); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"></label><?php _e("Exclude category", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo ($options['exclude']); ?>" name="ppc-exclude" id="ppc-exclude" /> (<?php _e("comma separated category ID's", "ppc"); ?>)</td>
+			<td><input type="text" value="<?php echo ($options['exclude']); ?>" name="ppc-exclude" id="ppc-exclude" /> <?php _e("comma separated category ID's", "ppc"); ?></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Only top level categories", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['parent']) ? ' checked="checked"' : ''; ?> name="ppc-parent" id="ppc-parent" /></td>
+			<td><input type="checkbox" <?php checked( (bool) $options['parent'], true ); ?> name="ppc-parent" id="ppc-parent" /></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Order categories by", "ppc"); ?></label></th>
 			<td>
-				<input type="radio" id="ppc-order" name="ppc-order" value="ID" <?php if ( $options['order'] == "ID" ) { echo "checked"; } ?>/> <?php _e("Category ID", "ppc"); ?><br/>
-				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php if ( $options['order'] == "name" ) { echo "checked"; } ?>/> <?php _e("Category Name", "ppc"); ?>
+				<input type="radio" id="ppc-order" name="ppc-order" value="ID" <?php checked( $options['order'], "ID" ); ?>/> <?php _e("Category ID", "ppc"); ?><br/>
+				<input type="radio" id="ppc-order" name="ppc-order" value="name" <?php checked( $options['order'], "name" ); ?>/> <?php _e("Category Name", "ppc"); ?>
 			</td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Only from displayed category archive", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['catonly']) ? ' checked="checked"' : ''; ?> name="ppc-catonly" id="ppc-catonly" /> (<?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive", "ppc"); ?>)</td>
+			<td><input type="checkbox" <?php checked( (bool) $options['catonly'], true ); ?> name="ppc-catonly" id="ppc-catonly" /> <?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive", "ppc"); ?></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Standalone link to archives", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['more']) ? ' checked="checked"' : ''; ?> name="ppc-more" id="ppc-more" /> (<?php _e("leave unchecked to link category title to archive", "ppc"); ?>)</td>
+			<td><input type="checkbox" <?php checked( (bool) $options['more'], true ); ?> name="ppc-more" id="ppc-more" /> <?php _e("leave unchecked to link category title to archive", "ppc"); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Archive link prefix", "ppc"); ?></label></th>
@@ -188,32 +195,32 @@ function ppc_postspercat_options()
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Headline length", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo $options['titlelength']; ?>" name="ppc-titlelength" id="ppc-titlelength" size="2" /> (<?php _e("leave blank for full post title length, optimal 34 characters", "ppc"); ?>)</td>
+			<td><input type="text" value="<?php echo $options['titlelength']; ?>" name="ppc-titlelength" id="ppc-titlelength" size="2" /> <?php _e("leave blank for full post title length, optimal 34 characters", "ppc"); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Shorten headline", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['shorten']) ? ' checked="checked"' : ''; ?> name="ppc-shorten" id="ppc-shorten" /></td>
+			<td><input type="checkbox" <?php checked( (bool) $options['shorten'], true ); ?> name="ppc-shorten" id="ppc-shorten" /></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Hide sticky posts", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['nosticky']) ? ' checked="checked"' : ''; ?> name="ppc-nosticky" id="ppc-nosticky" /></td>
+			<td><input type="checkbox" <?php checked( (bool) $options['nosticky'], true ); ?> name="ppc-nosticky" id="ppc-nosticky" /></td>
 		</tr>
 
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Show excerpt", "ppc"); ?></label></th>
 			<td>
-				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="none" <?php if ( $options['excerpt'] == "none" ) { echo "checked"; } ?>/> <?php _e("Don't display", "ppc"); ?><br/>
-				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="first" <?php if ( $options['excerpt'] == "first" ) { echo "checked"; } ?>/> <?php _e("For first article only", "ppc"); ?><br/>
-				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="all" <?php if ( $options['excerpt'] == "all" ) { echo "checked"; } ?>/> <?php _e("For all articles", "ppc"); ?>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="none" <?php checked( $options['excerpt'], "none" ); ?>/> <?php _e("Don't display", "ppc"); ?><br/>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="first" <?php checked( $options['excerpt'], "first" ); ?>/> <?php _e("For first article only", "ppc"); ?><br/>
+				<input type="radio" id="ppc-excerpt" name="ppc-excerpt" value="all" <?php checked( $options['excerpt'], "all" ); ?>/> <?php _e("For all articles", "ppc"); ?>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Excerpt length", "ppc"); ?></label></th>
-			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> (<?php _e("leave empty for full excerpt length", "ppc"); ?>)</td>
+			<td><input type="text" value="<?php echo $options['excleng']; ?>" name="ppc-excleng" id="ppc-excleng" size="2" /> <?php _e("leave empty for full excerpt length", "ppc"); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Show thumbnail with excerpt", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['thumb']) ? ' checked="checked"' : ''; ?> name="ppc-thumb" id="ppc-thumb" /> (<?php _e("thumbnail is shown only if theme support it, and excerpt is enabled. Require WordPress 2.9 or newer.", "ppc"); ?>)</td>
+			<td><input type="checkbox" <?php checked( (bool) $options['thumb'], true ); ?> name="ppc-thumb" id="ppc-thumb" /> <?php _e("thumbnail is shown only if theme support it, and excerpt is enabled", "ppc"); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Thumbnail size", "ppc"); ?></label></th>
@@ -225,7 +232,7 @@ function ppc_postspercat_options()
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><label><?php _e("Use PPC for styling list?", "ppc"); ?></label></th>
-			<td><input type="checkbox" <?php echo ($options['ppccss']) ? ' checked="checked"' : ''; ?> name="ppc-ppccss" id="ppc-ppccss" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
+			<td><input type="checkbox" <?php checked( (bool) $options['ppccss'], true ); ?> name="ppc-ppccss" id="ppc-ppccss" /> (<?php _e("enable this option if U see ugly lists in PPC boxes", "ppc"); ?>)</td>
 		</tr>
 	</table>
 
@@ -237,13 +244,18 @@ function ppc_postspercat_options()
 	</p>
 
 	</form>
+	<h3><?php _e("Support", "ppc"); ?></h3>
+	<p><?php echo sprintf(__('For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.', 'ppc'), "http://wordpress.org/tags/posts-per-cat?forum_id=10"); ?>
+	<h3><?php _e("Donate", "ppc"); ?></h3>
+	<p><?php echo sprintf(__('If you like <a href="%s">Posts per Cat</a> and my other <a href="%s">WordPress extensions</a>, feel free to support my work with <a href="%s">donation</a>.', 'ppc'), "http://wordpress.org/extend/plugins/posts-per-cat/", "http://profiles.wordpress.org/users/urkekg/", "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6"); ?></p>
+
 </div>
 <?php
 }
 
 function posts_per_cat()
 {
-	global $blog_url, $ppc_version;
+	global $blog_url;
 	$options     = get_option('postspercat');
 	$ppc_posts   = $options['posts'];   // broj članaka za listanje
 	$ppc_shorten = $options['shorten'];   // da li treba skrećivati naslov?
@@ -257,7 +269,7 @@ function posts_per_cat()
 	$ppc_moretxt = $options['moretxt']; // prefiks za vezu do arhive kategorije
 	$ppc_include = $options['include']; // kategorije koje će biti izlistane
 	$ppc_exclude = $options['exclude']; // kategorije koje će biti ignorisane
-	$ppc_thumb = $options['thumb']; // da li treba prikazati thumbnail?
+	$ppc_thumb   = $options['thumb']; // da li treba prikazati thumbnail?
 	$ppc_catonly = $options['catonly']; // da li treba prikazati samo članke iz kategorije u arhivi kategorije?
 	
 	if ( $options['tsize'] != "60" ) { $ppc_tsize = array($options['tsize'],$options['tsize']); } else { $ppc_tsize = array(60,60); } // visina i sirina thumbnaila u px
@@ -266,7 +278,7 @@ function posts_per_cat()
 	if ( $options['minh'] > 0 ) { $ppc_minh = 'style="min-height: '.$options['minh'].'px !important;"'; } else { $ppc_minh = ""; }
 
 	// da li treba filtrirati kategorije na arhivi kategorija?
-	if ( $ppc_catonly && is_category() ) {
+	if ( $ppc_catonly && is_category() && !is_home() ) {
 		$kategorije = get_categories('orderby='.$ppc_order.'&include='.get_query_var('cat'));
 	} else {
 		// uzimamo spisak kategorija iz baze
@@ -276,12 +288,12 @@ function posts_per_cat()
 	// klasa za raspoređivanje kutija levo/desno
 	$position = "left";
 	echo '
-<!-- start of Posts-per-Cat version '.$ppc_version.' -->
+<!-- start of Posts-per-Cat version '.POSTS_PER_CAT_VER.' -->
 	<div id="ppc-box"'.$ppc_column.'>
 ';
 
 	foreach ( $kategorije as $kat ) { // procesiramo svaku kategoriju niza
-		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False || $ppc_catonly == True ) ) { // uzimamo samo kategorije sa člancima
+		if ( $kat->count > 0 && ( ($ppc_parent == True && $kat->category_parent == 0) || $ppc_parent == False || ( $ppc_catonly == True && is_category() ) ) ) { // uzimamo samo kategorije sa člancima
 			// da li treba veza da ide na naslov kategorije ili na posebnu vezu?
 			if ( $ppc_more ) {
 				$ppc_cattitle = $kat->cat_name;

@@ -3,13 +3,13 @@ CSS Stylesheet for Posts-per-Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: List latests N article titles from categories and group them to category boxes organized in two columns.
 Author: Aleksandar Urošević
-Version: 0.0.12
+Version: 0.0.14
 Author URI: http://urosevic.net
 */
 
 .ppc {
 	border: 1px solid #DEDBD1;
-	background: #fff url(/wp-content/plugins/posts-per-cat/ppc_bg.gif) no-repeat bottom right;
+	background: #fff url(ppc_bg.gif) no-repeat bottom right;
 }
 #ppc-box .ppc-box .ppc h3 {
 	margin: 0 0 10px 0;
@@ -25,7 +25,7 @@ Author URI: http://urosevic.net
 
 #ppc-box .ppc-box .ppc ul li {
 	padding-left: 15px;
-	background: url(/wp-content/plugins/posts-per-cat/bullet.gif) no-repeat left top;
+	background: url(bullet.gif) no-repeat left top;
 }
 
 /* fonts and colors of content */

@@ -1,5 +1,3 @@
-# translation of ppc-sr_RS.po to Serbian
-# Aleksandar Urošević <urke@users.sourceforge.net>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: ppc-sr_RS\n"
@@ -11,221 +9,284 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: \n"
+"X-Poedit-Country: \n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: \n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
 
-#: ../wp-postspercat.php:288
+#: wp-postspercat.php:300
+#@ ppc
 msgid "&#8220;"
 msgstr ""
 
-#: ../wp-postspercat.php:288
+#: wp-postspercat.php:300
+#@ ppc
 msgid "&#8221;"
 msgstr ""
 
-#: ../wp-postspercat.php:178
+#: wp-postspercat.php:185
+#@ ppc
 msgid "Archive link prefix"
 msgstr "Текст испред назива"
 
-#: ../wp-postspercat.php:129
+#: wp-postspercat.php:136
+#@ ppc
 msgid "Boxes"
 msgstr "Кутије"
 
-#: ../wp-postspercat.php:163
+#: wp-postspercat.php:170
+#@ ppc
 msgid "Category ID"
 msgstr "ИД-у категорије"
 
-#: ../wp-postspercat.php:164
+#: wp-postspercat.php:171
+#@ ppc
 msgid "Category Name"
 msgstr "Називу категорије"
 
-#: ../wp-postspercat.php:144
+#: wp-postspercat.php:151
+#@ ppc
 msgid "Categoryes"
 msgstr "Категорије"
 
-#: ../wp-postspercat.php:123
-#, php-format
-msgid "Currently installed version: <strong>%s</strong>"
-msgstr "Актуелна верзија: <strong>%s</strong>"
-
-#: ../wp-postspercat.php:205
+#: wp-postspercat.php:212
+#@ ppc
 msgid "Don't display"
 msgstr "Не приказуј"
 
-#: ../wp-postspercat.php:211
+#: wp-postspercat.php:218
+#@ ppc
 msgid "Excerpt length"
 msgstr "Дужина сажетка"
 
-#: ../wp-postspercat.php:151
+#: wp-postspercat.php:158
+#@ ppc
 msgid "Exclude category"
 msgstr "Занемари категорије"
 
-#: ../wp-postspercat.php:207
+#: wp-postspercat.php:214
+#@ ppc
 msgid "For all articles"
 msgstr "За све чланке"
 
-#: ../wp-postspercat.php:206
+#: wp-postspercat.php:213
+#@ ppc
 msgid "For first article only"
 msgstr "Само за први чланак"
 
-#: ../wp-postspercat.php:190
+#: wp-postspercat.php:197
+#@ ppc
 msgid "Headline length"
 msgstr "Дужина наслова"
 
-#: ../wp-postspercat.php:183
+#: wp-postspercat.php:190
+#@ ppc
 msgid "Headlines"
 msgstr "Наслови"
 
-#: ../wp-postspercat.php:198
+#: wp-postspercat.php:205
+#@ ppc
 msgid "Hide sticky posts"
 msgstr "Сакриј истакнуте чланке"
 
-#: ../wp-postspercat.php:147
+#: wp-postspercat.php:154
+#@ ppc
 msgid "Include category"
 msgstr "Само категорије"
 
-#: ../wp-postspercat.php:139
+#: wp-postspercat.php:146
+#@ ppc
 msgid "Minimal height of box"
 msgstr "Минимална висина кутије"
 
-#: ../wp-postspercat.php:111
-#: ../wp-postspercat.php:179
+#: wp-postspercat.php:118
+#: wp-postspercat.php:186
+#@ ppc
 msgid "More from"
 msgstr "Још из рубрике"
 
-#: ../wp-postspercat.php:132
+#: wp-postspercat.php:139
+#@ ppc
 msgid "Number of Columns"
 msgstr "Број колона"
 
-#: ../wp-postspercat.php:186
+#: wp-postspercat.php:193
+#@ ppc
 msgid "Number of headlines"
 msgstr "Број наслова"
 
-#: ../wp-postspercat.php:135
+#: wp-postspercat.php:142
+#@ ppc
 msgid "One column per row (full width)"
 msgstr "Једна колона по реду (целом ширином)"
 
-#: ../wp-postspercat.php:169
+#: wp-postspercat.php:176
+#@ ppc
 msgid "Only from displayed category archive"
 msgstr "Филтер у архиви категорије"
 
-#: ../wp-postspercat.php:156
+#: wp-postspercat.php:163
+#@ ppc
 msgid "Only top level categories"
 msgstr "Само основне категорије"
 
-#: ../wp-postspercat.php:161
+#: wp-postspercat.php:168
+#@ ppc
 msgid "Order categories by"
 msgstr "Поредак категорија по"
 
-#: ../wp-postspercat.php:62
-#: ../wp-postspercat.php:120
+#: wp-postspercat.php:70
+#: wp-postspercat.php:127
+#@ ppc
 msgid "Posts per Cat"
 msgstr "Чланци по категоријама"
 
-#: ../wp-postspercat.php:62
+#: wp-postspercat.php:70
+#@ ppc
 msgid "Posts per Cat Options"
-msgstr "Подешавања „Чланци по категоријама“"
+msgstr "Поставке додатка „Чланци по категоријама“"
 
-#: ../wp-postspercat.php:126
+#: wp-postspercat.php:133
+#@ ppc
 msgid "Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):"
 msgstr "Следећи кôд поставите на место где желите да кућице чланака по категоријама буду приказане (немојте стављати у <em>loop</em>!)"
 
-#: ../wp-postspercat.php:236
+#: wp-postspercat.php:243
+#@ default
 msgid "Save Changes"
 msgstr "Сачувај измене"
 
-#: ../wp-postspercat.php:36
+#: wp-postspercat.php:41
+#@ default
 msgid "Settings"
 msgstr "Подешавања"
 
-#: ../wp-postspercat.php:194
+#: wp-postspercat.php:201
+#@ ppc
 msgid "Shorten headline"
 msgstr "Скрати наслове"
 
-#: ../wp-postspercat.php:203
+#: wp-postspercat.php:210
+#@ ppc
 msgid "Show excerpt"
 msgstr "Прикажи сажетке"
 
-#: ../wp-postspercat.php:215
+#: wp-postspercat.php:222
+#@ ppc
 msgid "Show thumbnail with excerpt"
 msgstr "Прикажи умањену слику"
 
-#: ../wp-postspercat.php:174
+#: wp-postspercat.php:181
+#@ ppc
 msgid "Standalone link to archives"
 msgstr "Издвој везе ка архивама"
 
-#: ../wp-postspercat.php:224
+#: wp-postspercat.php:231
+#@ ppc
 msgid "Styling"
 msgstr "Улепшавање"
 
-#: ../wp-postspercat.php:124
-msgid "This plugin list latests N article titles from categories and group them in category boxes organized in two columns.<br />Posts-Per-Cat has initially created for <a href=\"http://webnovinar.org\">Web Journalism School</a>."
-msgstr "Овај додатак листа последњих <em>Н</em> наслова чланака из категорија, групише их у кућице распоређене у две колоне.<br />Додатак „Чланци по категоријама“ иницијално је написан за <a href=\"http://webnovinar.org\">Школу веб новинарства</a>."
-
-#: ../wp-postspercat.php:219
+#: wp-postspercat.php:226
+#@ ppc
 msgid "Thumbnail size"
 msgstr "Величина умањене слике"
 
-#: ../wp-postspercat.php:134
+#: wp-postspercat.php:141
+#@ ppc
 msgid "Two columns per row"
 msgstr "Две колоне по реду"
 
-#: ../wp-postspercat.php:125
+#: wp-postspercat.php:132
+#@ ppc
 msgid "Usage"
 msgstr "Употреба"
 
-#: ../wp-postspercat.php:227
+#: wp-postspercat.php:234
+#@ ppc
 msgid "Use PPC for styling list?"
 msgstr "Користи посебне стилове за листе"
 
-#: ../wp-postspercat.php:148
-#: ../wp-postspercat.php:152
+#: wp-postspercat.php:155
+#: wp-postspercat.php:159
+#@ ppc
 msgid "comma separated category ID's"
 msgstr "ИД категорија раздвојени запетама"
 
-#: ../wp-postspercat.php:228
+#: wp-postspercat.php:235
+#@ ppc
 msgid "enable this option if U see ugly lists in PPC boxes"
 msgstr "омогућите ову опцију ако списак наслова не изгледа лепо"
 
-#: ../wp-postspercat.php:220
+#: wp-postspercat.php:227
+#@ ppc
 msgid "enter size in px for thumbnail width (height is same)"
 msgstr "унесите ширину умањене слике у пикселима, висина има исту вредност"
 
-#: ../wp-postspercat.php:170
+#: wp-postspercat.php:177
+#@ ppc
 msgid "exclude categories different from currently displayed on category archive and ignore first category rules on category archive"
 msgstr "приказује само чланке из категорије која је приказана на страници архиве категорије, игрноришући прва три правила за категорије"
 
-#: ../wp-postspercat.php:140
-msgid "in px (leave empty to disable min-height)"
-msgstr "у пикселима (оставите празно за искључивање стила <em>min-height</em>)"
-
-#: ../wp-postspercat.php:191
+#: wp-postspercat.php:198
+#@ ppc
 msgid "leave blank for full post title length, optimal 34 characters"
 msgstr "оставите празно за игнорисање скраћивања, оптимална дужина наслова 34 карактера"
 
-#: ../wp-postspercat.php:212
+#: wp-postspercat.php:219
+#@ ppc
 msgid "leave empty for full excerpt length"
 msgstr "оставите празно за пуну дужину сажетка"
 
-#: ../wp-postspercat.php:175
+#: wp-postspercat.php:182
+#@ ppc
 msgid "leave unchecked to link category title to archive"
 msgstr "оставите искључено за везу на наслову категорије"
 
-#: ../wp-postspercat.php:216
-msgid "thumbnail is shown only if theme support it, and excerpt is enabled. Require WordPress 2.9 or newer."
-msgstr "умањена слика се приказује само ако тема то подржава и укључен је приказ сажетака. Захтева Вордпрес 2.9 или новији."
+#: wp-postspercat.php:130
+#, php-format
+#@ ppc
+msgid "Current version: <strong>%s</strong>"
+msgstr "Тренутна верзија: <strong>%s</strong>"
 
-#~ msgid "Articles per category"
-#~ msgstr "Број чланака по категорији"
-#~ msgid "Category options"
-#~ msgstr "Опције категорија"
-#~ msgid "Optional"
-#~ msgstr "Опционо"
-#~ msgid "Post title length"
-#~ msgstr "Дужина наслова у карактерима"
-#~ msgid "Posts options"
-#~ msgstr "Поставке чланака"
-#~ msgid "Shorten post title"
-#~ msgstr "Скрати дужину наслова"
-#~ msgid "Use PPC CSS StyleSheet?"
-#~ msgstr "Користи припадајући <em>CSS</em> стил за листу"
+#: wp-postspercat.php:131
+#@ ppc
+msgid "This plugin list latests N article titles from categories and group them in category boxes organized in two columns."
+msgstr "Овај додатак приказује наслове последњих Н чланака груписаних по категоријама које се приказују у две колоне."
+
+#: wp-postspercat.php:147
+#@ ppc
+msgid "px (leave empty to disable min-height)"
+msgstr "пиксела (оставите празно да онемогућите минималну висину)"
+
+#: wp-postspercat.php:223
+#@ ppc
+msgid "thumbnail is shown only if theme support it, and excerpt is enabled"
+msgstr "умањена сличица се приказује само ако то тема подржава, и ако се приказују сажеци"
+
+#: wp-postspercat.php:247
+#@ ppc
+msgid "Support"
+msgstr "Подршка"
+
+#: wp-postspercat.php:248
+#, php-format
+#@ ppc
+msgid "For all questions, feature request and communication with author and users of this plugin, use our <a href=\"%s\">support forum</a>."
+msgstr "За сва питања, предлоге за проширења и комуникацију са аутором и осталим корисницима овог додатка користите <a href=\"%s\">форум за подршку</a>."
+
+#: wp-postspercat.php:249
+#@ ppc
+msgid "Donate"
+msgstr "Донација"
+
+#: wp-postspercat.php:250
+#, php-format
+#@ ppc
+msgid "If you like <a href=\"%s\">Posts per Cat</a> and my other <a href=\"%s\">WordPress extensions</a>, feel free to support my work with <a href=\"%s\">donation</a>."
+msgstr "Ако Вам се свидео додатак <a href=\"%s\">Posts per Cat</a> или неки други <a href=\"%s\">Вордпрес додатак</a> који сам написао, слободно подржите мој рад <a href=\"%s\">донацијом</a>."
 
