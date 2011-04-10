@@ -1,9 +1,9 @@
 /*
-CSS Stylesheet for Posts-per-Cat
+CSS Stylesheet for Posts per Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
-Description: List latests N article titles from categories and group them to category boxes organized in two columns.
+Description: Posts per Cat list latest `N` articles from all, top level only or manually choosen categories and group them in category boxes organized in one, two, three or four columns.
 Author: Aleksandar Urošević
-Version: 0.0.14
+Version: 1.0.0
 Author URI: http://urosevic.net
 */
 #ppc-box {
@@ -13,33 +13,41 @@ Author URI: http://urosevic.net
 	margin: 0;
 	padding: 0;
 }
-
-#ppc-box .ppc-box {
-	width: 48.5%;
-	border: none;
-	margin: 0;
-	padding: 0;
+#ppc-box .clear {
+	position: relative;
+	clear: both;
+	width: 100%;
 }
 
-#ppc-box.full .ppc-box {
+/* columns */
+#ppc-box .ppc-box {
 	position: relative;
+	float: left;
+	padding: 0;
+	margin: 0 0 7px 0;
+}
+#ppc-box .one {
 	width: 100%;
-	margin-bottom: 18px;
 	clear: both;
 }
-
-/* box graphics style */
-#ppc-box .ppc-box .ppc {
-	margin: 0;
-	padding: 10px;
-	clear: none;
+#ppc-box .two {
+	width: 49%;
+	margin-right: 1%;
+}
+#ppc-box .three {
+	width: 32%;
+	margin-right: 1%;
+}
+#ppc-box .four {
+	width: 24%;
+	margin-right: 1%;
 }
 
-/* fonts and colors of content */
+/* category box content */
 #ppc-box .ppc-box .ppc ul li p {
 	clear: both;
 }
-.ppc-more {
+#ppc-box .ppc-box .ppc .ppc-more {
 	display: block;
 	clear: both;
 	position: relative;
@@ -48,34 +56,13 @@ Author URI: http://urosevic.net
 	margin-top: 9px;
 	font-size: x-small;
 }
-.ppc-box .wp-post-image {
-	position: relative;
-	float: left;
-	display: block;
-	margin-right: 10px;
-	margin-top: 3px;
-	clear: left;
-}
-/* box positioning and spacing */
-#ppc-box .left {
-	position: relative;
-	float: left;
-}
-#ppc-box .right {
-	position: relative;
-	float: right;
-}
-#ppc-box.full .left,
-#ppc-box.full .right {
-	float: left !important;
-	clear: left !important;
-}
-#ppc-box .clear {
-	position: relative;
+.ppc li {
 	clear: both;
-	width: 100% !important;
-	height: 17px;
-	display: block;
 }
-.ppc li { display: block; clear: both; }
-.ppc li p img { float: left; position: relative; margin: 4px 9px 0 0; }
+.ppc li p img {
+	float: left !important;
+	position: relative !important;
+	margin: 0 10px 5px 0 !important;
+	padding: 0 !important;
+	border: none !important;
+}

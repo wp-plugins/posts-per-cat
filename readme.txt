@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.1
 Stable tag: 0.0.14
 
-List latests N article titles from all or top level only categories and group them in category boxes organized in two columns.
+Posts per Cat list latest `N` articles from all, top level only or manually choosen categories and group them in category boxes organized in one, two, three or four columns.
 
 == Description ==
 
@@ -16,7 +16,7 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 * you can choose two columns per row, or only one (full width)
 * configurable number of post titles to display per category
 * include or exclude child categories
-* ordering boxes by category ID or title
+* ordering boxes by category ID, title or custom
 * toggle displaying excerpt for first post in list per category
 * toggle displaying sticky posts
 * toggle usage of custom list CSS StyleSheet
@@ -49,12 +49,21 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
-1. Posts per Cat Settings menu
-2. Posts per Cat Settings page
-3. Posts per Cat plugin with two columns per row (default)
-4. Posts per Cat plugin with one column per row (full width)
+1. Posts per Cat on Plugins page
+2. Posts per Cat Options page
+3. Posts per Cat in action (sutom orderet categories in three columns)
 
 == Changelog ==
+
+= 1.0.0 =
+* Adds option to use post content in stead of post excerpt
+* Adds option for custom category ordering (as listed in Include category)
+* Adds option to display PPC in one, two, three or four columns
+* Adds available category list in Options page
+* All coments in code translated to English
+* Follow WP coding standards
+* Renamed from Posts-per-Cat to Posts per Cat
+
 = 0.0.14 (2011-04-09) =
 * Fixed debug errors
 * Fixed (I hope I do) image URI's in CSS
@@ -115,7 +124,3 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 = 0.0.1 (2009-02-02) =
 * Project initialized
 
-== Upgrade Notice ==
-
-= 0.0.8 =
-Fixed problem with wrong links on blogs installed in subdirectory.
