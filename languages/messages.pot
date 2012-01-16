@@ -7,213 +7,306 @@
 msgid   ""
 msgstr  "Project-Id-Version: PACKAGE VERSION\n"
         "Report-Msgid-Bugs-To: \n"
-        "POT-Creation-Date: 2010-04-15 23:01+0200\n"
+        "POT-Creation-Date: 2012-01-16 22:11+0100\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
+        "Language: \n"
         "MIME-Version: 1.0\n"
         "Content-Type: text/plain; charset=CHARSET\n"
         "Content-Transfer-Encoding: 8bit\n"
 
-#: ../wp-postspercat.php:288
+#: ../wp-postspercat.php:399
 msgid   "&#8220;"
 msgstr  ""
 
-#: ../wp-postspercat.php:288
+#: ../wp-postspercat.php:399
 msgid   "&#8221;"
 msgstr  ""
 
-#: ../wp-postspercat.php:178
+#: ../wp-postspercat.php:242
 msgid   "Archive link prefix"
 msgstr  ""
 
-#: ../wp-postspercat.php:129
-msgid   "Boxes"
+#: ../wp-postspercat.php:442
+#, php-format
+msgid   "Article %s published at %s"
+msgstr  ""
+
+#: ../wp-postspercat.php:446
+#, php-format
+msgid   "Be first to comment %s"
 msgstr  ""
 
 #: ../wp-postspercat.php:163
+msgid   "Boxes"
+msgstr  ""
+
+#: ../wp-postspercat.php:180
+msgid   "Categories"
+msgstr  ""
+
+#: ../wp-postspercat.php:228
 msgid   "Category ID"
 msgstr  ""
 
-#: ../wp-postspercat.php:164
+#: ../wp-postspercat.php:229
 msgid   "Category Name"
 msgstr  ""
 
-#: ../wp-postspercat.php:144
-msgid   "Categoryes"
+#: ../wp-postspercat.php:271
+msgid   "Content"
 msgstr  ""
 
-#: ../wp-postspercat.php:123
+#: ../wp-postspercat.php:230
 #, php-format
-msgid   "Currently installed version: <strong>%s</strong>"
+msgid   "Custom, as listed in <em>%s</em>"
 msgstr  ""
 
-#: ../wp-postspercat.php:205
+#: ../wp-postspercat.php:531
+msgid   "Description"
+msgstr  ""
+
+#: ../wp-postspercat.php:262
+msgid   "Display comment number"
+msgstr  ""
+
+#: ../wp-postspercat.php:276
 msgid   "Don't display"
 msgstr  ""
 
-#: ../wp-postspercat.php:211
+#: ../wp-postspercat.php:286
 msgid   "Excerpt length"
 msgstr  ""
 
-#: ../wp-postspercat.php:151
+#: ../wp-postspercat.php:218
 msgid   "Exclude category"
 msgstr  ""
 
-#: ../wp-postspercat.php:207
+#: ../wp-postspercat.php:442
+msgid   "F j, Y g:i a"
+msgstr  ""
+
+#: ../wp-postspercat.php:278
 msgid   "For all articles"
 msgstr  ""
 
-#: ../wp-postspercat.php:206
+#: ../wp-postspercat.php:319
+#, php-format
+msgid   "For all questions, feature request and communication with author and "
+        "users of this plugin, use our <a href=\"%s\">support forum</a>."
+msgstr  ""
+
+#: ../wp-postspercat.php:277
 msgid   "For first article only"
 msgstr  ""
 
-#: ../wp-postspercat.php:190
+#: ../wp-postspercat.php:171
+msgid   "Four columns per row"
+msgstr  ""
+
+#: ../wp-postspercat.php:254
 msgid   "Headline length"
 msgstr  ""
 
-#: ../wp-postspercat.php:183
+#: ../wp-postspercat.php:247
 msgid   "Headlines"
 msgstr  ""
 
-#: ../wp-postspercat.php:198
+#: ../wp-postspercat.php:145
+msgid   "Hide available categories"
+msgstr  ""
+
+#: ../wp-postspercat.php:266
 msgid   "Hide sticky posts"
 msgstr  ""
 
-#: ../wp-postspercat.php:147
+#: ../wp-postspercat.php:533
+msgid   "ID"
+msgstr  ""
+
+#: ../wp-postspercat.php:320
+#, php-format
+msgid   "If you like <a href=\"%s\">Posts per Cat</a> and my other <a href="
+        "\"%s\">WordPress extensions</a>, feel free to support my work with "
+        "<a href=\"%s\">donation</a>."
+msgstr  ""
+
+#: ../wp-postspercat.php:214 ../wp-postspercat.php:230
 msgid   "Include category"
 msgstr  ""
 
-#: ../wp-postspercat.php:139
+#: ../wp-postspercat.php:175
 msgid   "Minimal height of box"
 msgstr  ""
 
-#: ../wp-postspercat.php:111 ../wp-postspercat.php:179
+#: ../wp-postspercat.php:127 ../wp-postspercat.php:243
 msgid   "More from"
 msgstr  ""
 
-#: ../wp-postspercat.php:132
-msgid   "Number of Columns"
+#: ../wp-postspercat.php:530
+msgid   "Name"
 msgstr  ""
 
-#: ../wp-postspercat.php:186
+#: ../wp-postspercat.php:166
+msgid   "Number of columns"
+msgstr  ""
+
+#: ../wp-postspercat.php:250
 msgid   "Number of headlines"
 msgstr  ""
 
-#: ../wp-postspercat.php:135
+#: ../wp-postspercat.php:168
 msgid   "One column per row (full width)"
 msgstr  ""
 
-#: ../wp-postspercat.php:169
+#: ../wp-postspercat.php:234
 msgid   "Only from displayed category archive"
 msgstr  ""
 
-#: ../wp-postspercat.php:156
+#: ../wp-postspercat.php:222
 msgid   "Only top level categories"
 msgstr  ""
 
-#: ../wp-postspercat.php:161
+#: ../wp-postspercat.php:226
 msgid   "Order categories by"
 msgstr  ""
 
-#: ../wp-postspercat.php:62 ../wp-postspercat.php:120
+#: ../wp-postspercat.php:534
+msgid   "Posts"
+msgstr  ""
+
+#: ../wp-postspercat.php:76
 msgid   "Posts per Cat"
 msgstr  ""
 
-#: ../wp-postspercat.php:62
+#: ../wp-postspercat.php:76
 msgid   "Posts per Cat Options"
 msgstr  ""
 
-#: ../wp-postspercat.php:126
+#: ../wp-postspercat.php:155
+#, php-format
+msgid   "Posts per Cat v%s"
+msgstr  ""
+
+#: ../wp-postspercat.php:160
 msgid   "Put next code to template files in place where you wish to display "
         "PPC boxes (but not in Loop!):"
 msgstr  ""
 
-#: ../wp-postspercat.php:236
+#: ../wp-postspercat.php:448
+#, php-format
+msgid   "Read comments on %s"
+msgstr  ""
+
+#: ../wp-postspercat.php:310
 msgid   "Save Changes"
 msgstr  ""
 
-#: ../wp-postspercat.php:36
+#: ../wp-postspercat.php:43
 msgid   "Settings"
 msgstr  ""
 
-#: ../wp-postspercat.php:194
+#: ../wp-postspercat.php:258
 msgid   "Shorten headline"
 msgstr  ""
 
-#: ../wp-postspercat.php:203
+#: ../wp-postspercat.php:144 ../wp-postspercat.php:147
+#: ../wp-postspercat.php:183
+msgid   "Show available categories"
+msgstr  ""
+
+#: ../wp-postspercat.php:274
 msgid   "Show excerpt"
 msgstr  ""
 
-#: ../wp-postspercat.php:215
+#: ../wp-postspercat.php:290
 msgid   "Show thumbnail with excerpt"
 msgstr  ""
 
-#: ../wp-postspercat.php:174
+#: ../wp-postspercat.php:532
+msgid   "Slug"
+msgstr  ""
+
+#: ../wp-postspercat.php:238
 msgid   "Standalone link to archives"
 msgstr  ""
 
-#: ../wp-postspercat.php:224
+#: ../wp-postspercat.php:299
 msgid   "Styling"
 msgstr  ""
 
-#: ../wp-postspercat.php:124
-msgid   "This plugin list latests N article titles from categories and group "
-        "them in category boxes organized in two columns.<br />Posts-Per-Cat "
-        "has initially created for <a href=\"http://webnovinar.org\">Web "
-        "Journalism School</a>."
+#: ../wp-postspercat.php:315
+msgid   "Support"
 msgstr  ""
 
-#: ../wp-postspercat.php:219
-msgid   "Thumbnail size"
-msgstr  ""
-
-#: ../wp-postspercat.php:134
-msgid   "Two columns per row"
-msgstr  ""
-
-#: ../wp-postspercat.php:125
-msgid   "Usage"
-msgstr  ""
-
-#: ../wp-postspercat.php:227
-msgid   "Use PPC for styling list?"
-msgstr  ""
-
-#: ../wp-postspercat.php:148 ../wp-postspercat.php:152
-msgid   "comma separated category ID's"
-msgstr  ""
-
-#: ../wp-postspercat.php:228
-msgid   "enable this option if U see ugly lists in PPC boxes"
-msgstr  ""
-
-#: ../wp-postspercat.php:220
-msgid   "enter size in px for thumbnail width (height is same)"
+#: ../wp-postspercat.php:158
+msgid   "This plugin list latest N articles from all, top level only or "
+        "manually choosen categories and group them in category boxes "
+        "organized in one, two, three or four columns."
 msgstr  ""
 
 #: ../wp-postspercat.php:170
+msgid   "Three columns per row"
+msgstr  ""
+
+#: ../wp-postspercat.php:294
+msgid   "Thumbnail size"
+msgstr  ""
+
+#: ../wp-postspercat.php:169
+msgid   "Two columns per row"
+msgstr  ""
+
+#: ../wp-postspercat.php:159
+msgid   "Usage"
+msgstr  ""
+
+#: ../wp-postspercat.php:302
+msgid   "Use PPC for styling list?"
+msgstr  ""
+
+#: ../wp-postspercat.php:282
+msgid   "Use post content as excerpt"
+msgstr  ""
+
+#: ../wp-postspercat.php:215 ../wp-postspercat.php:219
+msgid   "comma separated category ID's"
+msgstr  ""
+
+#: ../wp-postspercat.php:303
+msgid   "enable this option if U see ugly lists in PPC boxes"
+msgstr  ""
+
+#: ../wp-postspercat.php:295
+msgid   "enter size in px for thumbnail width (height is same)"
+msgstr  ""
+
+#: ../wp-postspercat.php:235
 msgid   "exclude categories different from currently displayed on category "
         "archive and ignore first category rules on category archive"
 msgstr  ""
 
-#: ../wp-postspercat.php:140
-msgid   "in px (leave empty to disable min-height)"
-msgstr  ""
-
-#: ../wp-postspercat.php:191
+#: ../wp-postspercat.php:255
 msgid   "leave blank for full post title length, optimal 34 characters"
 msgstr  ""
 
-#: ../wp-postspercat.php:212
+#: ../wp-postspercat.php:287
 msgid   "leave empty for full excerpt length"
 msgstr  ""
 
-#: ../wp-postspercat.php:175
+#: ../wp-postspercat.php:239
 msgid   "leave unchecked to link category title to archive"
 msgstr  ""
 
-#: ../wp-postspercat.php:216
-msgid   "thumbnail is shown only if theme support it, and excerpt is enabled. "
-        "Require WordPress 2.9 or newer."
+#: ../wp-postspercat.php:176
+msgid   "px (leave empty to disable min-height)"
+msgstr  ""
+
+#: ../wp-postspercat.php:291
+msgid   "thumbnail is shown only if theme support it, and excerpt is enabled"
+msgstr  ""
+
+#: ../wp-postspercat.php:283
+msgid   "use post content in stead of post excerpt"
 msgstr  ""

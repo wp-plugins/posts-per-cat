@@ -1,7 +1,7 @@
 <?php
 /*
     WP Posts per Cat list titles of recent posts in boxes for all single categories
-    Copyright (C) 2009-2011 Aleksandar Urošević <urke@users.sourceforge.net>
+    Copyright (C) 2009-2012 Aleksandar Urošević <urke@users.sourceforge.net>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Plugin Name: Posts per Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
-Description: Posts per Cat list latest `N` articles from all, top level only or manually choosen categories and group them in category boxes organized in one, two, three or four columns.
+Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
 Version: 1.0.0
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
@@ -27,7 +27,6 @@ License: GNU GPLv3
 
 define( 'POSTS_PER_CAT_VER', '1.0.0' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
-define( 'POSTS_PER_CAT_DIR', PLUGINDIR . '/' . dirname(plugin_basename(__FILE__)) );
 
 // add PPC button to admin menu
 add_action( 'admin_menu', 'ppc_postspercat_menu' );
@@ -57,10 +56,10 @@ if ( function_exists('posts_per_cat') ) {
 
 // insert PPC CSS in page head
 function ppc_header_css() {
-	echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_DIR.'/ppc.css" type="text/css" media="screen" />';
+	echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_URL.'ppc.css" type="text/css" media="screen" />';
 	$options = get_option('postspercat');
 	if ( $options['ppccss'] ) {
-		echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_DIR.'/ppc-list.css" type="text/css" media="screen" />';
+		echo '<link rel="stylesheet" href="'.POSTS_PER_CAT_URL.'ppc-list.css" type="text/css" media="screen" />';
 	}
 ?>
 <style type="text/css" media="screen">
@@ -100,6 +99,8 @@ function ppc_postspercat_options() {
 		$options['thumb']    = isset($_POST['ppc-thumb']);
 		$options['tsize']    = htmlspecialchars($_POST['ppc-tsize']);
 		$options['catonly']  = isset($_POST['ppc-catonly']);
+		$options['commnum']  = isset($_POST['ppc-commnum']);
+
 		update_option('postspercat', $options);
 	}
 
@@ -126,12 +127,29 @@ function ppc_postspercat_options() {
 			'moretxt'  => __('More from', 'ppc'),
 			'thumb'    => false,
 			'tsize'    => '60',
-			'catonly'  => false
+			'catonly'  => false,
+			'commnum'  => false
 		);
 		update_option('postspercat', $options);
 	}
 	// Now print Options page
 ?>
+<script type="text/javascript">
+
+jQuery(document).ready(function($){
+	$('.allcats').hide();
+	$('#togglecattable').click(function(){
+		$('.allcats').fadeToggle('slow');
+		btn_title = $('#togglecattable').val();
+		if ( btn_title == "<?php _e('Show available categories', 'ppc'); ?>" ) {
+			$('#togglecattable').val("<?php _e('Hide available categories', 'ppc'); ?>");
+		} else {
+			$('#togglecattable').val("<?php _e('Show available categories', 'ppc'); ?>");
+		}
+	});
+});
+
+</script>
 <div class="wrap">
 	<div id="icon-options-general" class="icon32"><br /></div>
 	<h2><?php echo sprintf(__('Posts per Cat v%s', 'ppc'), POSTS_PER_CAT_VER); ?></h2>
@@ -159,12 +177,12 @@ function ppc_postspercat_options() {
 		</tr>
 	</table>
 
-	<h3><?php _e('Categoryes', 'ppc'); ?></h3>
+	<h3><?php _e('Categories', 'ppc'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-		<th scope="row"><?php _e('Available categories', 'ppc'); ?></th>
+		<th scope="row"><input type="button" id="togglecattable" class="button-secondary" value="<?php _e('Show available categories', 'ppc'); ?>" /> <!-- onclick="jQuery('.allcats').slideToggle('slow');" / --></th>
 			<td>
-				<table class="wp-list-table widefat fixed" cellspacing="0">
+				<table class="wp-list-table widefat fixed allcats" cellspacing="0">
 					<thead>
 						<?php print_cat_headfoot(); ?>
 					</thead>
@@ -239,6 +257,10 @@ function ppc_postspercat_options() {
 		<tr valign="top">
 			<th scope="row"><label><?php _e('Shorten headline', 'ppc'); ?></label></th>
 			<td><input type="checkbox" <?php checked( (bool) $options['shorten'], true ); ?> name="ppc-shorten" id="ppc-shorten" /></td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><label><?php _e('Display comment number', 'ppc'); ?></label></th>
+			<td><input type="checkbox" <?php checked( (bool) $options['commnum'], true ); ?> name="ppc-commnum" id="ppc-commnum" /></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e('Hide sticky posts', 'ppc'); ?></label></th>
@@ -323,6 +345,7 @@ function posts_per_cat() {
 	$ppc_exclude  = $options['exclude']; // do not list this categories
 	$ppc_thumb    = $options['thumb'];   // display thumbnail with excerpt?
 	$ppc_catonly  = $options['catonly']; // only posts from current category in archive
+	$ppc_commnum  = $options['commnum']; // display comment number
 	
 	if ( $options['tsize'] != "60" ) { // setup thumbnail size
 		$ppc_tsize = array($options['tsize'],$options['tsize']); // custom
@@ -417,6 +440,14 @@ function posts_per_cat() {
 
 				echo '
 				<li><a href="'.get_permalink($post->ID).'" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'.$title.'</a>';
+				if ( $ppc_commnum ) {
+					$comments_num = get_comments_number($post->ID);
+					if ( $comments_num == 0 ) {
+						echo ' (<a href="'.get_permalink($post->ID).'#respond" title="'.sprintf(__('Be first to comment %s', 'ppc'), $title_full).'">'.get_comments_number($post->ID).'</a>)';
+					} else {
+						echo ' (<a href="'.get_permalink($post->ID).'#comments" title="'.sprintf(__('Read comments on %s', 'ppc'), $title_full).'">'.get_comments_number($post->ID).'</a>)';
+					}
+				}
 				if ( $ppc_content ) {
 					$excerpt = strip_tags(substr_utf8($post->post_content, 0, 500)).'&hellip;';
 					if ( $ppc_excleng && mb_strlen_dh($excerpt) > ($ppc_excleng+1) ) {
