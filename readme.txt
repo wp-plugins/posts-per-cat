@@ -3,24 +3,27 @@ Tags: categories, category, posts, archive, archives, date, time, past, listing,
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
 Requires at least: 3.0
-Tested up to: 3.1
-Stable tag: 0.0.14
+Tested up to: 3.3.1
+Stable tag: 1.1.0
 
-Posts per Cat list latest `N` articles from all, top level only or manually choosen categories and group them in category boxes organized in one, two, three or four columns.
+Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
 
 == Description ==
 
-Posts per Cat is a simple plugin that get all categories from database, then list last N posts from all category in boxes organised in two columns.
+Posts per Cat is a simple plugin that grab all or only selected categories from blog database, and then list last N posts by category in boxes organised in 1-4 columns.
 
 = Features =
-* you can choose two columns per row, or only one (full width)
-* configurable number of post titles to display per category
-* include or exclude child categories
+* choose how many boxes per row will be displayed (one, two, three or four)
+* define number of post titles to display per category
+* define category ID's to exclude
+* define category ID's to include
+* toggle displaying of child categories
 * ordering boxes by category ID, title or custom
-* toggle displaying excerpt for first post in list per category
+* toggle displaying excerpt abowe post title (for first post only, for all posts or none)
+* toggle displaying featured image for posts
+* toggle displaying number of comments (with link) added to post title
 * toggle displaying sticky posts
-* toggle usage of custom list CSS StyleSheet
-* category boxes organised in two columns
+* toggle usage of custom list CSS
 * SEO optimized permalink URI's
 * translantable
 * produces XHTML 1.1 valid code
@@ -28,19 +31,15 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 
 == Installation ==
 
-= Manual =
-1. Upload the entire `posts-per-cat` folder to the `/wp-content/plugins/` directory.
-1. Activate the plugin through the `Plugins` menu in WordPress.
-1. Configure `Posts per Cat` options.
-1. Insert `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
+You can use the built in installer and upgrader, or you can install the plugin manually.
 
-= Automatic =
-1. Go to `Plugins` → `Add New` and search for `posts per cat`.
-1. Click on `Install Now` link bellow `Posts per Cat` search result and aswer `Yes` on popup question.
-1. If you need enter FTP parameters for your host and click on `Proceed`.
-1. Activate the plugin through the `Plugins` menu in WordPress.
-1. Configure `Posts per Cat` options.
-1. Insert `<?php do_action("ppc"); ?>` in your template files (for example in index.php after pagination code)
+1. You can either use the automatic plugin installer or your FTP program to upload unziped posts-per-cat directory it to your wp-content/plugins directory.
+2. Activate the plugin through the `Plugins` menu in WordPress
+3. Visit your `Posts per Cat` options (Settings - Posts per Cat)
+4. Configure any options as desired
+5. Put code `<?php do_action('ppc'); ?>` in your template file (for example in index.php just before closing `</div><!-- #content -->` tag
+
+If you have to upgrade manually simply repeat the installation steps and re-enable the plugin.
 
 == Frequently Asked Questions ==
 
@@ -49,13 +48,19 @@ Posts per Cat is a simple plugin that get all categories from database, then lis
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
-1. Posts per Cat on Plugins page
-2. Posts per Cat Options page
-3. Posts per Cat in action (sutom orderet categories in three columns)
+1. Posts per Cat Plugins settings
+2. Posts per Cat: custom cats, 3 column, w/o enabled CSS
+3. Posts per Cat: all cats, 3 column, w/ enabled CSS
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.1.0 (2012-04-05) =
+* Adds option to disable link on category title
+* Adds shortcode [ppc]
+* Adds class to headline title and number of comments
+
+= 1.0.0 (2012-01-16) =
+* Adds option to toggle comments number with link
 * Adds option to use post content in stead of post excerpt
 * Adds option for custom category ordering (as listed in Include category)
 * Adds option to display PPC in one, two, three or four columns
@@ -123,4 +128,3 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 
 = 0.0.1 (2009-02-02) =
 * Project initialized
-

@@ -34,6 +34,9 @@ Author URI: http://urosevic.net
 	clear: both;
 	position: relative;
 }
+#ppc-box .ppc-box .ppc ul li .ppc-comments-num,
+#ppc-box .ppc-box .ppc ul li .ppc-comments-num a { font-size: 100%; }
+
 /* fonts and colors of content */
 #ppc-box .ppc-box .ppc ul li p {
 	font-size: 14px;
