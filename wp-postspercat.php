@@ -19,20 +19,23 @@
 Plugin Name: Posts per Cat
 Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
-Version: 1.0.0
+Version: 1.1.0
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
 */
 
-define( 'POSTS_PER_CAT_VER', '1.0.0' );
+define( 'POSTS_PER_CAT_VER', '1.1.0' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 // add PPC button to admin menu
 add_action( 'admin_menu', 'ppc_postspercat_menu' );
 // initialize PPC
-add_action( 'ppc', 'posts_per_cat');
+add_action( 'ppc', 'ppc_echo');
+// define shortcode
+add_shortcode( 'ppc', 'posts_per_cat' );
 
+function ppc_echo() { echo posts_per_cat(); }
 
 // insert Settings link on plugins admin page
 if ( is_admin() ) {
@@ -94,6 +97,7 @@ function ppc_postspercat_options() {
 		$options['ppccss']   = isset($_POST['ppc-ppccss']);
 		$options['minh']     = htmlspecialchars($_POST['ppc-minh']);
 		$options['column']   = htmlspecialchars($_POST['ppc-column']);
+		$options['noctlink'] = isset($_POST['ppc-noctlink']);
 		$options['more']     = isset($_POST['ppc-more']);
 		$options['moretxt']  = htmlspecialchars($_POST['ppc-moretxt']);
 		$options['thumb']    = isset($_POST['ppc-thumb']);
@@ -123,6 +127,7 @@ function ppc_postspercat_options() {
 			'minh'     => '',
 			'nosticky' => false,
 			'column'   => '2',
+			'noctlink' => false,
 			'more'     => false,
 			'moretxt'  => __('More from', 'ppc'),
 			'thumb'    => false,
@@ -159,7 +164,9 @@ jQuery(document).ready(function($){
 	<h3><?php _e('Usage', 'ppc'); ?></h3>
 	<p><?php _e('Put next code to template files in place where you wish to display PPC boxes (but not in Loop!):', 'ppc'); ?></p>
 	<code>&lt;?php do_action('ppc'); ?&gt;</code>
-
+	<p><?php _e('You can even use shortcode. Simply put <strong>[ppc]</strong> in post or page content.', 'ppc');?></p>
+	<p><?php _e('If you wish to show Posts per Cat in widget, use shortcode in text widget. If theme you use does not support shortcodes in widget, simply put next code in <em>functions.php</em> of your theme:', 'ppc');?></p>
+	<code>add_filter('widget_text', 'do_shortcode');</code>
 	<h3><?php _e('Boxes', 'ppc'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
@@ -235,8 +242,12 @@ jQuery(document).ready(function($){
 			<td><input type="checkbox" <?php checked( (bool) $options['catonly'], true ); ?> name="ppc-catonly" id="ppc-catonly" /> <?php _e('exclude categories different from currently displayed on category archive and ignore first category rules on category archive', 'ppc'); ?></td>
 		</tr>
 		<tr valign="top">
+			<th scope="row"><label><?php _e('Do not link category name', 'ppc'); ?></label></th>
+			<td><input type="checkbox" <?php checked( (bool) $options['noctlink'], true ); ?> name="ppc-noctlink" id="ppc-noctlink" /> <?php _e('leave unchecked to link category title to archive', 'ppc'); ?></td>
+		</tr>
+		<tr valign="top">
 			<th scope="row"><label><?php _e('Standalone link to archives', 'ppc'); ?></label></th>
-			<td><input type="checkbox" <?php checked( (bool) $options['more'], true ); ?> name="ppc-more" id="ppc-more" /> <?php _e('leave unchecked to link category title to archive', 'ppc'); ?></td>
+			<td><input type="checkbox" <?php checked( (bool) $options['more'], true ); ?> name="ppc-more" id="ppc-more" /> <?php _e('check to print "read more" link bellow list of headlines', 'ppc'); ?></td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><label><?php _e('Archive link prefix', 'ppc'); ?></label></th>
@@ -329,6 +340,7 @@ jQuery(document).ready(function($){
 
 function posts_per_cat() {
 	global $blog_url;
+	
 	$options      = get_option('postspercat');
 	$ppc_posts    = $options['posts'];   // number of posts to list
 	$ppc_shorten  = $options['shorten']; // do we need to cut down titles
@@ -339,6 +351,7 @@ function posts_per_cat() {
 	$ppc_excleng  = $options['excleng']; // length of excerpt
 	$ppc_order    = $options['order'];   // category ordering: id, name or custom
 	$ppc_nosticky = $options['nosticky'];// include sticky posts?
+	$ppc_noctlink = $options['noctlink'];  // disable link for category title
 	$ppc_more     = $options['more'];    // print link for category archive
 	$ppc_moretxt  = $options['moretxt']; // prefix for category archive link text
 	$ppc_include  = $options['include']; // list only this categories
@@ -385,7 +398,7 @@ function posts_per_cat() {
 	// set number of boxes for clear fix
 	$boxnum = 0;
 	// print PPC body header
-	echo '
+	$ppc_str .= '
 <!-- start of Posts per Cat version '.POSTS_PER_CAT_VER.' -->
 	<div id="ppc-box">
 ';
@@ -398,11 +411,17 @@ function posts_per_cat() {
 				$ppc_cattitle = $cat->cat_name;
 				$ppc_moreadd = '<div class="ppc-more"><a href="'.get_category_link( $cat->cat_ID ).'">'.$ppc_moretxt.' '.__('&#8220;', 'ppc').$ppc_cattitle.__('&#8221;', 'ppc').'</a></div>';
 			} else { // on category title
-				$ppc_cattitle = '<a href="'.get_category_link( $cat->cat_ID ).'">'.$cat->cat_name.'</a>';
-				$ppc_moreadd = "";
+				if ( $ppc_noctlink ) {
+					$ppc_cattitle = '<a href="'.get_category_link( $cat->cat_ID ).'">'.$cat->cat_name.'</a>';
+					$ppc_moreadd = "";
+				} else {
+					$ppc_cattitle = $cat->cat_name;
+					$ppc_moreadd = "";
+
+				}
 			}
 			// start category box
-			echo '
+			$ppc_str .= '
 		<!-- start of Category Box -->
 		<div class="ppc-box '.$ppc_column.'">
 			<div class="ppc" '.$ppc_minh.'>
@@ -438,15 +457,17 @@ function posts_per_cat() {
 					$title_full = $title = $post->post_title;
 				}
 
-				echo '
-				<li><a href="'.get_permalink($post->ID).'" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'.$title.'</a>';
+				$ppc_str .= '
+				<li><a href="'.get_permalink($post->ID).'" class="ppc-post-title" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'.$title.'</a>';
 				if ( $ppc_commnum ) {
 					$comments_num = get_comments_number($post->ID);
+						$ppc_str .= ' <span class="ppc-comments-num">(<a href="'.get_permalink($post->ID);
 					if ( $comments_num == 0 ) {
-						echo ' (<a href="'.get_permalink($post->ID).'#respond" title="'.sprintf(__('Be first to comment %s', 'ppc'), $title_full).'">'.get_comments_number($post->ID).'</a>)';
+						$ppc_str .= '#respond" title="'.sprintf(__('Be first to comment %s', 'ppc'), $title_full);
 					} else {
-						echo ' (<a href="'.get_permalink($post->ID).'#comments" title="'.sprintf(__('Read comments on %s', 'ppc'), $title_full).'">'.get_comments_number($post->ID).'</a>)';
+						$ppc_str .= '#comments" title="'.sprintf(__('Read comments on %s', 'ppc'), $title_full);
 					}
+					$ppc_str .= '">'.get_comments_number($post->ID).'</a>)</span>';
 				}
 				if ( $ppc_content ) {
 					$excerpt = strip_tags(substr_utf8($post->post_content, 0, 500)).'&hellip;';
@@ -462,26 +483,26 @@ function posts_per_cat() {
 				}
 
 				if ( $br++ == 0 && ($ppc_excerpt == 'first') ) { // print excerpt for first post
-					echo '<p>';
+					$ppc_str .= '<p>';
 					if ( $ppc_thumb ) { // print thumbnail
 						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
-							echo wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize);
+							$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize);
 						}
 					}
-					echo $excerpt.'</p>';
+					$ppc_str .= $excerpt.'</p>';
 				} elseif ( $br++ > 0 && $ppc_excerpt == 'all' ) { // print excerpt for other posts
-					echo '<p>';
+					$ppc_str .= '<p>';
 					if ( $ppc_thumb ) { // print thumbnails
 						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
-						echo wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize ); }
+						$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize ); }
 					}
-					echo $excerpt.'</p>';
+					$ppc_str .= $excerpt.'</p>';
 				}
-				echo '</li>';
+				$ppc_str .= '</li>';
 			} // end of processing every post from category $cat
 
 			// close category box
-			echo '
+			$ppc_str .= '
 			</ul>
 			'.$ppc_moreadd.'
 			</div>
@@ -492,7 +513,7 @@ function posts_per_cat() {
 			// print row cleaner
 			$boxnum++;
 			if ( $boxnum == $options['column'] ) {
-				echo '<div class="clear"></div>';
+				$ppc_str .= '<div class="clear"></div>';
 				$boxnum = 0;
 			} // boxnum equal to number of columns
 		} // end of processing non-empty categories
@@ -500,14 +521,16 @@ function posts_per_cat() {
 
 	// print row cleaner at end of PPC
 	if ( $boxnum != $options['column'] ) {
-		echo '<div class="clear"></div>';
+		$ppc_str .= '<div class="clear"></div>';
 	}
 	
 	// close PPC container
-	echo '
+	$ppc_str .= '
 	</div>
 <!-- end of Posts per Cat -->
 ';
+
+return $ppc_str;
 } // posts_per_cat()
 
 // category table row print

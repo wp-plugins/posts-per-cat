@@ -4,7 +4,7 @@ Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 
 Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
 
@@ -53,6 +53,11 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 3. Posts per Cat: all cats, 3 column, w/ enabled CSS
 
 == Changelog ==
+
+= 1.1.0 (2012-04-05) =
+* Adds option to disable link on category title
+* Adds shortcode [ppc]
+* Adds class to headline title and number of comments
 
 = 1.0.0 (2012-01-16) =
 * Adds option to toggle comments number with link
