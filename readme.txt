@@ -32,6 +32,8 @@ Posts per Cat is a simple plugin that grab all or only selected categories from 
 * produces XHTML 1.1 valid code
 * published under terms of GNU GPLv3
 
+Visit http://urosevic.net/wordpress/plugins/posts-per-cat/ for more info.
+
 = Shortcode options =
 You can use shortcode [ppc], with options below (set option in shortcode to override default settings above):
 
