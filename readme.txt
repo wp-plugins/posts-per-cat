@@ -1,10 +1,10 @@
 === Posts per Cat ===
-Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail
+Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail, widget, shortcode
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
-Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 1.1.0
+Requires at least: 3.5.0
+Tested up to: 3.7.1
+Stable tag: 1.2.0
 
 Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
 
@@ -25,21 +25,44 @@ Posts per Cat is a simple plugin that grab all or only selected categories from 
 * toggle displaying sticky posts
 * toggle usage of custom list CSS
 * SEO optimized permalink URI's
+* integrate to template file, use shortcode [ppc] with options or widget
 * translantable
 * produces XHTML 1.1 valid code
 * published under terms of GNU GPLv3
 
+= Shortcode options =
+You can use shortcode [ppc], with options below (set option in shortcode to override default settings above):
+
+* columns=2 - Number of columns (1, 2, 3 or 4)
+* minh=0 - Minimal height of box (in px, set to 0 for auto)
+* include=category_ID's - Include category (comma separated category ID's)
+* exclude=category_ID's - Exclude category (comma separated category ID's)
+* parent=0 - Only top level categories (0 or 1)
+* order=ID - Order categories by (ID, name or custom)
+* catonly=0 - Only from displayed category archive (0 or 1)
+* noctlink=0 - Do not link category name (0 or 1)
+* more=0 - Standalone link to archives (0 or 1)
+* moretxt="More from" - Archive link prefix
+* posts=5 - Number of headlines per category block
+* titlelen=34 - Headline length (in characters)
+* shorten=0 - Shorten headline (0 or 1)
+* commnum=0 - Display comment number (0 or 1)
+* nosticky=0 - Hide sticky posts (0 or 1)
+* excerpts=none - Show excerpt (none, first or all)
+* content=0 - Use post content as excerpt (0 or 1)
+* excleng=100 - Excerpt length
+* thumb=0 - Show thumbnail with excerpt (0 or 1)
+* tsize=60 - Thumbnail size, set size in px for thumbnail width (height is same)
+
 == Installation ==
 
-You can use the built in installer and upgrader, or you can install the plugin manually.
-
-1. You can either use the automatic plugin installer or your FTP program to upload unziped posts-per-cat directory it to your wp-content/plugins directory.
-2. Activate the plugin through the `Plugins` menu in WordPress
-3. Visit your `Posts per Cat` options (Settings - Posts per Cat)
-4. Configure any options as desired
-5. Put code `<?php do_action('ppc'); ?>` in your template file (for example in index.php just before closing `</div><!-- #content -->` tag
-
-If you have to upgrade manually simply repeat the installation steps and re-enable the plugin.
+1. Login to your WordPress site and go to page `Plugins`-->`Add New`
+2. Type `posts per cat` to `Search` field and press `Search Plugins` button
+3. Click on `Install Now` link below `Posts per Cat` name
+4. Click on `OK` as answer to question `Are you sure you want to install this plugin?`
+5. Click `Activate Plugin` link after success installation
+6. Go to `Settings`-->`Posts per Cat` page and configure plugin's options
+7. Put code `<?php do_action('ppc'); ?>` in your template file (for example in index.php just before closing `</div><!-- #content -->` tag, or use widget `Posts per Cat` or shortcode `[ppc]`.
 
 == Frequently Asked Questions ==
 
@@ -48,11 +71,16 @@ If you have to upgrade manually simply repeat the installation steps and re-enab
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
-1. Posts per Cat Plugins settings
-2. Posts per Cat: custom cats, 3 column, w/o enabled CSS
-3. Posts per Cat: all cats, 3 column, w/ enabled CSS
+1. Posts per Cat default settings
+2. Posts per Cat widget
+3. Posts per Cat: custom cats, 3 column, w/o enabled CSS
+4. Posts per Cat: all cats, 3 column, w/ enabled CSS
 
 == Changelog ==
+= 1.2.0 (2013-11-24) =
+* Add shortcode options to override default settings
+* Add widget with settings
+* Code optimization
 
 = 1.1.0 (2012-04-05) =
 * Adds option to disable link on category title
