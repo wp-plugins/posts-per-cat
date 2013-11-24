@@ -5,8 +5,10 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Requires at least: 3.5.0
 Tested up to: 3.7.1
 Stable tag: 1.2.0
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
+Group recent posts by category and show them inside boxes organized in one, two, three or four columns.
 
 == Description ==
 
@@ -75,6 +77,10 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 2. Posts per Cat widget
 3. Posts per Cat: custom cats, 3 column, w/o enabled CSS
 4. Posts per Cat: all cats, 3 column, w/ enabled CSS
+
+== Upgrade Notice ==
+= 1.2.0 =
+* We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
 = 1.2.0 (2013-11-24) =
