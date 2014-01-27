@@ -7,7 +7,7 @@ class PPC_Widget extends WP_Widget {
 		parent::__construct(
 			'ppc_widget', // Base ID
 			__('Posts per Cat', 'ppc'), // Name
-			array( 'description' => __( 'Widget to generate Posts-per-Cat blocks inside single widget', 'ppc' ), ) // Args
+			array( 'description' => __( 'Widget for Posts-per-Cat block in custom Widget Area', 'ppc' ), ) // Args
 		);
 	}
 
@@ -16,10 +16,26 @@ class PPC_Widget extends WP_Widget {
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
 		$options = array(
-			'columns'	=> $instance['columns'],
-			'minh'		=> $instance['minh'],
-			'include'	=> $instance['include'],
-			'exclude'	=> $instance['exclude']
+			'columns'  => $instance['columns'],
+			'minh'     => $instance['minh'],
+			'include'  => $instance['include'],
+			'exclude'  => $instance['exclude'],
+			'parent'   => $instance['parent'],
+			'order'    => $instance['order'],
+			'catonly'  => $instance['catonly'],
+			'noctlink' => $instance['noctlink'],
+			'more'     => $instance['more'],
+			'moretxt'  => $instance['moretxt'],
+			'posts'    => (empty($instance['posts']))?5:$instance['posts'],
+			'titlelen' => (empty($instance['titlelen']))?'':$instance['titlelen'],
+			'shorten'  => $instance['shorten'],
+			'commnum'  => $instance['commnum'],
+			'nosticky' => $instance['nosticky'],
+			'excerpts' => $instance['excerpts'],
+			'content'  => $instance['content'],
+			'excleng'  => (empty($instance['excleng']))?'':$instance['excleng'],
+			'thum'     => (empty($instance['thum']))?false:$instance['thum'],
+			'tsize'    => $instance['tsize']
 			);
 
 		// error_log(print_r($options));
@@ -53,7 +69,7 @@ class PPC_Widget extends WP_Widget {
 		$shorten	= ( isset( $instance[ 'shorten' ] ) ) ? $instance[ 'shorten' ] : false;
 		$commnum	= ( isset( $instance[ 'commnum' ] ) ) ? $instance[ 'commnum' ] : false;
 		$nosticky	= ( isset( $instance[ 'nosticky' ] ) ) ? $instance[ 'nosticky' ] : false;
-		$excerpt	= ( isset( $instance[ 'excerpt' ] ) ) ? $instance[ 'excerpt' ] : 'none';
+		$excerpts	= ( isset( $instance[ 'excerpts' ] ) ) ? $instance[ 'excerpts' ] : 'none';
 		$content	= ( isset( $instance[ 'content' ] ) ) ? $instance[ 'content' ] : false;
 		$excleng	= ( isset( $instance[ 'excleng' ] ) ) ? $instance[ 'excleng' ] : '';
 		$thum		= ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
@@ -145,11 +161,11 @@ class PPC_Widget extends WP_Widget {
 
 		<h3>Content</h3>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'excerpt' ); ?>">Show excerpt</label>
-			<select class="widefat" id="<?php echo $this->get_field_id( 'excerpt' ); ?>" name="<?php echo $this->get_field_name( 'excerpt' ); ?>">
-				<option value="none"<?php selected( $instance['excerpt'], 'none' ); ?>><?php _e("Don't display", 'ppc'); ?></option>
-				<option value="first"<?php selected( $instance['excerpt'], 'first' ); ?>><?php _e('For first article only', 'ppc'); ?></option>
-				<option value="all"<?php selected( $instance['excerpt'], 'all' ); ?>><?php _e('For all articles', 'ppc'); ?></option>
+			<label for="<?php echo $this->get_field_id( 'excerpts' ); ?>">Show excerpt</label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'excerpts' ); ?>" name="<?php echo $this->get_field_name( 'excerpts' ); ?>">
+				<option value="none"<?php selected( $instance['excerpts'], 'none' ); ?>><?php _e("Don't display", 'ppc'); ?></option>
+				<option value="first"<?php selected( $instance['excerpts'], 'first' ); ?>><?php _e('For first article only', 'ppc'); ?></option>
+				<option value="all"<?php selected( $instance['excerpts'], 'all' ); ?>><?php _e('For all articles', 'ppc'); ?></option>
 			</select>
 		</p>
 
@@ -173,27 +189,27 @@ class PPC_Widget extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
 		// processes widget options to be saved
-		$instance = array();
-		$options = get_option('postspercat');
-		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-		$instance['columns'] = ( ! empty( $new_instance['columns'] ) ) ? strip_tags( $new_instance['columns'] ) : '';
-		$instance['minh'] = ( ! empty( $new_instance['minh'] ) ) ? strip_tags( $new_instance['minh'] ) : '';
-		$instance['include'] = ( ! empty( $new_instance['include'] ) ) ? strip_tags( $new_instance['include'] ) : '';
-		$instance['exclude'] = ( ! empty( $new_instance['exclude'] ) ) ? strip_tags( $new_instance['exclude'] ) : '';
-		$instance['parent'] = ( ! empty( $new_instance['parent'] ) ) ? strip_tags( $new_instance['parent'] ) : '';
-		$instance['order'] = ( ! empty( $new_instance['order'] ) ) ? strip_tags( $new_instance['order'] ) : '';
-		$instance['catonly'] = ( ! empty( $new_instance['catonly'] ) ) ? strip_tags( $new_instance['catonly'] ) : '';
-		$instance['noctlink'] = ( ! empty( $new_instance['noctlink'] ) ) ? strip_tags( $new_instance['noctlink'] ) : '';
-		$instance['more'] = ( ! empty( $new_instance['more'] ) ) ? strip_tags( $new_instance['more'] ) : '';
-		$instance['moretxt'] = ( ! empty( $new_instance['moretxt'] ) ) ? strip_tags( $new_instance['moretxt'] ) : 'More from';
-		$instance['shorten'] = ( ! empty( $new_instance['shorten'] ) ) ? strip_tags( $new_instance['shorten'] ) : '';
-		$instance['commnum'] = ( ! empty( $new_instance['commnum'] ) ) ? strip_tags( $new_instance['commnum'] ) : '';
-		$instance['nosticky'] = ( ! empty( $new_instance['nosticky'] ) ) ? strip_tags( $new_instance['nosticky'] ) : '';
-		$instance['excerpt'] = ( ! empty( $new_instance['excerpt'] ) ) ? strip_tags( $new_instance['excerpt'] ) : 'none';
-		$instance['content'] = ( ! empty( $new_instance['content'] ) ) ? strip_tags( $new_instance['content'] ) : '';
-		$instance['excleng'] = ( ! empty( $new_instance['excleng'] ) ) ? strip_tags( $new_instance['excleng'] ) : '';
-		$instance['thumb'] = ( ! empty( $new_instance['thumb'] ) ) ? strip_tags( $new_instance['thumb'] ) : '';
-		$instance['tsize'] = ( ! empty( $new_instance['tsize'] ) ) ? strip_tags( $new_instance['tsize'] ) : '60';
+		$instance             = array();
+		$options              = get_option('postspercat');
+		$instance['title']    = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+		$instance['columns']  = (!empty($new_instance['columns'])) ? strip_tags($new_instance['columns']) : '';
+		$instance['minh']     = (!empty($new_instance['minh'])) ? strip_tags($new_instance['minh']) : '';
+		$instance['include']  = (!empty($new_instance['include'])) ? strip_tags($new_instance['include']) : '';
+		$instance['exclude']  = (!empty($new_instance['exclude'])) ? strip_tags($new_instance['exclude']) : '';
+		$instance['parent']   = (!empty($new_instance['parent'])) ? strip_tags($new_instance['parent']) : '';
+		$instance['order']    = (!empty($new_instance['order'])) ? strip_tags($new_instance['order']) : '';
+		$instance['catonly']  = (!empty($new_instance['catonly'])) ? strip_tags($new_instance['catonly']) : '';
+		$instance['noctlink'] = (!empty($new_instance['noctlink'])) ? strip_tags($new_instance['noctlink']) : '';
+		$instance['more']     = (!empty($new_instance['more'])) ? strip_tags($new_instance['more']) : '';
+		$instance['moretxt']  = (!empty($new_instance['moretxt'])) ? strip_tags($new_instance['moretxt']) : 'More from';
+		$instance['shorten']  = (!empty($new_instance['shorten'])) ? strip_tags($new_instance['shorten']) : '';
+		$instance['commnum']  = (!empty($new_instance['commnum'])) ? strip_tags($new_instance['commnum']) : '';
+		$instance['nosticky'] = (!empty($new_instance['nosticky'])) ? strip_tags($new_instance['nosticky']) : '';
+		$instance['excerpts'] = (!empty($new_instance['excerpts'])) ? strip_tags($new_instance['excerpts']) : 'none';
+		$instance['content']  = (!empty($new_instance['content'])) ? strip_tags($new_instance['content']) : '';
+		$instance['excleng']  = (!empty($new_instance['excleng'])) ? strip_tags($new_instance['excleng']) : '';
+		$instance['thumb']    = (!empty($new_instance['thumb'])) ? strip_tags($new_instance['thumb']) : '';
+		$instance['tsize']    = (!empty($new_instance['tsize'])) ? strip_tags($new_instance['tsize']) : '60';
 		return $instance;
 	}
 }

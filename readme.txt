@@ -2,9 +2,9 @@
 Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail, widget, shortcode
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
-Requires at least: 3.5.0
-Tested up to: 3.7.1
-Stable tag: 1.2.0
+Requires at least: 3.7.0
+Tested up to: 3.8.1
+Stable tag: 1.2.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,8 +31,6 @@ Posts per Cat is a simple plugin that grab all or only selected categories from 
 * translantable
 * produces XHTML 1.1 valid code
 * published under terms of GNU GPLv3
-
-Visit http://urosevic.net/wordpress/plugins/posts-per-cat/ for more info.
 
 = Shortcode options =
 You can use shortcode [ppc], with options below (set option in shortcode to override default settings above):
@@ -85,6 +83,10 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
+= 1.2.1 (2014-01-27) =
+* Fix widget functionality
+* Update compatibility to 3.8.1
+
 = 1.2.0 (2013-11-24) =
 * Add shortcode options to override default settings
 * Add widget with settings

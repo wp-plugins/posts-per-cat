@@ -17,15 +17,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Plugin Name: Posts per Cat
-Plugin URI: http://blog.urosevic.net/wordpress/posts-per-cat/
+Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
-Version: 1.2.0
+Version: 1.2.1
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
 */
 
-define( 'POSTS_PER_CAT_VER', '1.2.0' );
+define( 'POSTS_PER_CAT_VER', '1.2.1' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 // add PPC button to admin menu
@@ -231,7 +231,7 @@ function posts_per_cat($attr = null) {
 
 				if ( $br++ == 0 && ($excerpts == 'first') ) { // print excerpt for first post
 					$ppc_str .= '<p>';
-					if ( $ppc_thumb ) { // print thumbnail
+					if ( $thumb ) { // print thumbnail
 						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
 							$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize);
 						}
@@ -239,7 +239,7 @@ function posts_per_cat($attr = null) {
 					$ppc_str .= $excerpt.'</p>';
 				} elseif ( $br++ > 0 && $excerpts == 'all' ) { // print excerpt for other posts
 					$ppc_str .= '<p>';
-					if ( $ppc_thumb ) { // print thumbnails
+					if ( $thumb ) { // print thumbnails
 						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
 						$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize ); }
 					}
@@ -277,7 +277,6 @@ function posts_per_cat($attr = null) {
 <!-- end of Posts per Cat -->
 ';
 
-// error_log($ppc_str);
 return $ppc_str;
 } // posts_per_cat()
 

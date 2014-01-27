@@ -5,7 +5,7 @@
 		$options['posts']    = htmlspecialchars($_POST['ppc-posts']);
 		$options['titlelen'] = htmlspecialchars($_POST['ppc-titlelen']);
 		$options['shorten']  = isset($_POST['ppc-shorten']);
-		$options['excerpts']  = htmlspecialchars($_POST['ppc-excerpts']);
+		$options['excerpts'] = htmlspecialchars($_POST['ppc-excerpts']);
 		$options['content']  = isset($_POST['ppc-content']);
 		$options['excleng']  = htmlspecialchars($_POST['ppc-excleng']);
 		$options['parent']   = isset($_POST['ppc-parent']);
@@ -57,20 +57,25 @@
 		);
 		update_option('postspercat', $options);
 	}
-	// Now print Options page
 
-	// migrate to 1.2.0
-	if ( empty($options['posts']) && !empty($options['post']) )
+	// migrate to 1.2.0+
+	if ( empty($options['posts']) && !empty($options['post']) ){
 		$options['posts'] = $options['post'];
-	if ( empty($options['columns']) && !empty($options['column']) )
+		unset($options['post']);
+	}
+	if ( empty($options['columns']) && !empty($options['column']) ){
 		$options['columns'] = $options['column'];
-	if ( empty($options['excerpts']) && !empty($options['excerpt']) )
+		unset($options['column']);
+	}
+	if ( empty($options['excerpts']) && !empty($options['excerpt']) ){
 		$options['excerpts'] = $options['excerpt'];
+		unset($options['excerpt']);
+	}
 
+	// Now print Options page
 
 ?>
 <script type="text/javascript">
-
 jQuery(document).ready(function($){
 	$('.allcats').hide();
 	$('#togglecattable').click(function(){
@@ -83,7 +88,6 @@ jQuery(document).ready(function($){
 		}
 	});
 });
-
 </script>
 <div class="wrap">
 	<div id="icon-options-general" class="icon32"><br /></div>
@@ -287,7 +291,7 @@ jQuery(document).ready(function($){
 		<tr>
 			<td>
 				<p><?php echo sprintf(__('For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.', 'ppc'), 'http://wordpress.org/tags/posts-per-cat?forum_id=10'); ?>
-				<p><?php echo sprintf(__('If you like <a href="%s">Posts per Cat</a> and my other <a href="%s">WordPress extensions</a>, feel free to support my work with <a href="%s">donation</a>.', 'ppc'), 'http://wordpress.org/extend/plugins/posts-per-cat/', 'http://profiles.wordpress.org/users/urkekg/', 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6'); ?></p>
+				<p><?php echo sprintf(__('If you like <a href="%s">Posts per Cat</a> and my other <a href="%s">WordPress extensions</a>, feel free to support my work with <a href="%s">donation</a>.', 'ppc'), 'http://wordpress.org/plugins/posts-per-cat/', 'http://profiles.wordpress.org/urkekg/', 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6'); ?></p>
 			</td>
 		</tr>
 		</tbody>
