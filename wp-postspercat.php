@@ -19,17 +19,18 @@
 Plugin Name: Posts per Cat
 Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
-Version: 1.2.1
+Version: 1.2.2
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
 */
 
-define( 'POSTS_PER_CAT_VER', '1.2.1' );
+define( 'POSTS_PER_CAT_NAME', 'Posts per Cat' );
+define( 'POSTS_PER_CAT_VER', '1.2.2' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 // add PPC button to admin menu
-add_action( 'admin_menu', 'ppc_postspercat_menu' );
+// add_action( 'admin_menu', 'ppc_postspercat_menu' );
 // initialize PPC
 add_action( 'ppc', 'ppc_echo');
 // define shortcode
@@ -41,6 +42,13 @@ function ppc_echo() { echo posts_per_cat(); }
 if ( is_admin() ) {
 	$plugin = plugin_basename(__FILE__); 
 	add_filter('plugin_action_links_'.$plugin, 'addConfigureLink' );
+
+	if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' ) ) {
+	    require_once( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' );
+	}
+	if ( !isset( $ppc_redux ) && file_exists( dirname( __FILE__ ) . '/inc/config.php' ) ) {
+	    require_once( dirname( __FILE__ ) . '/inc/config.php' );
+	}
 }
 function addConfigureLink( $links ) { 
 	$settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>'; 
@@ -72,14 +80,14 @@ function ppc_scripts(){
         wp_add_inline_style( 'ppc-main', $custom_css );
 }
 
-/* prepare Options page */
+/* prepare Options page *//*
 function ppc_postspercat_menu() {
-	add_options_page(__('Posts per Cat Options', 'ppc'),  __('Posts per Cat', 'ppc'), 'manage_options', 'posts-per-cat', 'ppc_postspercat_options');
+	add_options_page(__(POSTS_PER_CAT_NAME.' Options', 'ppc'),  __(POSTS_PER_CAT_NAME, 'ppc'), 'manage_options', 'posts-per-cat', 'ppc_postspercat_options');
 }
 
 function ppc_postspercat_options() {
 	require_once('inc/options.php');
-}
+}*/
 
 require_once('inc/tools.php');
 require_once('inc/widget.php');
@@ -87,10 +95,24 @@ require_once('inc/widget.php');
 function posts_per_cat($attr = null) {
 	global $blog_url;
 
+	// $options = get_option('posts_per_cat_default');
+	// var_dump($options);
 	$options		= get_option('postspercat');
 // [ppc posts="" shorten=0 titlelen=0 parent=0 excerpts=]
+
+	$include = $options['include']['enabled'];
+	unset ($include['placebo']);
+	$include = str_replace("_","",implode(",", array_keys($include)));
+
+	$exclude = $options['exclude']['enabled'];
+	unset ($exclude['placebo']);
+	$exclude = str_replace("_","",implode(",", array_keys($exclude)));
+
+	// echo "include=$include<br/>exclude=$exclude<br/>";
 	extract( shortcode_atts( array(
 		'posts'		=> $options['posts'],
+		'porderby'	=> $options['porderby'],
+		'porder'	=> $options['porder'],
 		'shorten'	=> $options['shorten'],
 		'titlelen'	=> $options['titlelen'],
 		'parent'	=> $options['parent'],
@@ -102,14 +124,14 @@ function posts_per_cat($attr = null) {
 		'noctlink'	=> $options['noctlink'],
 		'more'		=> $options['more'],
 		'moretxt'	=> $options['moretxt'],
-		'include'	=> $options['include'],
-		'exclude'	=> $options['exclude'],
-		'thumb'		=> $options['thumb'],
+		'include'	=> $include, //$options['include'],
+		'exclude'	=> $exclude, //$options['exclude'],
 		'catonly'	=> $options['catonly'],
 		'commnum'	=> $options['commnum'],
+		'thumb'		=> $options['thumb'],
 		'tsize'		=> $options['tsize'],
 		'columns'	=> (!empty($options['columns'])) ? $options['columns'] : $options['column'],
-		'minh'		=> $options['minh']
+		'minh'		=> $options['minh']['height']
     ), $attr ) );
 
 	// default thumbnail size
@@ -131,7 +153,8 @@ function posts_per_cat($attr = null) {
 	} else {
 		// custom or other category ordering?
 		if ( $order == "custom" ) { // custom
-			$custom_order = split(",", $include);
+			$custom_order = explode(",", $include);
+			// print_r($cusom_order);
 			foreach ( $custom_order as $custom_order_cat_ID ) {
 				$custom_order_cat_object = get_categories('include='.$custom_order_cat_ID);
 				$custom_order_cat[] = $custom_order_cat_object[0];
@@ -146,7 +169,7 @@ function posts_per_cat($attr = null) {
 	$boxnum = 0;
 	// print PPC body header
 	$ppc_str = '
-<!-- start of Posts per Cat version '.POSTS_PER_CAT_VER.' -->
+<!-- start of '.POSTS_PER_CAT_NAME.' version '.POSTS_PER_CAT_VER.' -->
 	<div id="ppc-box">
 ';
 
@@ -180,12 +203,13 @@ function posts_per_cat($attr = null) {
 				$posts_arr = get_posts(array(
 					'post__not_in' => get_option("sticky_posts"),
 					'numberposts' => $posts,
-					'order' => "DSC",
-					'orderby' => "date",
+					'order' => $porder, //"DSC",
+					'orderby' => $porderby, //"date",
 					'category' => $cat->cat_ID
 				));
 			} else { // include sticky posts
-				$posts_arr = get_posts('numberposts='.$posts.'&order=DSC&orderby=date&category='.$cat->cat_ID);
+				$posts_arr = get_posts('numberposts='.$posts.'&order='.$porder.'&orderby='.$porderby.'&category='.$cat->cat_ID);
+				// $posts_arr = get_posts('numberposts='.$posts.'&order=DSC&orderby=date&category='.$cat->cat_ID);
 			}
 			
 			$br = 0; // control number for number of excerpts
@@ -274,7 +298,7 @@ function posts_per_cat($attr = null) {
 	// close PPC container
 	$ppc_str .= '
 	</div>
-<!-- end of Posts per Cat -->
+<!-- end of '.POSTS_PER_CAT_NAME.' -->
 ';
 
 return $ppc_str;
