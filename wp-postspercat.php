@@ -1,7 +1,7 @@
 <?php
 /*
     WP Posts per Cat list titles of recent posts in boxes for all single categories
-    Copyright (C) 2009-2012 Aleksandar Urošević <urke@users.sourceforge.net>
+    Copyright (C) 2009-2014 Aleksandar Urošević <urke.kg@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
 Plugin Name: Posts per Cat
 Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
-Version: 1.2.2
+Version: 1.3.0
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
 */
 
 define( 'POSTS_PER_CAT_NAME', 'Posts per Cat' );
-define( 'POSTS_PER_CAT_VER', '1.2.2' );
+define( 'POSTS_PER_CAT_VER', '1.3.0' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 // add PPC button to admin menu
