@@ -1,7 +1,21 @@
 /*global jQuery*/
 
-jQuery(document).ready(function () {
-	jQuery('.redux-datepicker').each(function(){
-		jQuery(this).datepicker();
-	});
-});
+(function( $ ) {
+    "use strict";
+
+    $.reduxDate = $.reduxDate || {};
+
+    $( document ).ready(
+        function() {
+            $.reduxDate.init();
+        }
+    );
+
+    $.reduxDate.init = function() {
+        $( '.redux-datepicker' ).each(
+            function() {
+                $( this ).datepicker();
+            }
+        );
+    };
+})( jQuery );

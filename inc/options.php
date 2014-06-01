@@ -110,6 +110,7 @@ jQuery(document).ready(function($){
 				<input type="radio" id="ppc-columns" name="ppc-columns" value="2" <?php checked( $options['columns'], 2 ); ?>/> <?php _e('Two columns per row', 'ppc'); ?><br />
 				<input type="radio" id="ppc-columns" name="ppc-columns" value="3" <?php checked( $options['columns'], 3 ); ?>/> <?php _e('Three columns per row', 'ppc'); ?><br />
 				<input type="radio" id="ppc-columns" name="ppc-columns" value="4" <?php checked( $options['columns'], 4 ); ?>/> <?php _e('Four columns per row', 'ppc'); ?>
+				<input type="radio" id="ppc-columns" name="ppc-columns" value="5" <?php checked( $options['columns'], 5 ); ?>/> <?php _e('Five columns per row', 'ppc'); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -290,7 +291,7 @@ jQuery(document).ready(function($){
 		<tbody>
 		<tr>
 			<td>
-				<p><?php echo sprintf(__('For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.', 'ppc'), 'http://wordpress.org/tags/posts-per-cat?forum_id=10'); ?>
+				<p><?php echo sprintf(__('For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.', 'ppc'), 'http://wordpress.org/support/plugin/posts-per-cat'); ?>
 				<p><?php echo sprintf(__('If you like <a href="%s">Posts per Cat</a> and my other <a href="%s">WordPress extensions</a>, feel free to support my work with <a href="%s">donation</a>.', 'ppc'), 'http://wordpress.org/plugins/posts-per-cat/', 'http://profiles.wordpress.org/urkekg/', 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6'); ?></p>
 			</td>
 		</tr>

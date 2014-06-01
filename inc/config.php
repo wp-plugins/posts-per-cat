@@ -188,7 +188,7 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 						'type'        => 'radio', 
 						'title'       => __('Columns', 'ppc'),
 						'desc'        => __('Number of columns per row.', 'ppc'),
-						'options'     => array('1' => 'One column (full width)', '2' => 'Two columns', '3' => 'Three columns', '4' => 'Four columns'),//Must provide key => value pairs for radio options
+						'options'     => array('1' => 'One column (full width)', '2' => 'Two columns', '3' => 'Three columns', '4' => 'Four columns', '5' => 'Five columns'),//Must provide key => value pairs for radio options
 						'default'     => 2,
 					),	
 
@@ -504,7 +504,7 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 	            'page'		 	 		=> __( POSTS_PER_CAT_NAME.' Options', 'ppc' ),
 	            'google_api_key'   	 	=> '', // Must be defined to add google fonts to the typography module
 	            'global_variable'    	=> '', // Set a different name for your global variable other than the opt_name
-	            'dev_mode'           	=> true, // Show the time the page took to load, etc
+	            'dev_mode'           	=> false, // Show the time the page took to load, etc
 	            'customizer'         	=> true, // Enable basic customizer support
 
 	            // OPTIONAL -> Give you extra features
@@ -574,9 +574,9 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 				} else {
 					$v = str_replace("-", "_", $this->args['opt_name']);
 				}
-				$this->args['intro_text'] = __('<p>List latest N articles from all, top level only or manually defind categories and group them in category boxes organized in one, two, three or four columns.</p>', 'ppc' );
+				$this->args['intro_text'] = __('<p>List latest articles from all, top level only or manually defind categories and group them in category boxes organized to one, two, three, four or five columns.</p><p>Here you can set default options that will be used as defaults for new widgets, and for shortcode.</p>', 'ppc' );
 			} else {
-				$this->args['intro_text'] = __('<p>This text is displayed above the options panel. It isn\'t required, but more info is always better! The intro_text field accepts all HTML.</p>', 'ppc');
+				// $this->args['intro_text'] = __('<p>This text is displayed above the options panel. It isn\'t required, but more info is always better! The intro_text field accepts all HTML.</p>', 'ppc');
 			}
 
 			// Add content after the form.

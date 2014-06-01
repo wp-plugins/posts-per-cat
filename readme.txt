@@ -2,9 +2,9 @@
 Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail, widget, shortcode
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
-Requires at least: 3.7.0
-Tested up to: 3.8.1
-Stable tag: 1.2.1
+Requires at least: 3.8.0
+Tested up to: 3.9.1
+Stable tag: 1.3.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -35,7 +35,7 @@ Posts per Cat is a simple plugin that grab all or only selected categories from 
 = Shortcode options =
 You can use shortcode [ppc], with options below (set option in shortcode to override default settings above):
 
-* columns=2 - Number of columns (1, 2, 3 or 4)
+* columns=2 - Number of columns (1, 2, 3, 4 or 5)
 * minh=0 - Minimal height of box (in px, set to 0 for auto)
 * include=category_ID's - Include category (comma separated category ID's)
 * exclude=category_ID's - Exclude category (comma separated category ID's)
@@ -73,16 +73,26 @@ You can use shortcode [ppc], with options below (set option in shortcode to over
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
 == Screenshots ==
-1. Posts per Cat default settings
+1. Posts per Cat general settings
 2. Posts per Cat widget
 3. Posts per Cat: custom cats, 3 column, w/o enabled CSS
 4. Posts per Cat: all cats, 3 column, w/ enabled CSS
 
 == Upgrade Notice ==
+= 1.3.0 =
+* General settings page moved to Redux framework. Make backup before you update plugin, so you can go back if something go wrong.
+
 = 1.2.0 =
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
+= 1.3.0 (2014-06-01) =
+* A lot of fixes made during framework change
+* Improved basic block layouts
+* Add 5th column for boxes
+* Convert settings page to Redux Framework
+* Update compatibility to 3.9.1
+
 = 1.2.1 (2014-01-27) =
 * Fix widget functionality
 * Update compatibility to 3.8.1

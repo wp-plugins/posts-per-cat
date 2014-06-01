@@ -34,7 +34,7 @@ class PPC_Widget extends WP_Widget {
 			'excerpts' => $instance['excerpts'],
 			'content'  => $instance['content'],
 			'excleng'  => (empty($instance['excleng']))?'':$instance['excleng'],
-			'thum'     => (empty($instance['thum']))?false:$instance['thum'],
+			'thumb'     => (empty($instance['thumb']))?false:$instance['thumb'],
 			'tsize'    => $instance['tsize']
 			);
 
@@ -72,7 +72,7 @@ class PPC_Widget extends WP_Widget {
 		$excerpts	= ( isset( $instance[ 'excerpts' ] ) ) ? $instance[ 'excerpts' ] : 'none';
 		$content	= ( isset( $instance[ 'content' ] ) ) ? $instance[ 'content' ] : false;
 		$excleng	= ( isset( $instance[ 'excleng' ] ) ) ? $instance[ 'excleng' ] : '';
-		$thum		= ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
+		$thumb		= ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
 		$tsize		= ( isset( $instance[ 'tsize' ] ) ) ? $instance[ 'tsize' ] : '60';
 
 		?>
@@ -87,6 +87,7 @@ class PPC_Widget extends WP_Widget {
 				<option value="2"<?php selected( $instance['columns'], '2' ); ?>><?php _e('Two columns per row', 'ppc'); ?></option>
 				<option value="3"<?php selected( $instance['columns'], '3' ); ?>><?php _e('Three columns per row', 'ppc'); ?></option>
 				<option value="4"<?php selected( $instance['columns'], '4' ); ?>><?php _e('Four columns per row', 'ppc'); ?></option>
+				<option value="5"<?php selected( $instance['columns'], '5' ); ?>><?php _e('Five columns per row', 'ppc'); ?></option>
 			</select>
 		</p>
 
@@ -191,9 +192,11 @@ class PPC_Widget extends WP_Widget {
 		// processes widget options to be saved
 		$instance             = array();
 		$options              = get_option('postspercat');
+		// main
 		$instance['title']    = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
 		$instance['columns']  = (!empty($new_instance['columns'])) ? strip_tags($new_instance['columns']) : '';
 		$instance['minh']     = (!empty($new_instance['minh'])) ? strip_tags($new_instance['minh']) : '';
+		// categories
 		$instance['include']  = (!empty($new_instance['include'])) ? strip_tags($new_instance['include']) : '';
 		$instance['exclude']  = (!empty($new_instance['exclude'])) ? strip_tags($new_instance['exclude']) : '';
 		$instance['parent']   = (!empty($new_instance['parent'])) ? strip_tags($new_instance['parent']) : '';
@@ -202,9 +205,13 @@ class PPC_Widget extends WP_Widget {
 		$instance['noctlink'] = (!empty($new_instance['noctlink'])) ? strip_tags($new_instance['noctlink']) : '';
 		$instance['more']     = (!empty($new_instance['more'])) ? strip_tags($new_instance['more']) : '';
 		$instance['moretxt']  = (!empty($new_instance['moretxt'])) ? strip_tags($new_instance['moretxt']) : 'More from';
+		// Headlines
+		$instance['posts']  = (!empty($new_instance['posts'])) ? strip_tags($new_instance['posts']) : '';
+		$instance['titlelen']  = (!empty($new_instance['titlelen'])) ? strip_tags($new_instance['titlelen']) : '';
 		$instance['shorten']  = (!empty($new_instance['shorten'])) ? strip_tags($new_instance['shorten']) : '';
 		$instance['commnum']  = (!empty($new_instance['commnum'])) ? strip_tags($new_instance['commnum']) : '';
 		$instance['nosticky'] = (!empty($new_instance['nosticky'])) ? strip_tags($new_instance['nosticky']) : '';
+		// Content
 		$instance['excerpts'] = (!empty($new_instance['excerpts'])) ? strip_tags($new_instance['excerpts']) : 'none';
 		$instance['content']  = (!empty($new_instance['content'])) ? strip_tags($new_instance['content']) : '';
 		$instance['excleng']  = (!empty($new_instance['excleng'])) ? strip_tags($new_instance['excleng']) : '';

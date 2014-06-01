@@ -7,6 +7,9 @@ Version: 1.0.0
 Author URI: http://urosevic.net
 */
 
+#ppc-box .ppc-box {
+	padding: 5px;
+}
 #ppc-box .ppc-box .ppc {
 	border: 1px solid #DEDBD1;
 	background: #fff url(ppc_bg.gif) no-repeat bottom right;

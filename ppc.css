@@ -7,40 +7,51 @@ Version: 1.0.0
 Author URI: http://urosevic.net
 */
 #ppc-box {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	width: 100%;
 	clear: both;
 	border: none;
 	margin: 0;
 	padding: 0;
 }
+#ppc-box:after,
 #ppc-box .clear {
-	position: relative;
 	clear: both;
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	position: relative;
 	width: 100%;
+	content: "\0020";
 }
 
 /* columns */
 #ppc-box .ppc-box {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	position: relative;
 	float: left;
 	padding: 0;
-	margin: 0 0 7px 0;
+	margin: 0;
 }
 #ppc-box .one {
 	width: 100%;
 	clear: both;
 }
 #ppc-box .two {
-	width: 49%;
-	margin-right: 1%;
+	width: 50%;
 }
 #ppc-box .three {
-	width: 32%;
-	margin-right: 1%;
+	width: 33.3333%;
 }
 #ppc-box .four {
-	width: 24%;
-	margin-right: 1%;
+	width: 25%;
+}
+#ppc-box .five {
+	width: 20%;
 }
 
 /* category box content */
@@ -53,8 +64,8 @@ Author URI: http://urosevic.net
 	position: relative;
 	width: 100%;
 	text-align: right;
-	margin-top: 9px;
-	font-size: x-small;
+	/*margin-top: 9px;*/
+	/*font-size: x-small;*/
 }
 .ppc li {
 	clear: both;

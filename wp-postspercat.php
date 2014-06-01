@@ -134,6 +134,8 @@ function posts_per_cat($attr = null) {
 		'minh'		=> $options['minh']['height']
     ), $attr ) );
 
+	// if exclength has not been set, set 500
+	if (empty($excleng)) $excleng = 500;
 	// default thumbnail size
 	$ppc_tsize = ( empty($tsize) ) ? array(60,60) : array($tsize,$tsize);
 
@@ -141,6 +143,7 @@ function posts_per_cat($attr = null) {
 		case 1:		$ppc_column = "one"; break;
 		case 3:		$ppc_column = "three"; break;
 		case 4:		$ppc_column = "four"; break;
+		case 5:		$ppc_column = "five"; break;
 		default:	$ppc_column = "two";
 	}
 
@@ -197,7 +200,6 @@ function posts_per_cat($attr = null) {
 			<div class="ppc" '.$minh.'>
 			<h3>'.$ppc_cattitle.'</h3>
 			<ul>';
-
 			// get latest N posts from category $cat
 			if ( $nosticky ) { // exclude sticky posts
 				$posts_arr = get_posts(array(
@@ -228,6 +230,8 @@ function posts_per_cat($attr = null) {
 					$title_full = $title = $post->post_title;
 				}
 
+				$title = htmlspecialchars(str_replace('"', "", $title));
+				$title_full = htmlspecialchars (str_replace('"', "", $title_full));
 				$ppc_str .= '
 				<li><a href="'.get_permalink($post->ID).'" class="ppc-post-title" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'.$title.'</a>';
 				if ( $commnum ) {
@@ -240,14 +244,23 @@ function posts_per_cat($attr = null) {
 					}
 					$ppc_str .= '">'.get_comments_number($post->ID).'</a>)</span>';
 				}
+
 				if ( $content ) {
-					$excerpt = strip_tags(substr_utf8($post->post_content, 0, 500)).'&hellip;';
-					if ( $excleng && mb_strlen_dh($excerpt) > ($excleng+1) ) {
-						$excerpt = substr_utf8($excerpt, 0, $excleng).'&hellip;';
+					$excerpt = strip_tags($post->post_content);
+					// $excerpt = substr_utf8($excerpt, 0, $excleng).'&hellip;';
+					$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
+					// $excerpt = strip_tags(substr_utf8($post->post_content, 0, $excleng)).'&hellip;';
+					// $excerpt = substr_utf8($post->post_content,0,$excleng).'&hellip;';
+					if ( $excleng && mb_strlen($excerpt) > ($excleng+1) ) {
+					// if ( $excleng && mb_strlen_dh($excerpt) > ($excleng+1) ) {
+						// $excerpt = substr_utf8($excerpt, 0, $excleng).'&hellip;';
+						$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
 					}
 				} else {
-					if ( $excleng && mb_strlen_dh($post->post_excerpt) > ($excleng+1) ) {
-						$excerpt = substr_utf8($post->post_excerpt, 0, $excleng).'&hellip;';
+					if ( $excleng && mb_strlen($post->post_excerpt) > ($excleng+1) ) {
+					// if ( $excleng && mb_strlen_dh($post->post_excerpt) > ($excleng+1) ) {
+						$excerpt = mb_substr($post->post_excerpt, 0, $excleng).'&hellip;';
+						// $excerpt = substr_utf8($post->post_excerpt, 0, $excleng).'&hellip;';
 					} else {
 						$excerpt = $post->post_excerpt;
 					}
@@ -265,7 +278,8 @@ function posts_per_cat($attr = null) {
 					$ppc_str .= '<p>';
 					if ( $thumb ) { // print thumbnails
 						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
-						$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize ); }
+							$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize );
+						}
 					}
 					$ppc_str .= $excerpt.'</p>';
 				}

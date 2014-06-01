@@ -1,34 +1,61 @@
-jQuery(document).ready(function() {
-	
-	jQuery(".redux-spacing-top, .redux-spacing-right, .redux-spacing-bottom, .redux-spacing-left, .redux-spacing-all").numeric({
-		//allowMinus   : false,
-	});
+(function( $ ) {
+    "use strict";
 
-	jQuery(".redux-spacing-units").select2({
-		width: 'resolve',
-		triggerChange: true,
-		allowClear: true
-	});
+    $.reduxSpacing = $.reduxSpacing || {};
 
-	jQuery('.redux-spacing-input').on('change', function() {
-		var units = jQuery(this).parents('.redux-field:first').find('.field-units').val();
-		if ( jQuery(this).parents('.redux-field:first').find('.redux-spacing-units').length !== 0 ) {
-			units = jQuery(this).parents('.redux-field:first').find('.redux-spacing-units option:selected').val();
-		}
-		var value = jQuery(this).val();
-		if( typeof units !== 'undefined' && value ) {
-			value += units;
-		}
-		if ( jQuery(this).hasClass( 'redux-spacing-all' ) ) {
-			jQuery(this).parents('.redux-field:first').find('.redux-spacing-value').each(function() {
-				jQuery(this).val(value);
-			});
-		} else {
-			jQuery('#'+jQuery(this).attr('rel')).val(value);
-		}
-	});
-	jQuery('.redux-spacing-units').on('change', function() {
-		jQuery(this).parents('.redux-field:first').find('.redux-spacing-input').change();
-	});
+    $( document ).ready(
+        function() {
+            $.reduxSpacing.init();
+        }
+    );
 
-});
+    $.reduxSpacing.init = function() {
+        var default_params = {
+            width: 'resolve',
+            triggerChange: true,
+            allowClear: true
+        };
+
+        var select2_handle = $( '.redux-container-spacing' ).find( '.select2_params' );
+        if ( select2_handle.size() > 0 ) {
+            var select2_params = select2_handle.val();
+
+            select2_params = JSON.parse( select2_params );
+            default_params = $.extend( {}, default_params, select2_params );
+        }
+
+        $( ".redux-spacing-units" ).select2( default_params );
+
+        $( '.redux-spacing-input' ).on(
+            'change', function() {
+                var units = $( this ).parents( '.redux-field:first' ).find( '.field-units' ).val();
+
+                if ( $( this ).parents( '.redux-field:first' ).find( '.redux-spacing-units' ).length !== 0 ) {
+                    units = $( this ).parents( '.redux-field:first' ).find( '.redux-spacing-units option:selected' ).val();
+                }
+
+                var value = $( this ).val();
+
+                if ( typeof units !== 'undefined' && value ) {
+                    value += units;
+                }
+
+                if ( $( this ).hasClass( 'redux-spacing-all' ) ) {
+                    $( this ).parents( '.redux-field:first' ).find( '.redux-spacing-value' ).each(
+                        function() {
+                            $( this ).val( value );
+                        }
+                    );
+                } else {
+                    $( '#' + $( this ).attr( 'rel' ) ).val( value );
+                }
+            }
+        );
+
+        $( '.redux-spacing-units' ).on(
+            'change', function() {
+                $( this ).parents( '.redux-field:first' ).find( '.redux-spacing-input' ).change();
+            }
+        );
+    };
+})( jQuery );
