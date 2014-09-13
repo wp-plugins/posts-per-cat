@@ -118,6 +118,7 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 == Changelog ==
 = 1.4.0 (2014-09-13) =
 * Fix usage of predefined include/exclude categories in global settings if no include/exclude categories provided in widget or shortcode
+* Fix non-working minimal box height set in widget or shortcode
 * Add support for cusotm template output with post element macros
 * Add support for non-square thumbnails with WIDTH, WIDTHxHEIGHT or image size name as value
 * Change - Link to category can be applied to Category title and to "More" link for category in same time

@@ -195,7 +195,7 @@ if ( !class_exists('POSTS_PER_CAT') )
 					// <!-- start of Category Box -->
 					$ppc_str .= '
 				<div class="ppc-box '.$ppc_column.'">
-					<div class="ppc" '.$minh.'>
+					<div class="ppc" '.$ppc_minh.'>
 					<h3>'.$ppc_cattitle.'</h3>
 					<ul>';
 					// get latest N posts from category $cat
