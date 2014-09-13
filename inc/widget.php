@@ -18,8 +18,6 @@ class PPC_Widget extends WP_Widget {
 		$options = array(
 			'columns'  => $instance['columns'],
 			'minh'     => $instance['minh'],
-			'include'  => $instance['include'],
-			'exclude'  => $instance['exclude'],
 			'parent'   => $instance['parent'],
 			'order'    => $instance['order'],
 			'catonly'  => $instance['catonly'],
@@ -34,19 +32,21 @@ class PPC_Widget extends WP_Widget {
 			'excerpts' => $instance['excerpts'],
 			'content'  => $instance['content'],
 			'excleng'  => (empty($instance['excleng']))?'':$instance['excleng'],
-			'thumb'     => (empty($instance['thumb']))?false:$instance['thumb'],
+			'thumb'    => (empty($instance['thumb']))?false:$instance['thumb'],
 			'tsize'    => $instance['tsize']
-			);
+		);
+		if ( !empty($instance['include']) ) $options['include'] = $instance['include'];
+		if ( !empty($instance['exclude']) ) $options['exclude'] = $instance['exclude'];
 
-		// error_log(print_r($options));
+		$template = !empty($instance['template']) ? $instance['template'] : null;
 		$out = $args['before_widget'];
 		if ( ! empty( $title ) )
 			$out .= $args['before_title'] . $title . $args['after_title'];
 
-		// echo do_shortcode('[ppc]');
 		ob_start();
-		echo posts_per_cat($options);
+		echo POSTS_PER_CAT::shortcode($options, $template);
 		$out .= ob_get_clean();
+
 		$out .= $args['after_widget'];
 		echo $out;
 	}
@@ -74,6 +74,8 @@ class PPC_Widget extends WP_Widget {
 		$excleng	= ( isset( $instance[ 'excleng' ] ) ) ? $instance[ 'excleng' ] : '';
 		$thumb		= ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
 		$tsize		= ( isset( $instance[ 'tsize' ] ) ) ? $instance[ 'tsize' ] : '60';
+		$columns	= ( isset( $instance[ 'columns' ] ) ) ? $instance[ 'columns' ] : '2';
+		$template	= ( isset( $instance[ 'template' ] ) ) ? $instance[ 'template' ] : '';
 
 		?>
 		<p>
@@ -83,11 +85,11 @@ class PPC_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'columns' ); ?>">Number of columns</label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'columns' ); ?>" name="<?php echo $this->get_field_name( 'columns' ); ?>">
-				<option value="1"<?php selected( $instance['columns'], '1' ); ?>><?php _e('One column per row (full width)', 'ppc'); ?></option>
-				<option value="2"<?php selected( $instance['columns'], '2' ); ?>><?php _e('Two columns per row', 'ppc'); ?></option>
-				<option value="3"<?php selected( $instance['columns'], '3' ); ?>><?php _e('Three columns per row', 'ppc'); ?></option>
-				<option value="4"<?php selected( $instance['columns'], '4' ); ?>><?php _e('Four columns per row', 'ppc'); ?></option>
-				<option value="5"<?php selected( $instance['columns'], '5' ); ?>><?php _e('Five columns per row', 'ppc'); ?></option>
+				<option value="1"<?php selected( $columns, '1' ); ?>><?php _e('One column per row (full width)', 'ppc'); ?></option>
+				<option value="2"<?php selected( $columns, '2' ); ?>><?php _e('Two columns per row', 'ppc'); ?></option>
+				<option value="3"<?php selected( $columns, '3' ); ?>><?php _e('Three columns per row', 'ppc'); ?></option>
+				<option value="4"<?php selected( $columns, '4' ); ?>><?php _e('Four columns per row', 'ppc'); ?></option>
+				<option value="5"<?php selected( $columns, '5' ); ?>><?php _e('Five columns per row', 'ppc'); ?></option>
 			</select>
 		</p>
 
@@ -107,28 +109,28 @@ class PPC_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['parent'], true ); ?> id="<?php echo $this->get_field_id( 'parent' ); ?>" name="<?php echo $this->get_field_name( 'parent' ); ?>" /> <label for="<?php echo $this->get_field_id( 'parent' ); ?>"><?php _e('Only top level categories', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $parent, true ); ?> id="<?php echo $this->get_field_id( 'parent' ); ?>" name="<?php echo $this->get_field_name( 'parent' ); ?>" /> <label for="<?php echo $this->get_field_id( 'parent' ); ?>"><?php _e('Only top level categories', 'ppc'); ?></label>
 		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'order' ); ?>">Order categories by</label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'order' ); ?>" name="<?php echo $this->get_field_name( 'order' ); ?>">
-				<option value="ID"<?php selected( $instance['order'], 'ID' ); ?>><?php _e('Category ID', 'ppc'); ?></option>
-				<option value="name"<?php selected( $instance['order'], 'name' ); ?>><?php _e('Category Name', 'ppc'); ?></option>
-				<option value="custom"<?php selected( $instance['order'], 'custom' ); ?>><?php _e('Custom, as listed in Include category', 'ppc'); ?></option>
+				<option value="ID"<?php selected( $order, 'ID' ); ?>><?php _e('Category ID', 'ppc'); ?></option>
+				<option value="name"<?php selected( $order, 'name' ); ?>><?php _e('Category Name', 'ppc'); ?></option>
+				<option value="custom"<?php selected( $order, 'custom' ); ?>><?php _e('Custom, as listed in Include category', 'ppc'); ?></option>
 			</select>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['catonly'], true ); ?> id="<?php echo $this->get_field_id( 'catonly' ); ?>" name="<?php echo $this->get_field_name( 'catonly' ); ?>" title="<?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive","ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'catonly' ); ?>"><?php _e('Only from displayed category archive', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $catonly, true ); ?> id="<?php echo $this->get_field_id( 'catonly' ); ?>" name="<?php echo $this->get_field_name( 'catonly' ); ?>" title="<?php _e("exclude categories different from currently displayed on category archive and ignore first category rules on category archive","ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'catonly' ); ?>"><?php _e('Only from displayed category archive', 'ppc'); ?></label>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['noctlink'], true ); ?> id="<?php echo $this->get_field_id( 'noctlink' ); ?>" name="<?php echo $this->get_field_name( 'noctlink' ); ?>" title="<?php _e("leave unchecked to link category title to archive","ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'noctlink' ); ?>"><?php _e('Do not link category name', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $noctlink, true ); ?> id="<?php echo $this->get_field_id( 'noctlink' ); ?>" name="<?php echo $this->get_field_name( 'noctlink' ); ?>" title="<?php _e("leave unchecked to link category title to archive","ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'noctlink' ); ?>"><?php _e('Do not link category name', 'ppc'); ?></label>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['more'], true ); ?> id="<?php echo $this->get_field_id( 'more' ); ?>" name="<?php echo $this->get_field_name( 'more' ); ?>" title="<?php _e('check to print "read more" link bellow list of headlines',"ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'more' ); ?>"><?php _e('Standalone link to archives', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $more, true ); ?> id="<?php echo $this->get_field_id( 'more' ); ?>" name="<?php echo $this->get_field_name( 'more' ); ?>" title="<?php _e('check to print "read more" link bellow list of headlines',"ppc"); ?>" /> <label for="<?php echo $this->get_field_id( 'more' ); ?>"><?php _e('Standalone link to archives', 'ppc'); ?></label>
 		</p>
 
 		<p>
@@ -149,29 +151,29 @@ class PPC_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['shorten'], true ); ?> id="<?php echo $this->get_field_id( 'shorten' ); ?>" name="<?php echo $this->get_field_name( 'shorten' ); ?>" /> <label for="<?php echo $this->get_field_id( 'shorten' ); ?>"><?php _e('Shorten headline', 'ppc'); ?></label> posts
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $shorten, true ); ?> id="<?php echo $this->get_field_id( 'shorten' ); ?>" name="<?php echo $this->get_field_name( 'shorten' ); ?>" /> <label for="<?php echo $this->get_field_id( 'shorten' ); ?>"><?php _e('Shorten headline', 'ppc'); ?> [*]</label>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['commnum'], true ); ?> id="<?php echo $this->get_field_id( 'commnum' ); ?>" name="<?php echo $this->get_field_name( 'commnum' ); ?>" /> <label for="<?php echo $this->get_field_id( 'commnum' ); ?>"><?php _e('Display comment number', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $commnum, true ); ?> id="<?php echo $this->get_field_id( 'commnum' ); ?>" name="<?php echo $this->get_field_name( 'commnum' ); ?>" /> <label for="<?php echo $this->get_field_id( 'commnum' ); ?>"><?php _e('Display comment number', 'ppc'); ?> [*]</label>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['nosticky'], true ); ?> id="<?php echo $this->get_field_id( 'nosticky' ); ?>" name="<?php echo $this->get_field_name( 'nosticky' ); ?>" /> <label for="<?php echo $this->get_field_id( 'nosticky' ); ?>"><?php _e('Hide sticky posts', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $nosticky, true ); ?> id="<?php echo $this->get_field_id( 'nosticky' ); ?>" name="<?php echo $this->get_field_name( 'nosticky' ); ?>" /> <label for="<?php echo $this->get_field_id( 'nosticky' ); ?>"><?php _e('Hide sticky posts', 'ppc'); ?></label>
 		</p>
 
 		<h3>Content</h3>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'excerpts' ); ?>">Show excerpt</label>
+			<label for="<?php echo $this->get_field_id( 'excerpts' ); ?>">Show excerpt [*]</label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'excerpts' ); ?>" name="<?php echo $this->get_field_name( 'excerpts' ); ?>">
-				<option value="none"<?php selected( $instance['excerpts'], 'none' ); ?>><?php _e("Don't display", 'ppc'); ?></option>
-				<option value="first"<?php selected( $instance['excerpts'], 'first' ); ?>><?php _e('For first article only', 'ppc'); ?></option>
-				<option value="all"<?php selected( $instance['excerpts'], 'all' ); ?>><?php _e('For all articles', 'ppc'); ?></option>
+				<option value="none"<?php selected( $excerpts, 'none' ); ?>><?php _e("Don't display", 'ppc'); ?></option>
+				<option value="first"<?php selected( $excerpts, 'first' ); ?>><?php _e('For first article only', 'ppc'); ?></option>
+				<option value="all"<?php selected( $excerpts, 'all' ); ?>><?php _e('For all articles', 'ppc'); ?></option>
 			</select>
 		</p>
 
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['content'], true ); ?> id="<?php echo $this->get_field_id( 'content' ); ?>" name="<?php echo $this->get_field_name( 'content' ); ?>" title="<?php _e('use post content in stead of post excerpt','ppc');?>" /> <label for="<?php echo $this->get_field_id( 'content' ); ?>"><?php _e('Use post content as excerpt', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php checked( (bool) $content, true ); ?> id="<?php echo $this->get_field_id( 'content' ); ?>" name="<?php echo $this->get_field_name( 'content' ); ?>" title="<?php _e('use post content in stead of post excerpt','ppc');?>" /> <label for="<?php echo $this->get_field_id( 'content' ); ?>"><?php _e('Use post content as excerpt', 'ppc'); ?></label>
 		</p>
 
 		<p>
@@ -179,14 +181,24 @@ class PPC_Widget extends WP_Widget {
 			<input class="small-text" id="<?php echo $this->get_field_id( 'excleng' ); ?>" name="<?php echo $this->get_field_name( 'excleng' ); ?>" type="number" value="<?php echo esc_attr( $excleng ); ?>" title="<?php _e("leave empty for full excerpt length","ppc"); ?>" /> characters
 		</p>
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( (bool) $instance['thumb'], true ); ?> id="<?php echo $this->get_field_id( 'thumb' ); ?>" name="<?php echo $this->get_field_name( 'thumb' ); ?>" title="<?php _e('thumbnail is shown only if theme support it, and excerpt is enabled','ppc');?>" /> <label for="<?php echo $this->get_field_id( 'thumb' ); ?>"><?php _e('Show thumbnail with excerpt', 'ppc'); ?></label>
+			<input class="checkbox" type="checkbox" <?php 
+			checked( (bool) $thumb, true ); 
+			?> id="<?php echo $this->get_field_id( 'thumb' ); ?>" name="<?php echo $this->get_field_name( 'thumb' ); ?>" title="<?php _e('thumbnail is shown only if theme support it, and excerpt is enabled','ppc');?>" /> <label for="<?php echo $this->get_field_id( 'thumb' ); ?>"><?php _e('Show thumbnail with excerpt', 'ppc'); ?> [*]</label>
 		</p>
 		<p>
 			<label>Thumbnail size</label><br />
-			<input class="small-text" id="<?php echo $this->get_field_id( 'tsize' ); ?>" name="<?php echo $this->get_field_name( 'tsize' ); ?>" type="number" value="<?php echo esc_attr( $tsize ); ?>" title="<?php _e("enter size in px for thumbnail width (height is same)","ppc"); ?>" /> px
+			<input class="widefat" id="<?php echo $this->get_field_id( 'tsize' ); ?>" name="<?php echo $this->get_field_name( 'tsize' ); ?>" type="text" value="<?php echo esc_attr( $tsize ); ?>" title="<?php _e("enter size in px for thumbnail width (height is same) or WxH or image size name (thumbnail, medium, large, full)","ppc"); ?>" />
+			<small>Enter only WIDTH in pixels for square; WIDTHxHEIGHT or image size name (thumbnail, small, mediaum, large, full, etc) for custom aspect ratio</small>
 		</p>
+
+		<p>
+			<label for="<?php echo $this->get_field_id( 'template' ); ?>">Single line HTML template</label>
+			<textarea class="widefat" rows="5" id="<?php echo $this->get_field_id( 'template' ); ?>" name="<?php echo $this->get_field_name( 'template' ); ?>" title="<?php _e('custom HTML syntax for single post in box','ppc');?>"><?php echo esc_attr( $template ); ?></textarea>
+			<small>Options with <em>[*]</em> at the end of label will not affect template</small>
+		</p>
+
 		<?php 
-		}
+	} // form()
 
 	public function update( $new_instance, $old_instance ) {
 		// processes widget options to be saved
@@ -217,9 +229,10 @@ class PPC_Widget extends WP_Widget {
 		$instance['excleng']  = (!empty($new_instance['excleng'])) ? strip_tags($new_instance['excleng']) : '';
 		$instance['thumb']    = (!empty($new_instance['thumb'])) ? strip_tags($new_instance['thumb']) : '';
 		$instance['tsize']    = (!empty($new_instance['tsize'])) ? strip_tags($new_instance['tsize']) : '60';
+		$instance['template']    = (!empty($new_instance['template'])) ? $new_instance['template'] : '';
 		return $instance;
-	}
-}
+	} // update()
+} // end class
 
 // register Foo_Widget widget
 function register_ppc_widget() {

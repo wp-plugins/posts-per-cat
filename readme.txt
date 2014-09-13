@@ -1,60 +1,84 @@
 === Posts per Cat ===
-Tags: categories, category, posts, archive, archives, date, time, past, listing, plugin, links, excerpt, navigation, simple, css, style, thumbnails, thumbnail, widget, shortcode
+Tags: category, categories, posts, archives, list, post list, recent, recent posts, excerpt, thumbnail, widget, shortcode
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
 Requires at least: 3.8.0
-Tested up to: 3.9.1
-Stable tag: 1.3.0
+Tested up to: 4.0.0
+Stable tag: 1.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Group recent posts by category and show them inside boxes organized in one, two, three or four columns.
+Group recent posts by category and show them inside boxes organized to columns.
 
 == Description ==
 
-Posts per Cat is a simple plugin that grab all or only selected categories from blog database, and then list last N posts by category in boxes organised in 1-4 columns.
+Posts per Cat is a simple plugin that grab all or only selected categories from blog database, and then list recent N posts from each category, organised in 1-5 columns.
 
 = Features =
-* choose how many boxes per row will be displayed (one, two, three or four)
+* choose how many boxes per row will be displayed (one, two, three, four or five)
 * define number of post titles to display per category
 * define category ID's to exclude
 * define category ID's to include
 * toggle displaying of child categories
-* ordering boxes by category ID, title or custom
-* toggle displaying excerpt abowe post title (for first post only, for all posts or none)
-* toggle displaying featured image for posts
-* toggle displaying number of comments (with link) added to post title
+* ordering boxes by category ID, title or custom (manually entered category ID's as include list)
 * toggle displaying sticky posts
 * toggle usage of custom list CSS
 * SEO optimized permalink URI's
 * integrate to template file, use shortcode [ppc] with options or widget
-* translantable
-* produces XHTML 1.1 valid code
-* published under terms of GNU GPLv3
+* ready for localisation
+* template system for single post line in box defined by user in plain HTML with macro keywords for post elements
 
 = Shortcode options =
 You can use shortcode [ppc], with options below (set option in shortcode to override default settings above):
 
-* columns=2 - Number of columns (1, 2, 3, 4 or 5)
-* minh=0 - Minimal height of box (in px, set to 0 for auto)
-* include=category_ID's - Include category (comma separated category ID's)
-* exclude=category_ID's - Exclude category (comma separated category ID's)
-* parent=0 - Only top level categories (0 or 1)
-* order=ID - Order categories by (ID, name or custom)
-* catonly=0 - Only from displayed category archive (0 or 1)
-* noctlink=0 - Do not link category name (0 or 1)
-* more=0 - Standalone link to archives (0 or 1)
-* moretxt="More from" - Archive link prefix
-* posts=5 - Number of headlines per category block
-* titlelen=34 - Headline length (in characters)
-* shorten=0 - Shorten headline (0 or 1)
-* commnum=0 - Display comment number (0 or 1)
-* nosticky=0 - Hide sticky posts (0 or 1)
-* excerpts=none - Show excerpt (none, first or all)
-* content=0 - Use post content as excerpt (0 or 1)
-* excleng=100 - Excerpt length
-* thumb=0 - Show thumbnail with excerpt (0 or 1)
-* tsize=60 - Thumbnail size, set size in px for thumbnail width (height is same)
+* `columns=2` - Number of columns (1, 2, 3, 4 or 5)
+* `minh=0` - Minimal height of box (in px, set to 0 for auto)
+* `include=category_ID's` - Include category (comma separated category ID's)
+* `exclude=category_ID's` - Exclude category (comma separated category ID's)
+* `parent=0` - Only top level categories (0 or 1)
+* `order=ID` - Order categories by (ID, name or custom)
+* `catonly=0` - Only from displayed category archive (0 or 1)
+* `noctlink=0` - Do not link category name (0 or 1)
+* `more=0` - Standalone link to archives (0 or 1)
+* `moretxt="More from"` - Archive link prefix
+* `posts=5` - Number of headlines per category block
+* `titlelen=34` - Headline length (in characters)
+* `shorten=0` - Shorten headline (0 or 1)
+* `commnum=0` - Display comment number (0 or 1)
+* `nosticky=0` - Hide sticky posts (0 or 1)
+* `excerpts=none` - Show excerpt (none, first or all)
+* `content=0` - Use post content as excerpt (0 or 1)
+* `excleng=100` - Excerpt length
+* `thumb=0` - Show thumbnail with excerpt (0 or 1)
+* `tsize=60` - Thumbnail size, set size in px for thumbnail width (height is same); or set in format WIDTHxHEIGHT (example 220x123); or set predefined custom image size (thumbnail, small, medium, large, full or cusotm defined)
+
+Since version 1.4.0 you can use template to display custom formatted output (post line element). Example:
+`[ppc]
+<h3><a href="%link%">%title_short%</a></h3>
+<span class="comments-meta">(<a href="%comments_link%">%comments_num% comments</a>)</span>
+<span class="date-meta">%date% @ %time%</span>
+<span class="author-meta"><a href="%author_posts_url%">%author_displayname%</a></span>
+%thumbnail%
+%excerpt% <a href="%link%">[read more]</a>
+[/ppc]`
+
+Supported macros:
+* `%title%`
+* `%title_short%`
+* `%post_content%`
+* `%excerpt%`
+* `%thumbnail%`
+* `%link%`
+* `%comments_num%`
+* `%comments_link%`
+* `%comments_form_link%`
+* `%datetime%`
+* `%date%`
+* `%time%`
+* `%author_displayname%`
+* `%author_firstname%`
+* `%author_lastname%`
+* `%author_posts_url%`
 
 == Installation ==
 
@@ -79,6 +103,12 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 4. Posts per Cat: all cats, 3 column, w/ enabled CSS
 
 == Upgrade Notice ==
+= 1.4.0 =
+* Make backup before upgrade!
+* Install and activate Redux Framework Plugin to motify global Posts-per-Cat settings.
+* Review shortcode/widget settings after upgrade.
+* Do not forget to make website backup before plugin upgrade!
+
 = 1.3.0 =
 * General settings page moved to Redux framework. Make backup before you update plugin, so you can go back if something go wrong.
 
@@ -86,6 +116,14 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
+= 1.4.0 (2014-09-13) =
+* Fix usage of predefined include/exclude categories in global settings if no include/exclude categories provided in widget or shortcode
+* Add support for cusotm template output with post element macros
+* Add support for non-square thumbnails with WIDTH, WIDTHxHEIGHT or image size name as value
+* Change - Link to category can be applied to Category title and to "More" link for category in same time
+* Change - Remove embedded Redux from plugin and use Redux Framework Plugin for global PPX settings page
+* Change - pack PPC to class
+
 = 1.3.0 (2014-06-01) =
 * A lot of fixes made during framework change
 * Improved basic block layouts

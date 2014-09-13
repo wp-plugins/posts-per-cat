@@ -18,330 +18,384 @@
 
 Plugin Name: Posts per Cat
 Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
-Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized in one, two, three or four columns.
-Version: 1.3.0
+Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized to columns. Please note, for global settings you need to have installed and active <strong>Redux Framework Plugin</strong>.
+Version: 1.4.0
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
 */
 
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+// predefined constants
 define( 'POSTS_PER_CAT_NAME', 'Posts per Cat' );
-define( 'POSTS_PER_CAT_VER', '1.3.0' );
+define( 'POSTS_PER_CAT_VER', '1.4.0' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
-// add PPC button to admin menu
-// add_action( 'admin_menu', 'ppc_postspercat_menu' );
-// initialize PPC
-add_action( 'ppc', 'ppc_echo');
-// define shortcode
-add_shortcode( 'ppc', 'posts_per_cat' );
+if ( !class_exists('POSTS_PER_CAT') )
+{
 
-function ppc_echo() { echo posts_per_cat(); }
+	class POSTS_PER_CAT
+	{
 
-// insert Settings link on plugins admin page
-if ( is_admin() ) {
-	$plugin = plugin_basename(__FILE__); 
-	add_filter('plugin_action_links_'.$plugin, 'addConfigureLink' );
+		function __construct()
+		{
 
-	if ( !class_exists( 'ReduxFramework' ) && file_exists( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' ) ) {
-	    require_once( dirname( __FILE__ ) . '/ReduxFramework/ReduxCore/framework.php' );
-	}
-	if ( !isset( $ppc_redux ) && file_exists( dirname( __FILE__ ) . '/inc/config.php' ) ) {
-	    require_once( dirname( __FILE__ ) . '/inc/config.php' );
-	}
-}
-function addConfigureLink( $links ) { 
-	$settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>'; 
-	array_unshift( $links, $settings_link ); 
-	return $links; 
-}
+			// init textdomain for localisation
+			load_plugin_textdomain( 'ppc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
-// start PPC
-if ( function_exists('posts_per_cat') ) {
-	$blog_url = get_bloginfo('url');
-	// init textdomain for localisation
-	load_plugin_textdomain( 'ppc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-	// call PPC CSS header insertion
-	add_action( 'wp_enqueue_scripts', 'ppc_scripts' );
-}
+			require_once('inc/tools.php');
+			require_once('inc/widget.php');
 
-// inject PPC CSS in page head
-function ppc_scripts(){
-	wp_enqueue_style( 'ppc-main', plugins_url('ppc.css', __FILE__) );
-	$options = get_option('postspercat');
-	if ( $options['ppccss'] ) {
-		wp_enqueue_style( 'ppc-list', plugins_url('ppc-list.css', __FILE__) );
-	}
-    $tsize =  $options['tsize'];
-        $custom_css = ".ppc .attachment-{$tsize}x{$tsize} {
-	width: {$tsize}px !important;
-	height: {$tsize}px !important;
-}";
-        wp_add_inline_style( 'ppc-main', $custom_css );
-}
+			// Add 'ppc' action
+			add_action( 'ppc', array($this, 'echo_shortcode') );
 
-/* prepare Options page *//*
-function ppc_postspercat_menu() {
-	add_options_page(__(POSTS_PER_CAT_NAME.' Options', 'ppc'),  __(POSTS_PER_CAT_NAME, 'ppc'), 'manage_options', 'posts-per-cat', 'ppc_postspercat_options');
-}
+			// Add 'ppc' shortcode
+			add_shortcode( 'ppc', array($this,'shortcode') );
 
-function ppc_postspercat_options() {
-	require_once('inc/options.php');
-}*/
-
-require_once('inc/tools.php');
-require_once('inc/widget.php');
-
-function posts_per_cat($attr = null) {
-	global $blog_url;
-
-	// $options = get_option('posts_per_cat_default');
-	// var_dump($options);
-	$options		= get_option('postspercat');
-// [ppc posts="" shorten=0 titlelen=0 parent=0 excerpts=]
-
-	$include = $options['include']['enabled'];
-	unset ($include['placebo']);
-	$include = str_replace("_","",implode(",", array_keys($include)));
-
-	$exclude = $options['exclude']['enabled'];
-	unset ($exclude['placebo']);
-	$exclude = str_replace("_","",implode(",", array_keys($exclude)));
-
-	// echo "include=$include<br/>exclude=$exclude<br/>";
-	extract( shortcode_atts( array(
-		'posts'		=> $options['posts'],
-		'porderby'	=> $options['porderby'],
-		'porder'	=> $options['porder'],
-		'shorten'	=> $options['shorten'],
-		'titlelen'	=> $options['titlelen'],
-		'parent'	=> $options['parent'],
-		'excerpts'	=> $options['excerpts'],
-		'content'	=> $options['content'],
-		'excleng'	=> $options['excleng'],
-		'order'		=> $options['order'],
-		'nosticky'	=> $options['nosticky'],
-		'noctlink'	=> $options['noctlink'],
-		'more'		=> $options['more'],
-		'moretxt'	=> $options['moretxt'],
-		'include'	=> $include, //$options['include'],
-		'exclude'	=> $exclude, //$options['exclude'],
-		'catonly'	=> $options['catonly'],
-		'commnum'	=> $options['commnum'],
-		'thumb'		=> $options['thumb'],
-		'tsize'		=> $options['tsize'],
-		'columns'	=> (!empty($options['columns'])) ? $options['columns'] : $options['column'],
-		'minh'		=> $options['minh']['height']
-    ), $attr ) );
-
-	// if exclength has not been set, set 500
-	if (empty($excleng)) $excleng = 500;
-	// default thumbnail size
-	$ppc_tsize = ( empty($tsize) ) ? array(60,60) : array($tsize,$tsize);
-
-	switch ( $columns ) { // setup number of columns
-		case 1:		$ppc_column = "one"; break;
-		case 3:		$ppc_column = "three"; break;
-		case 4:		$ppc_column = "four"; break;
-		case 5:		$ppc_column = "five"; break;
-		default:	$ppc_column = "two";
-	}
-
-	// do we need to force minimal height of box?
-	$ppc_minh = ( $minh > 0 ) ? 'style="min-height: '.$minh.'px !important;"' : "";
-
-	// do we need to display only current category on archive?
-	if ( $catonly && is_category() && !is_home() ) {
-		$cats = get_categories('orderby='.$order.'&include='.get_query_var('cat'));
-	} else {
-		// custom or other category ordering?
-		if ( $order == "custom" ) { // custom
-			$custom_order = explode(",", $include);
-			// print_r($cusom_order);
-			foreach ( $custom_order as $custom_order_cat_ID ) {
-				$custom_order_cat_object = get_categories('include='.$custom_order_cat_ID);
-				$custom_order_cat[] = $custom_order_cat_object[0];
+			// Load Redux Framework
+			if ( class_exists( "ReduxFramework" ) )
+			{
+				// Add Settings link on Plugins page if Redux is installed
+				add_filter('plugin_action_links_'.plugin_basename(__FILE__), array($this, 'add_settings_link') );
+			} else {
+				// Add admin notice for Redux Framework
+				add_action( 'admin_notices', array($this,'admin_notice') );
 			}
-			$cats = $custom_order_cat;
-		} else { // by cat_ID or name
-			$cats = get_categories('orderby='.$order.'&include='.$include.'&exclude='.$exclude);
+
+			// Load Settings Page configuration
+			if ( file_exists(dirname(__FILE__).'/inc/config.php') )
+		    	require_once( dirname( __FILE__ ) . '/inc/config.php' );
+
+			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
+		} // construct
+
+		function admin_notice()
+		{
+			echo '<div class="error"><p>'.sprintf("To configure global <strong>%s</strong> options, you need to install and activate <strong>%s</strong>.",POSTS_PER_CAT_NAME, "Redux Framework Plugin") . '</p></div>';
 		}
-	}
+		
+		function add_settings_link($links)
+		{
+			$settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>'; 
+			array_unshift( $links, $settings_link ); 
+			return $links; 
+		} // add_settings_link()
 
-	// set number of boxes for clear fix
-	$boxnum = 0;
-	// print PPC body header
-	$ppc_str = '
-<!-- start of '.POSTS_PER_CAT_NAME.' version '.POSTS_PER_CAT_VER.' -->
-	<div id="ppc-box">
-';
+		private function echo_shortcode()
+		{ 
+			echo array($this,'shortcode');
+		} // echo()
 
-	foreach ( $cats as $cat ) { // process all category
-		// get only non-empty categories
-		if ( $cat->count > 0 && ( ($parent == true && $cat->category_parent == 0) || $parent == false || ( $catonly == true && is_category() ) ) ) {
-			// where to put category archive link
-			if ( $more ) { // add more link
-				$ppc_cattitle = $cat->cat_name;
-				$ppc_moreadd = '<div class="ppc-more"><a href="'.get_category_link( $cat->cat_ID ).'">'.$moretxt.' '.__('&#8220;', 'ppc').$ppc_cattitle.__('&#8221;', 'ppc').'</a></div>';
-			} else { // on category title
-				if ( $noctlink ) {
-					$ppc_cattitle = '<a href="'.get_category_link( $cat->cat_ID ).'">'.$cat->cat_name.'</a>';
-					$ppc_moreadd = "";
-				} else {
-					$ppc_cattitle = $cat->cat_name;
-					$ppc_moreadd = "";
+		public static function shortcode($attr, $template=null) {
+			global $blog_url;
 
+			// get global plugin options
+			$options		= get_option('postspercat');
+
+			$include = $options['include']['enabled'];
+			unset ($include['placebo']);
+			$include_default = str_replace("_","",implode(",", array_keys($include)));
+
+			$exclude = $options['exclude']['enabled'];
+			unset ($exclude['placebo']);
+			$exclude_default = str_replace("_","",implode(",", array_keys($exclude)));
+
+			// echo "include=$include<br/>exclude=$exclude<br/>";
+			extract( shortcode_atts( array(
+				'posts'		=> $options['posts'],
+				'porderby'	=> $options['porderby'],
+				'porder'	=> $options['porder'],
+				'shorten'	=> $options['shorten'],
+				'titlelen'	=> $options['titlelen'],
+				'parent'	=> $options['parent'],
+				'excerpts'	=> $options['excerpts'],
+				'content'	=> $options['content'],
+				'excleng'	=> $options['excleng'],
+				'order'		=> $options['order'],
+				'nosticky'	=> $options['nosticky'],
+				'noctlink'	=> $options['noctlink'],
+				'more'		=> $options['more'],
+				'moretxt'	=> $options['moretxt'],
+				'include'	=> $include_default,
+				'exclude'	=> $exclude_default,
+				'catonly'	=> $options['catonly'],
+				'commnum'	=> $options['commnum'],
+				'thumb'		=> $options['thumb'],
+				'tsize'		=> $options['tsize'],
+				'columns'	=> (!empty($options['columns'])) ? $options['columns'] : $options['column'],
+				'minh'		=> $options['minh']['height']
+		    ), $attr ) );
+
+			// if exclength has not been set, set 500
+			if (empty($excleng)) $excleng = 500;
+
+			// default thumbnail size
+			if ( empty($tsize) )
+			{
+				$ppc_tsize = array(60,60);
+			} else if ( preg_match_all('/^([0-9]+)x([0-9]+)$/', $tsize, $matches)) {
+				$ppc_tsize = array($matches[1][0],$matches[2][0]);
+			} else if ( preg_match('/^([0-9]+)$/', $tsize) ) {
+				$ppc_tsize = array($tsize,$tsize);
+			} else {
+				$ppc_tsize = $tsize;
+			}
+
+			switch ( $columns ) { // setup number of columns
+				case 1:		$ppc_column = "one"; break;
+				case 3:		$ppc_column = "three"; break;
+				case 4:		$ppc_column = "four"; break;
+				case 5:		$ppc_column = "five"; break;
+				default:	$ppc_column = "two";
+			}
+
+			// do we need to force minimal height of box?
+			$ppc_minh = ( $minh > 0 ) ? 'style="min-height: '.$minh.'px !important;"' : "";
+
+			// do we need to display only current category on archive?
+			if ( $catonly && is_category() && !is_home() ) {
+				$cats = get_categories('orderby='.$order.'&include='.get_query_var('cat'));
+			} else {
+				// custom or other category ordering?
+				if ( $order == "custom" ) { // custom
+					$custom_order = explode(",", $include);
+					// print_r($cusom_order);
+					foreach ( $custom_order as $custom_order_cat_ID ) {
+						$custom_order_cat_object = get_categories('include='.$custom_order_cat_ID);
+						$custom_order_cat[] = $custom_order_cat_object[0];
+					}
+					$cats = $custom_order_cat;
+				} else { // by cat_ID or name
+					$cats = get_categories('orderby='.$order.'&include='.$include.'&exclude='.$exclude);
 				}
 			}
-			// start category box
-			$ppc_str .= '
-		<!-- start of Category Box -->
-		<div class="ppc-box '.$ppc_column.'">
-			<div class="ppc" '.$minh.'>
-			<h3>'.$ppc_cattitle.'</h3>
-			<ul>';
-			// get latest N posts from category $cat
-			if ( $nosticky ) { // exclude sticky posts
-				$posts_arr = get_posts(array(
-					'post__not_in' => get_option("sticky_posts"),
-					'numberposts' => $posts,
-					'order' => $porder, //"DSC",
-					'orderby' => $porderby, //"date",
-					'category' => $cat->cat_ID
-				));
-			} else { // include sticky posts
-				$posts_arr = get_posts('numberposts='.$posts.'&order='.$porder.'&orderby='.$porderby.'&category='.$cat->cat_ID);
-				// $posts_arr = get_posts('numberposts='.$posts.'&order=DSC&orderby=date&category='.$cat->cat_ID);
+
+			// set number of boxes for clear fix
+			$boxnum = 0;
+			// print PPC body header
+			$ppc_str = '
+		<!-- start of '.POSTS_PER_CAT_NAME.' version '.POSTS_PER_CAT_VER.' -->
+			<div id="ppc-box">
+		';
+
+			foreach ( $cats as $cat ) { // process all category
+				// get only non-empty categories
+				if ( $cat->count > 0 && ( ($parent == true && $cat->category_parent == 0) || $parent == false || ( $catonly == true && is_category() ) ) ) {
+
+					$cat_link = get_category_link( $cat->cat_ID );
+					// link on category title
+					$ppc_cattitle = ( $noctlink ) ? $cat->cat_name : '<a href="'.$cat_link.'">'.$cat->cat_name.'</a>';
+
+					// add more link
+					$ppc_moreadd = ( $more ) ? '<div class="ppc-more"><a href="'.$cat_link.'">'.$moretxt.' '.__('&#8220;', 'ppc').$cat->cat_name.__('&#8221;', 'ppc').'</a></div>' : '';
+
+					// start category box
+					// <!-- start of Category Box -->
+					$ppc_str .= '
+				<div class="ppc-box '.$ppc_column.'">
+					<div class="ppc" '.$minh.'>
+					<h3>'.$ppc_cattitle.'</h3>
+					<ul>';
+					// get latest N posts from category $cat
+					if ( $nosticky ) { // exclude sticky posts
+						$posts_arr = get_posts(array(
+							'post__not_in' => get_option("sticky_posts"),
+							'numberposts' => $posts,
+							'order' => $porder, //"DSC",
+							'orderby' => $porderby, //"date",
+							'category' => $cat->cat_ID
+						));
+					} else { // include sticky posts
+						$posts_arr = get_posts('numberposts='.$posts.'&order='.$porder.'&orderby='.$porderby.'&category='.$cat->cat_ID);
+					}
+					
+					$br = 0; // control number for number of excerpts
+
+					// process all posts from category
+					foreach ( $posts_arr as $post ) {
+
+						// Define Post Link
+						$link = get_permalink($post->ID);
+
+						// Define Full Title
+						$title_full = $title_short = $post->post_title;
+						$title_full = htmlspecialchars (str_replace('"', "", $title_full));
+
+						// Define Short Title
+						if ( $titlelen && mb_strlen_dh($post->post_title) > ($titlelen+1) ) {
+							$title_short = substr_utf8($post->post_title, 0, $titlelen);
+							$title_short = htmlspecialchars (str_replace('"', "", $title_short))."&hellip;";
+						}
+
+						// Define Date
+						$date = get_the_date( get_option( 'date_format' ), $post->ID );
+						// Define Time
+						$time = get_the_time( get_option( 'time_format' ), $post->ID );
+						// Define DateTime
+						$datetime = $date.' '.$time;
+
+						// Define Comments Number
+						$comments_num = get_comments_number($post->ID);
+						// Define Comments Link
+						$comments_link = $link."#comments";
+						// Define Comments Form Link
+						$comments_form_link = $link.'#respond';
+
+						// Define Post Author
+						$author_displayname = get_the_author_meta( 'display_name', $post->post_author );
+						$author_firstname = get_the_author_meta( 'user_firstname', $post->post_author );
+						$author_lastname = get_the_author_meta( 'user_lastname', $post->post_author );
+						$author_posts_url = get_author_posts_url( $post->post_author );
+
+						// Define Post Content
+						$post_content = $post->post_content;
+
+						// Define Excerpt
+						if ( $content ) {
+							$excerpt = strip_tags($post->post_content);
+							$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
+							if ( $excleng && mb_strlen($excerpt) > ($excleng+1) ) {
+								$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
+							}
+						} else {
+							if ( $excleng && mb_strlen($post->post_excerpt) > ($excleng+1) ) {
+								$excerpt = mb_substr($post->post_excerpt, 0, $excleng).'&hellip;';
+							} else {
+								$excerpt = $post->post_excerpt;
+							}
+						}
+
+						// Define Thumbnail
+						$thumbnail = "";
+						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
+							$thumbnail = wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize );
+						}
+
+						// start post line
+						$ppc_str .= '<li>';
+
+						// Use automated output format or template?
+						if ( empty($template) )
+						{
+							// automated output
+							$ppc_str .= '
+							<a href="'.get_permalink($post->ID).'" class="ppc-post-title" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'. (($shorten)?$title_short:$title_full) .'</a>';
+							if ( $commnum ) {
+									$ppc_str .= ' <span class="ppc-comments-num">(<a href="'.get_permalink($post->ID);
+								if ( $comments_num == 0 ) {
+									$ppc_str .= '#respond" title="'.sprintf(__('Be first to comment %s', 'ppc'), $title_full);
+								} else {
+									$ppc_str .= '#comments" title="'.sprintf(__('Read comments on %s', 'ppc'), $title_full);
+								}
+								$ppc_str .= '">'.$comments_num.'</a>)</span>';
+							}
+
+							if ( $br++ == 0 && ($excerpts == 'first') ) { // print excerpt for first post
+								$ppc_str .= '<p>';
+								if ( $thumb ) { // print thumbnail
+									if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
+										$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize);
+									}
+								}
+								$ppc_str .= $excerpt.'</p>';
+							} elseif ( $br++ > 0 && $excerpts == 'all' ) { // print excerpt for other posts
+								$ppc_str .= '<p>';
+								if ( $thumb ) { // print thumbnails
+									if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
+										$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize );
+									}
+								}
+								$ppc_str .= $excerpt.'</p>';
+							}
+						} else {
+							// tempalte output
+							$template_str = $template;
+							$template_str = str_replace('%title%', $title_full, $template_str);
+							$template_str = str_replace('%title_short%', $title_short, $template_str);
+							$template_str = str_replace('%post_content%', $post_content, $template_str);
+							$template_str = str_replace('%excerpt%', $excerpt, $template_str);
+							$template_str = str_replace('%thumbnail%', $thumbnail, $template_str);
+							$template_str = str_replace('%link%', $link, $template_str);
+							$template_str = str_replace('%comments_num%', $comments_num, $template_str);
+							$template_str = str_replace('%comments_link%', $comments_link, $template_str);
+							$template_str = str_replace('%comments_form_link%', $comments_form_link, $template_str);
+							$template_str = str_replace('%datetime%', $datetime, $template_str);
+							$template_str = str_replace('%date%', $date, $template_str);
+							$template_str = str_replace('%time%', $time, $template_str);
+							$template_str = str_replace('%author_displayname%', $author_displayname, $template_str);
+							$template_str = str_replace('%author_firstname%', $author_firstname, $template_str);
+							$template_str = str_replace('%author_lastname%', $author_lastname, $template_str);
+							$template_str = str_replace('%author_posts_url%', $author_posts_url, $template_str);
+							$ppc_str .= $template_str;
+							unset($template_str);
+						}
+
+						$ppc_str .= '</li>';
+					} // end of processing every post from category $cat
+
+					// close category box
+					$ppc_str .= '
+					</ul>
+					'.$ppc_moreadd.'
+					</div>
+				</div>
+					';
+					// <!-- end of Category Box -->
+
+					// print row cleaner
+					$boxnum++;
+					if ( $boxnum == $columns ) {
+						$ppc_str .= '<div class="clear"></div>';
+						$boxnum = 0;
+					} // boxnum equal to number of columns
+				} // end of processing non-empty categories
+			} // end foreach $cats as $cat
+
+			// print row cleaner at end of PPC
+			if ( $boxnum != $columns ) {
+				$ppc_str .= '<div class="clear"></div>';
 			}
 			
-			$br = 0; // control number for number of excerpts
-
-			// process all posts from category
-			foreach ( $posts_arr as $post ) {
-				// do we need to cut down post title?
-				if ( $shorten ) {
-					if ( $titlelen && mb_strlen_dh($post->post_title) > ($titlelen+1) ) {
-						$title = substr_utf8($post->post_title, 0, $titlelen)."&hellip;";
-					} else {
-						$title = $post->post_title;
-					}
-					$title_full = $post->post_title;
-				} else {
-					$title_full = $title = $post->post_title;
-				}
-
-				$title = htmlspecialchars(str_replace('"', "", $title));
-				$title_full = htmlspecialchars (str_replace('"', "", $title_full));
-				$ppc_str .= '
-				<li><a href="'.get_permalink($post->ID).'" class="ppc-post-title" title="'.sprintf(__('Article %s published at %s', 'ppc'), $title_full, date_i18n(__('F j, Y g:i a'), strtotime($post->post_date)) ).'">'.$title.'</a>';
-				if ( $commnum ) {
-					$comments_num = get_comments_number($post->ID);
-						$ppc_str .= ' <span class="ppc-comments-num">(<a href="'.get_permalink($post->ID);
-					if ( $comments_num == 0 ) {
-						$ppc_str .= '#respond" title="'.sprintf(__('Be first to comment %s', 'ppc'), $title_full);
-					} else {
-						$ppc_str .= '#comments" title="'.sprintf(__('Read comments on %s', 'ppc'), $title_full);
-					}
-					$ppc_str .= '">'.get_comments_number($post->ID).'</a>)</span>';
-				}
-
-				if ( $content ) {
-					$excerpt = strip_tags($post->post_content);
-					// $excerpt = substr_utf8($excerpt, 0, $excleng).'&hellip;';
-					$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
-					// $excerpt = strip_tags(substr_utf8($post->post_content, 0, $excleng)).'&hellip;';
-					// $excerpt = substr_utf8($post->post_content,0,$excleng).'&hellip;';
-					if ( $excleng && mb_strlen($excerpt) > ($excleng+1) ) {
-					// if ( $excleng && mb_strlen_dh($excerpt) > ($excleng+1) ) {
-						// $excerpt = substr_utf8($excerpt, 0, $excleng).'&hellip;';
-						$excerpt = mb_substr($excerpt, 0, $excleng).'&hellip;';
-					}
-				} else {
-					if ( $excleng && mb_strlen($post->post_excerpt) > ($excleng+1) ) {
-					// if ( $excleng && mb_strlen_dh($post->post_excerpt) > ($excleng+1) ) {
-						$excerpt = mb_substr($post->post_excerpt, 0, $excleng).'&hellip;';
-						// $excerpt = substr_utf8($post->post_excerpt, 0, $excleng).'&hellip;';
-					} else {
-						$excerpt = $post->post_excerpt;
-					}
-				}
-
-				if ( $br++ == 0 && ($excerpts == 'first') ) { // print excerpt for first post
-					$ppc_str .= '<p>';
-					if ( $thumb ) { // print thumbnail
-						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
-							$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize);
-						}
-					}
-					$ppc_str .= $excerpt.'</p>';
-				} elseif ( $br++ > 0 && $excerpts == 'all' ) { // print excerpt for other posts
-					$ppc_str .= '<p>';
-					if ( $thumb ) { // print thumbnails
-						if ( function_exists('has_post_thumbnail') && has_post_thumbnail($post->ID) ) {
-							$ppc_str .= wp_get_attachment_image( get_post_thumbnail_id($post->ID), $ppc_tsize );
-						}
-					}
-					$ppc_str .= $excerpt.'</p>';
-				}
-				$ppc_str .= '</li>';
-			} // end of processing every post from category $cat
-
-			// close category box
+			// close PPC container
 			$ppc_str .= '
-			</ul>
-			'.$ppc_moreadd.'
 			</div>
-		</div>
-		<!-- end of Category Box -->
-			';
+		<!-- end of '.POSTS_PER_CAT_NAME.' -->
+		';
 
-			// print row cleaner
-			$boxnum++;
-			if ( $boxnum == $columns ) {
-				$ppc_str .= '<div class="clear"></div>';
-				$boxnum = 0;
-			} // boxnum equal to number of columns
-		} // end of processing non-empty categories
-	} // end foreach $cats as $cat
+		return $ppc_str;
+		} // posts_per_cat()
 
-	// print row cleaner at end of PPC
-	if ( $boxnum != $columns ) {
-		$ppc_str .= '<div class="clear"></div>';
-	}
-	
-	// close PPC container
-	$ppc_str .= '
-	</div>
-<!-- end of '.POSTS_PER_CAT_NAME.' -->
-';
+		// inject PPC CSS in page head
+		function enqueue_scripts() {
+			wp_enqueue_style( 'ppc-main', plugins_url('assets/css/ppc.min.css', __FILE__) );
+			$options = get_option('postspercat');
+			if ( $options['ppccss'] ) {
+				wp_enqueue_style( 'ppc-list', plugins_url('assets/css/ppc-list.min.css', __FILE__) );
+			}
+		    $tsize =  $options['tsize'];
+		    if ( preg_match_all('/([0-9]+)x([0-9]+)/', $tsize, $matches) )
+		    {
+		        $custom_css = ".ppc .attachment-{$matches[0]}x{$matches[1]} {
+			width: {$matches[0]}px !important;
+			height: {$matches[1]}px !important;
+		}";
+		    }
+		    else if ( preg_match('/^([0-9])+$/', $tsize) )
+		    {
+		        $custom_css = ".ppc .attachment-{$tsize}x{$tsize} {
+			width: {$tsize}px !important;
+			height: {$tsize}px !important;
+		}";
+		    }
+			if ( !empty($custom_css) )
+		    	wp_add_inline_style( 'ppc-main', $custom_css );
+		}
 
-return $ppc_str;
-} // posts_per_cat()
+	} // end class
 
-// category table row print
-function print_cat_row($category) {
-?>
-	<tr>
-		<td class="name column-name">
-		<a href="edit-tags.php?action=edit&taxonomy=category&tag_ID=<?php echo $category->cat_ID; ?>&post_type=post"><?php if ( $category->parent != 0 ) { echo "— "; } echo $category->cat_name; ?></a></td>
-		<td class="column-description description"><?php echo $category->category_description; ?></td>
-		<td class="slug column-slug"><?php echo $category->slug; ?></td>
-		<td class="num column-rating"><?php echo $category->cat_ID; ?></td>
-		<td class="num column-posts"><a href="edit.php?category_name=<?php echo $category->slug; ?>&post_type=post"><?php echo $category->count; ?></a></td>
-	</tr>
-<?php
-}
 
-function print_cat_headfoot() {
-?>
-			<tr>
-				<th scope="col" class="manage-column column-name row-title"><?php _e('Name'); ?></th>
-				<th scope="col" class="manage-column column-description desc row-title"><?php _e('Description'); ?></th>
-				<th scope="col" class="manage-column column-slug slug row-title"><?php _e('Slug'); ?></th>
-				<th scope="col" class="manage-column column-rating num row-title"><?php _e('ID'); ?></th>
-				<th scope="col" class="manage-column column-posts num row-title"><?php _e('Posts'); ?></th>
-			</tr>
-<?php
-}
+} // end class check
 
-?>
+new POSTS_PER_CAT();

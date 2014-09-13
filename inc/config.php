@@ -1,5 +1,4 @@
 <?php
-
 /**
 	ReduxFramework Posts per Cat Config File
 **/
@@ -8,8 +7,8 @@ if ( !class_exists( "ReduxFramework" ) ) {
 	return;
 } 
 
-if ( !class_exists( "Redux_Framework_sample_config" ) ) {
-	class Redux_Framework_sample_config {
+if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
+	class Redux_Framework_Posts_Per_Cat {
 
 		public $args = array();
 		public $sections = array();
@@ -17,6 +16,15 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 
 		public function __construct( ) {
 
+            // This is needed. Bah WordPress bugs.  ;)
+            if ( true == Redux_Helpers::isTheme( __FILE__ ) ) {
+                $this->initSettings();
+            } else {
+                add_action('plugins_loaded', array($this, 'initSettings'), 10);
+            }
+        }
+
+        public function initSettings(){
 			// Set the default arguments
 			$this->setArguments();
 			
@@ -169,9 +177,39 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 	<li><code>tsize</code>=60 - Thumbnail size, set size in px for thumbnail width (height is same)</li>
 	</ul>
 
-	<h3>Example</h3>
+	<h4>Example</h4>
 	<pre>[ppc columns=3 minh=200 include=1,16,4 order=custom posts=10 nosticky=1 excerpts=all excleng=150]</pre>
 	<p><strong>Explanation:</strong> render three columns per row, minimal height of box is 200px, get 10 posts ffrom categories with ID 1, 16 and 4, order categories as defined in array, exclude sticky posts, show excerpts for all posts andshorten excerpt to 150 characters.</p>
+
+<h4>Template</h4>
+<p>Since version 1.4.0 you can use template to display custom formatted output (post line element).</p>
+<pre>[ppc tsize=ppc content=1]
+%thumbnail%
+&lt;strong&gt;&lt;a href="%link%"&gt;%title_short%&lt;/a&gt;&lt;/strong&gt;&lt;br /&gt;
+&lt;small class="date-meta"&gt;Published on %datetime%&lt;/small&gt; 
+&lt;small class="author-meta"&gt;by &lt;a href="%author_posts_url%"&gt;%author_displayname%&lt;/a&gt;&lt;/small&gt;&lt;br /&gt;
+%excerpt% &lt;a href="%link%"&gt;[read more]&lt;/a&gt;
+[/ppc]</pre>
+
+<p>Supported macros:
+<ul>
+<li><code>%title%</code></li>
+<li><code>%title_short%</code></li>
+<li><code>%post_content%</code></li>
+<li><code>%excerpt%</code></li>
+<li><code>%thumbnail%</code></li>
+<li><code>%link%</code></li>
+<li><code>%comments_num%</code></li>
+<li><code>%comments_link%</code></li>
+<li><code>%comments_form_link%</code></li>
+<li><code>%datetime%</code></li>
+<li><code>%date%</code></li>
+<li><code>%time%</code></li>
+<li><code>%author_displayname%</code></li>
+<li><code>%author_firstname%</code></li>
+<li><code>%author_lastname%</code></li>
+<li><code>%author_posts_url%</code></li>
+</ul></p>
 <?php
 			$shortcodeHTML = ob_get_contents();
 			    
@@ -214,7 +252,7 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 					        'id'      => 'include',
 					        'type'    => 'sorter',
 					        'title'   => __('Included categories', 'ppc'),
-					        'desc'    => __('Categories that will be included by default. Drag them to enabled block and order as you wish for Custom orderinge', 'ppc'),
+					        'desc'    => __('Categories that will be included by default. Drag them to enabled block and order as you wish for Custom ordering.', 'ppc'),
 					        'options' => array(
 					            'enabled'  => array(
 					                'placebo'    => 'placebo', //REQUIRED!
@@ -412,13 +450,13 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 					),
 					array(
 						'id'      => 'tsize',
-						'type'    => 'spinner',
+						'type'    => 'text',
 						'title'   => __('Thumbnail size', 'ppc'),
-						'desc'    => __('enter size in pixels for thumbnail width (height is same)', 'ppc'),
-						'default' => 60,
+						'desc'    => __('enter size in pixels for thumbnail width (height is same) or WIDTHxHEIGHT or image size name (thumbnail, small, medium, large, full)', 'ppc'),
+						'default' => 60/*,
 						'min'     => 16,
 						'max'     => 250,
-						'step'    => 1
+						'step'    => 1*/
 					)
 				)
 			);
@@ -473,7 +511,7 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 						'type' => 'raw', //info',
 						// 'raw_html'=>true,
 						'content' => 
-							sprintf( __('<p>For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.</p>', 'ppc'), 'http://wordpress.org/tags/posts-per-cat?forum_id=10') .
+							sprintf( __('<p>For all questions, feature request and communication with author and users of this plugin, use our <a href="%s">support forum</a>.</p>', 'ppc'), 'http://wordpress.org/support/plugin/posts-per-cat') .
 							sprintf( __('<p>If you like <a href="%s">Posts per Cat</a> and my other <a href="%s">WordPress extensions</a>, feel free to support my work with <a href="%s">donation</a>.</p>', 'ppc'), 'http://wordpress.org/plugins/posts-per-cat/', 'http://urosevic.net/wordpress/plugins/', 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6')
 					)
 				)
@@ -548,7 +586,7 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 			);
 			$this->args['share_icons'][] = array(
 			    'url' => 'http://twitter.com/urosevic',
-			    'title' => 'Follow me on Twitter', 
+			    'title' => 'Add me on Twitter', 
 			    'icon' => 'el-icon-twitter'
 			);
 			$this->args['share_icons'][] = array(
@@ -584,10 +622,9 @@ if ( !class_exists( "Redux_Framework_sample_config" ) ) {
 
 		}
 	}
-	new Redux_Framework_sample_config();
+	new Redux_Framework_Posts_Per_Cat();
 
 }
-
 
 /** 
 
