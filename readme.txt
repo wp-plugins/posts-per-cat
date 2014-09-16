@@ -65,6 +65,7 @@ Since version 1.4.0 you can use template to display custom formatted output (pos
 [/ppc]`
 
 Supported macros:
+
 * `%title%`
 * `%title_short%`
 * `%post_content%`
@@ -122,7 +123,7 @@ Enable option `Use post content as excerpt` in widget, or provide shortcode para
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
-= 1.4.1 (2014-09-14) =
+= 1.4.1 (2014-09-16) =
 * Fix settings page initialization issue
 * Fix output when do_action() is used for integration
 * Add to Widget settings support for post ordering and sorting (already supported by shortcode since 1.3.0 - undocumented until now)
