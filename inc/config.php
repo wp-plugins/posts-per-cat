@@ -12,34 +12,26 @@ if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
 
 		public $args = array();
 		public $sections = array();
+		// public $theme;
 		public $ReduxFramework;
 
 		public function __construct( ) {
 
-            // This is needed. Bah WordPress bugs.  ;)
-            if ( true == Redux_Helpers::isTheme( __FILE__ ) ) {
-                $this->initSettings();
-            } else {
-                add_action('plugins_loaded', array($this, 'initSettings'), 10);
-            }
-        }
-
-        public function initSettings(){
 			// Set the default arguments
 			$this->setArguments();
-			
+
 			// Set a few help tabs so you can see how it's done
 			// $this->setHelpTabs();
 
 			// Create the sections and fields
 			$this->setSections();
-			
+
 			if ( !isset( $this->args['opt_name'] ) ) { // No errors please
 				return;
 			}
-			
+
 			// If Redux is running as a plugin, this will remove the demo notice and links
-			//add_action( 'redux/plugin/hooks', array( $this, 'remove_demo' ) );
+			add_action( 'redux/plugin/hooks', array( $this, 'remove_demo' ) );
 			
 			// Function to test the compiler hook and demo CSS output.
 			//add_filter('redux/options/'.$this->args['opt_name'].'/compiler', array( $this, 'compiler_action' ), 10, 2); 
@@ -56,67 +48,8 @@ if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
 
 			$this->ReduxFramework = new ReduxFramework($this->sections, $this->args);
 
-		}
-
-
-		/**
-
-			This is a test function that will let you see when the compiler hook occurs. 
-			It only runs if a field	set with compiler=>true is changed.
-
-		**/
-
-		function compiler_action($options, $css) {
-			//echo "<h1>The compiler hook has run!";
-			//print_r($options); //Option values
-			
-			//print_r($css); // Compiler selector CSS values  compiler => array( CSS SELECTORS )
-
-			/*
-			// Demo of how to use the dynamic CSS and write your own static CSS file
-		    $filename = dirname(__FILE__) . '/style' . '.css';
-		    global $wp_filesystem;
-		    if( empty( $wp_filesystem ) ) {
-		        require_once( ABSPATH .'/wp-admin/includes/file.php' );
-		        WP_Filesystem();
-		    }
-
-		    if( $wp_filesystem ) {
-		        $wp_filesystem->put_contents(
-		            $filename,
-		            $css,
-		            FS_CHMOD_FILE // predefined mode settings for WP files
-		        );
-		    }
-			*/
-		}
-
-		/**
-
-			Filter hook for filtering the args. Good for child themes to override or add to the args array. Can also be used in other functions.
-
-		**/
+		}			
 		
-		function change_arguments($args){
-		    //$args['dev_mode'] = true;
-		    
-		    return $args;
-		}
-			
-		
-		/**
-
-			Filter hook for filtering the default value of any given field. Very useful in development mode.
-
-		**/
-
-		function change_defaults($defaults){
-		    $defaults['str_replace'] = "Testing filter hook!";
-		    
-		    return $defaults;
-		}
-
-
 		// Remove the demo link and the notice of integrated demo from the redux-framework plugin
 		function remove_demo() {
 			
@@ -129,7 +62,6 @@ if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
 			remove_action('admin_notices', array( ReduxFrameworkPlugin::get_instance(), 'admin_notices' ) );	
 
 		}
-
 
 		public function setSections() {
 
@@ -527,7 +459,6 @@ if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
 
 		 **/
 		public function setArguments() {
-			
 			$theme = wp_get_theme(); // For use with some settings. Not necessary.
 
 			$this->args = array(
@@ -622,8 +553,8 @@ if ( !class_exists( "Redux_Framework_Posts_Per_Cat" ) ) {
 
 		}
 	}
-	new Redux_Framework_Posts_Per_Cat();
-
+    global $reduxConfig;
+    $reduxConfig = new Redux_Framework_Posts_Per_Cat();
 }
 
 /** 

@@ -19,7 +19,7 @@
 Plugin Name: Posts per Cat
 Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized to columns. Please note, for global settings you need to have installed and active <strong>Redux Framework Plugin</strong>.
-Version: 1.4.0
+Version: 1.4.1
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // predefined constants
 define( 'POSTS_PER_CAT_NAME', 'Posts per Cat' );
-define( 'POSTS_PER_CAT_VER', '1.4.0' );
+define( 'POSTS_PER_CAT_VER', '1.4.1' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 if ( !class_exists('POSTS_PER_CAT') )
@@ -42,10 +42,17 @@ if ( !class_exists('POSTS_PER_CAT') )
 		function __construct()
 		{
 
-			// init textdomain for localisation
+			// Init textdomain for localisation
 			load_plugin_textdomain( 'ppc', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
+			// Initialize Plugin Settings Magic
+			if ( is_admin() )
+				add_action('init', array($this, 'settings_init'), 900);
+
+			// Load tool functions
 			require_once('inc/tools.php');
+
+			// Load widget definition
 			require_once('inc/widget.php');
 
 			// Add 'ppc' action
@@ -54,27 +61,34 @@ if ( !class_exists('POSTS_PER_CAT') )
 			// Add 'ppc' shortcode
 			add_shortcode( 'ppc', array($this,'shortcode') );
 
+			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
+
+		} // construct
+
+		function settings_init()
+		{
+
 			// Load Redux Framework
 			if ( class_exists( "ReduxFramework" ) )
 			{
 				// Add Settings link on Plugins page if Redux is installed
 				add_filter('plugin_action_links_'.plugin_basename(__FILE__), array($this, 'add_settings_link') );
+
+				// Load Settings Page configuration
+				if ( file_exists(dirname(__FILE__).'/inc/config.php') ){
+					require_once( dirname( __FILE__ ) . '/inc/config.php' );
+				}
 			} else {
 				// Add admin notice for Redux Framework
 				add_action( 'admin_notices', array($this,'admin_notice') );
 			}
 
-			// Load Settings Page configuration
-			if ( file_exists(dirname(__FILE__).'/inc/config.php') )
-		    	require_once( dirname( __FILE__ ) . '/inc/config.php' );
-
-			add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
-		} // construct
+		} // settings_init()
 
 		function admin_notice()
 		{
 			echo '<div class="error"><p>'.sprintf("To configure global <strong>%s</strong> options, you need to install and activate <strong>%s</strong>.",POSTS_PER_CAT_NAME, "Redux Framework Plugin") . '</p></div>';
-		}
+		} // admin_notice()
 		
 		function add_settings_link($links)
 		{
@@ -83,10 +97,10 @@ if ( !class_exists('POSTS_PER_CAT') )
 			return $links; 
 		} // add_settings_link()
 
-		private function echo_shortcode()
+		function echo_shortcode()
 		{ 
-			echo array($this,'shortcode');
-		} // echo()
+			echo do_shortcode('[ppc]');
+		} // echo_shortcode()
 
 		public static function shortcode($attr, $template=null) {
 			global $blog_url;

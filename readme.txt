@@ -4,7 +4,7 @@ Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
 Requires at least: 3.8.0
 Tested up to: 4.0.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -42,6 +42,8 @@ You can use shortcode [ppc], with options below (set option in shortcode to over
 * `more=0` - Standalone link to archives (0 or 1)
 * `moretxt="More from"` - Archive link prefix
 * `posts=5` - Number of headlines per category block
+* `porderby=date` - Order posts by date, modified, title, name, ID, author
+* `porder=DESC` - Order sorting DESC or ASC
 * `titlelen=34` - Headline length (in characters)
 * `shorten=0` - Shorten headline (0 or 1)
 * `commnum=0` - Display comment number (0 or 1)
@@ -96,6 +98,10 @@ Supported macros:
 
 Enter category ID into `Include category` field, and leave unchecked `Only top level categories` checkbox.
 
+= I set in template macro to display excerpt, but no excerpt displayed =
+
+Enable option `Use post content as excerpt` in widget, or provide shortcode parameter `content=1`, because you did not have manually set excerpts for posts, so you must ask PPC to generate excerpt from post content.
+
 == Screenshots ==
 1. Posts per Cat general settings
 2. Posts per Cat widget
@@ -116,6 +122,11 @@ Enter category ID into `Include category` field, and leave unchecked `Only top l
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
+= 1.4.1 (2014-09-14) =
+* Fix settings page initialization issue
+* Fix output when do_action() is used for integration
+* Add to Widget settings support for post ordering and sorting (already supported by shortcode since 1.3.0 - undocumented until now)
+
 = 1.4.0 (2014-09-13) =
 * Fix usage of predefined include/exclude categories in global settings if no include/exclude categories provided in widget or shortcode
 * Fix non-working minimal box height set in widget or shortcode

@@ -25,6 +25,8 @@ class PPC_Widget extends WP_Widget {
 			'more'     => $instance['more'],
 			'moretxt'  => $instance['moretxt'],
 			'posts'    => (empty($instance['posts']))?5:$instance['posts'],
+			'porderby' => (empty($instance['porderby']))?'date':$instance['porderby'],
+			'porder'   => (empty($instance['porder']))?'DESC':$instance['porder'],
 			'titlelen' => (empty($instance['titlelen']))?'':$instance['titlelen'],
 			'shorten'  => $instance['shorten'],
 			'commnum'  => $instance['commnum'],
@@ -53,29 +55,31 @@ class PPC_Widget extends WP_Widget {
 
  	public function form( $instance ) {
 		// outputs the options form on admin
-		$options	= get_option('postspercat');;
-		$title		= ( isset( $instance[ 'title' ] ) ) ? $instance[ 'title' ] : __( 'Posts per Category', 'ppc' );
-		$minh		= ( isset( $instance[ 'minh' ] ) ) ? $instance[ 'minh' ] : '';
-		$include	= ( isset( $instance[ 'include' ] ) ) ? $instance[ 'include' ] : '';
-		$exclude	= ( isset( $instance[ 'exclude' ] ) ) ? $instance[ 'exclude' ] : '';
-		$parent		= ( isset( $instance[ 'parent' ] ) ) ? $instance[ 'parent' ] : false;
-		$order		= ( isset( $instance[ 'order' ] ) ) ? $instance[ 'order' ] : 'ID';
-		$catonly	= ( isset( $instance[ 'catonly' ] ) ) ? $instance[ 'catonly' ] : false;
-		$noctlink	= ( isset( $instance[ 'noctlink' ] ) ) ? $instance[ 'noctlink' ] : false;
-		$more		= ( isset( $instance[ 'more' ] ) ) ? $instance[ 'more' ] : false;
-		$moretxt	= ( isset( $instance[ 'moretxt' ] ) ) ? $instance[ 'moretxt' ] : false;
-		$posts		= ( isset( $instance[ 'posts' ] ) ) ? $instance[ 'posts' ] : "5";
-		$titlelen	= ( isset( $instance[ 'titlelen' ] ) ) ? $instance[ 'titlelen' ] : '';
-		$shorten	= ( isset( $instance[ 'shorten' ] ) ) ? $instance[ 'shorten' ] : false;
-		$commnum	= ( isset( $instance[ 'commnum' ] ) ) ? $instance[ 'commnum' ] : false;
-		$nosticky	= ( isset( $instance[ 'nosticky' ] ) ) ? $instance[ 'nosticky' ] : false;
-		$excerpts	= ( isset( $instance[ 'excerpts' ] ) ) ? $instance[ 'excerpts' ] : 'none';
-		$content	= ( isset( $instance[ 'content' ] ) ) ? $instance[ 'content' ] : false;
-		$excleng	= ( isset( $instance[ 'excleng' ] ) ) ? $instance[ 'excleng' ] : '';
-		$thumb		= ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
-		$tsize		= ( isset( $instance[ 'tsize' ] ) ) ? $instance[ 'tsize' ] : '60';
-		$columns	= ( isset( $instance[ 'columns' ] ) ) ? $instance[ 'columns' ] : '2';
-		$template	= ( isset( $instance[ 'template' ] ) ) ? $instance[ 'template' ] : '';
+		$options  = get_option('postspercat');;
+		$title    = ( isset( $instance[ 'title' ] ) ) ? $instance[ 'title' ] : __( 'Posts per Category', 'ppc' );
+		$minh     = ( isset( $instance[ 'minh' ] ) ) ? $instance[ 'minh' ] : '';
+		$include  = ( isset( $instance[ 'include' ] ) ) ? $instance[ 'include' ] : '';
+		$exclude  = ( isset( $instance[ 'exclude' ] ) ) ? $instance[ 'exclude' ] : '';
+		$parent   = ( isset( $instance[ 'parent' ] ) ) ? $instance[ 'parent' ] : false;
+		$order    = ( isset( $instance[ 'order' ] ) ) ? $instance[ 'order' ] : 'ID';
+		$catonly  = ( isset( $instance[ 'catonly' ] ) ) ? $instance[ 'catonly' ] : false;
+		$noctlink = ( isset( $instance[ 'noctlink' ] ) ) ? $instance[ 'noctlink' ] : false;
+		$more     = ( isset( $instance[ 'more' ] ) ) ? $instance[ 'more' ] : false;
+		$moretxt  = ( isset( $instance[ 'moretxt' ] ) ) ? $instance[ 'moretxt' ] : false;
+		$posts    = ( isset( $instance[ 'posts' ] ) ) ? $instance[ 'posts' ] : "5";
+		$porderby = ( isset( $instance[ 'porderby' ] ) ) ? $instance[ 'porderby' ] : "date";
+		$porder   = ( isset( $instance[ 'porder' ] ) ) ? $instance[ 'porder' ] : "DESC";
+		$titlelen = ( isset( $instance[ 'titlelen' ] ) ) ? $instance[ 'titlelen' ] : '';
+		$shorten  = ( isset( $instance[ 'shorten' ] ) ) ? $instance[ 'shorten' ] : false;
+		$commnum  = ( isset( $instance[ 'commnum' ] ) ) ? $instance[ 'commnum' ] : false;
+		$nosticky = ( isset( $instance[ 'nosticky' ] ) ) ? $instance[ 'nosticky' ] : false;
+		$excerpts = ( isset( $instance[ 'excerpts' ] ) ) ? $instance[ 'excerpts' ] : 'none';
+		$content  = ( isset( $instance[ 'content' ] ) ) ? $instance[ 'content' ] : false;
+		$excleng  = ( isset( $instance[ 'excleng' ] ) ) ? $instance[ 'excleng' ] : '';
+		$thumb    = ( isset( $instance[ 'thumb' ] ) ) ? $instance[ 'thumb' ] : false;
+		$tsize    = ( isset( $instance[ 'tsize' ] ) ) ? $instance[ 'tsize' ] : '60';
+		$columns  = ( isset( $instance[ 'columns' ] ) ) ? $instance[ 'columns' ] : '2';
+		$template = ( isset( $instance[ 'template' ] ) ) ? $instance[ 'template' ] : '';
 
 		?>
 		<p>
@@ -140,6 +144,27 @@ class PPC_Widget extends WP_Widget {
 
 		<h3>Headlines</h3>
 
+		<p>
+			<label for="<?php echo $this->get_field_id( 'porderby' ); ?>">Sort retrieved posts</label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'porderby' ); ?>" name="<?php echo $this->get_field_name( 'porderby' ); ?>">
+				<option value="none"<?php selected( $porderby, 'none' ); ?>><?php _e("No order", 'ppc'); ?></option>
+				<option value="ID"<?php selected( $porderby, 'ID' ); ?>><?php _e('ID', 'ppc'); ?></option>
+				<option value="author"<?php selected( $porderby, 'author' ); ?>><?php _e('Author', 'ppc'); ?></option>
+				<option value="title"<?php selected( $porderby, 'title' ); ?>><?php _e('Title', 'ppc'); ?></option>
+				<option value="name"<?php selected( $porderby, 'name' ); ?>><?php _e('Post slug', 'ppc'); ?></option>
+				<option value="date"<?php selected( $porderby, 'date' ); ?>><?php _e('Publishing date', 'ppc'); ?></option>
+				<option value="modified"<?php selected( $porderby, 'modified' ); ?>><?php _e('Last modified date', 'ppc'); ?></option>
+				<option value="comment_count"<?php selected( $porderby, 'comment_count' ); ?>><?php _e('Number of comments', 'ppc'); ?></option>
+				<option value="rand"<?php selected( $porderby, 'rand' ); ?>><?php _e('Random', 'ppc'); ?></option>
+			</select>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'porder' ); ?>">Sorting order</label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'porder' ); ?>" name="<?php echo $this->get_field_name( 'porder' ); ?>">
+				<option value="DESC"<?php selected( $porder, 'DESC' ); ?>><?php _e("Descending", 'ppc'); ?></option>
+				<option value="ASC"<?php selected( $porder, 'ASC' ); ?>><?php _e('Ascending', 'ppc'); ?></option>
+			</select>
+		</p>
 		<p>
 			<label>Number of headlines</label><br />
 			<input class="small-text" id="<?php echo $this->get_field_id( 'posts' ); ?>" name="<?php echo $this->get_field_name( 'posts' ); ?>" type="number" value="<?php echo esc_attr( $posts ); ?>" />
@@ -218,6 +243,8 @@ class PPC_Widget extends WP_Widget {
 		$instance['more']     = (!empty($new_instance['more'])) ? strip_tags($new_instance['more']) : '';
 		$instance['moretxt']  = (!empty($new_instance['moretxt'])) ? strip_tags($new_instance['moretxt']) : 'More from';
 		// Headlines
+		$instance['porderby']  = (!empty($new_instance['porderby'])) ? strip_tags($new_instance['porderby']) : 'date';
+		$instance['porder']  = (!empty($new_instance['porder'])) ? strip_tags($new_instance['porder']) : 'DESC';
 		$instance['posts']  = (!empty($new_instance['posts'])) ? strip_tags($new_instance['posts']) : '';
 		$instance['titlelen']  = (!empty($new_instance['titlelen'])) ? strip_tags($new_instance['titlelen']) : '';
 		$instance['shorten']  = (!empty($new_instance['shorten'])) ? strip_tags($new_instance['shorten']) : '';
