@@ -1,7 +1,7 @@
 <?php
 /*
     WP Posts per Cat list titles of recent posts in boxes for all single categories
-    Copyright (C) 2009-2014 Aleksandar Urošević <urke.kg@gmail.com>
+    Copyright (C) 2009-2015 Aleksandar Urošević <urke.kg@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 Plugin Name: Posts per Cat
 Plugin URI: http://urosevic.net/wordpress/plugins/posts-per-cat/
 Description: Group latest posts by selected category and show post titles w/ or w/o excerpt, featured image and comments number in boxes organized to columns. Please note, for global settings you need to have installed and active <strong>Redux Framework Plugin</strong>.
-Version: 1.4.1
+Version: 1.4.1.1
 Author: Aleksandar Urošević
 Author URI: http://urosevic.net
 License: GNU GPLv3
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 // predefined constants
 define( 'POSTS_PER_CAT_NAME', 'Posts per Cat' );
-define( 'POSTS_PER_CAT_VER', '1.4.1' );
+define( 'POSTS_PER_CAT_VER', '1.4.1.1' );
 define( 'POSTS_PER_CAT_URL', plugin_dir_url(__FILE__) );
 
 if ( !class_exists('POSTS_PER_CAT') )
@@ -89,16 +89,16 @@ if ( !class_exists('POSTS_PER_CAT') )
 		{
 			echo '<div class="error"><p>'.sprintf("To configure global <strong>%s</strong> options, you need to install and activate <strong>%s</strong>.",POSTS_PER_CAT_NAME, "Redux Framework Plugin") . '</p></div>';
 		} // admin_notice()
-		
+
 		function add_settings_link($links)
 		{
-			$settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>'; 
-			array_unshift( $links, $settings_link ); 
-			return $links; 
+			$settings_link = '<a href="options-general.php?page=posts-per-cat">'.__('Settings').'</a>';
+			array_unshift( $links, $settings_link );
+			return $links;
 		} // add_settings_link()
 
 		function echo_shortcode()
-		{ 
+		{
 			echo do_shortcode('[ppc]');
 		} // echo_shortcode()
 
@@ -107,40 +107,49 @@ if ( !class_exists('POSTS_PER_CAT') )
 
 			// get global plugin options
 			$options		= get_option('postspercat');
+			$include_default = $exclude_default = '';
 
-			$include = $options['include']['enabled'];
-			unset ($include['placebo']);
-			$include_default = str_replace("_","",implode(",", array_keys($include)));
+			if ( ! empty($options) ) {
 
-			$exclude = $options['exclude']['enabled'];
-			unset ($exclude['placebo']);
-			$exclude_default = str_replace("_","",implode(",", array_keys($exclude)));
+				if ( ! empty($options['include']['enabled']) ) {
+					$include = $options['include']['enabled'];
+					unset ($include['placebo']);
+					$include_default = str_replace("_","",implode(",", array_keys($include)));
+				} // END ! empty($options['include']['enabled'])
+
+				if ( ! empty($options['exclude']['enabled']) ) {
+					$exclude = $options['exclude']['enabled'];
+					unset ($exclude['placebo']);
+					$exclude_default = str_replace("_","",implode(",", array_keys($exclude)));
+				} // END ! empty($options['exclude']['enabled'])
+
+			} // END ! empty($options)
 
 			// echo "include=$include<br/>exclude=$exclude<br/>";
 			extract( shortcode_atts( array(
-				'posts'		=> $options['posts'],
-				'porderby'	=> $options['porderby'],
-				'porder'	=> $options['porder'],
-				'shorten'	=> $options['shorten'],
-				'titlelen'	=> $options['titlelen'],
-				'parent'	=> $options['parent'],
-				'excerpts'	=> $options['excerpts'],
-				'content'	=> $options['content'],
-				'excleng'	=> $options['excleng'],
-				'order'		=> $options['order'],
-				'nosticky'	=> $options['nosticky'],
-				'noctlink'	=> $options['noctlink'],
-				'more'		=> $options['more'],
-				'moretxt'	=> $options['moretxt'],
-				'include'	=> $include_default,
-				'exclude'	=> $exclude_default,
-				'catonly'	=> $options['catonly'],
-				'commnum'	=> $options['commnum'],
-				'thumb'		=> $options['thumb'],
-				'tsize'		=> $options['tsize'],
-				'columns'	=> (!empty($options['columns'])) ? $options['columns'] : $options['column'],
-				'minh'		=> $options['minh']['height']
-		    ), $attr ) );
+				'posts'    => $options['posts'],
+				'porderby' => $options['porderby'],
+				'porder'   => $options['porder'],
+				'shorten'  => $options['shorten'],
+				'titlelen' => $options['titlelen'],
+				'parent'   => $options['parent'],
+				'excerpts' => $options['excerpts'],
+				'content'  => $options['content'],
+				'excleng'  => $options['excleng'],
+				'order'    => $options['order'],
+				'nosticky' => $options['nosticky'],
+				'noctlink' => $options['noctlink'],
+				'more'     => $options['more'],
+				'moretxt'  => $options['moretxt'],
+				'include'  => $include_default,
+				'exclude'  => $exclude_default,
+				'catonly'  => $options['catonly'],
+				'commnum'  => $options['commnum'],
+				'thumb'    => $options['thumb'],
+				'tsize'    => $options['tsize'],
+				'columns'  => ( ! empty($options['columns']) ) ? $options['columns'] : $options['column'],
+				'minh'     => $options['minh']['height']
+			), $attr ) );
 
 			// if exclength has not been set, set 500
 			if (empty($excleng)) $excleng = 500;
@@ -224,7 +233,7 @@ if ( !class_exists('POSTS_PER_CAT') )
 					} else { // include sticky posts
 						$posts_arr = get_posts('numberposts='.$posts.'&order='.$porder.'&orderby='.$porderby.'&category='.$cat->cat_ID);
 					}
-					
+
 					$br = 0; // control number for number of excerpts
 
 					// process all posts from category
@@ -371,7 +380,7 @@ if ( !class_exists('POSTS_PER_CAT') )
 			if ( $boxnum != $columns ) {
 				$ppc_str .= '<div class="clear"></div>';
 			}
-			
+
 			// close PPC container
 			$ppc_str .= '
 			</div>

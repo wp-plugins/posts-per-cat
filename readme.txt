@@ -3,8 +3,8 @@ Tags: category, categories, posts, archives, list, post list, recent, recent pos
 Contributors: urkekg
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Q6Q762MQ97XJ6
 Requires at least: 3.8.0
-Tested up to: 4.0.0
-Stable tag: 1.4.1
+Tested up to: 4.2.0
+Stable tag: 1.4.1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -123,6 +123,9 @@ Enable option `Use post content as excerpt` in widget, or provide shortcode para
 * We changed options names for number of columns, number of posts and excerpts visibility. We recommend you to update plugin settings after update.
 
 == Changelog ==
+= 1.4.1.1 (2015-03-30) =
+* Fix warnings if no default settings defined
+
 = 1.4.1 (2014-09-16) =
 * Fix settings page initialization issue
 * Fix output when do_action() is used for integration
